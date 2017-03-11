@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.config;
+package com.example.ics.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;

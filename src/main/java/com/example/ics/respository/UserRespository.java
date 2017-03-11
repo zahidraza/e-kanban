@@ -1,6 +1,6 @@
-package com.example.spring.oauth2.respository;
+package com.example.ics.respository;
 
-import com.example.spring.oauth2.entity.User;
+import com.example.ics.entity.User;
 import java.io.Serializable;
 import org.springframework.data.jpa.repository.JpaRepository;
 

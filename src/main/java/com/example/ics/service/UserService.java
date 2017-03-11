@@ -1,9 +1,9 @@
-package com.example.spring.oauth2.service;
+package com.example.ics.service;
 
-import com.example.spring.oauth2.dto.UserDto;
-import com.example.spring.oauth2.entity.User;
-import com.example.spring.oauth2.page.converter.UserConverter;
-import com.example.spring.oauth2.respository.UserRespository;
+import com.example.ics.dto.UserDto;
+import com.example.ics.entity.User;
+import com.example.ics.page.converter.UserConverter;
+import com.example.ics.respository.UserRespository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.dozer.Mapper;

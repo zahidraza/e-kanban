@@ -1,7 +1,7 @@
-package com.example.spring.oauth2.page.converter;
+package com.example.ics.page.converter;
 
-import com.example.spring.oauth2.dto.UserDto;
-import com.example.spring.oauth2.entity.User;
+import com.example.ics.dto.UserDto;
+import com.example.ics.entity.User;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;

@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.dto;
+package com.example.ics.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.NotNull;

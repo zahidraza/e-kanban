@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.restcontroller;
+package com.example.ics.restcontroller;
 
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;

@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.entity;
+package com.example.ics.entity;
 
 public enum Role {
     ADMIN("ROLE_ADMIN"), MERCHANT("ROLE_MERCHANT"), USER("ROLE_USER");

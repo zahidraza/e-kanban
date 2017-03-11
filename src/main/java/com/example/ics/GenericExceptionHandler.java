@@ -1,7 +1,7 @@
-package com.example.spring.oauth2;
+package com.example.ics;
 
-import com.example.spring.oauth2.dto.FieldError;
-import com.example.spring.oauth2.dto.RestError;
+import com.example.ics.dto.FieldError;
+import com.example.ics.dto.RestError;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;

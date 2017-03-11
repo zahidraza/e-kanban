@@ -1,7 +1,7 @@
-package com.example.spring.oauth2.assembler;
+package com.example.ics.assembler;
 
-import com.example.spring.oauth2.dto.UserDto;
-import com.example.spring.oauth2.restcontroller.UserRestController;
+import com.example.ics.dto.UserDto;
+import com.example.ics.restcontroller.UserRestController;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.hateoas.Resource;

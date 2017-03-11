@@ -1,9 +1,9 @@
-package com.example.spring.oauth2.restcontroller;
+package com.example.ics.restcontroller;
 
-import com.example.spring.oauth2.assembler.UserAssembler;
-import com.example.spring.oauth2.dto.UserDto;
-import com.example.spring.oauth2.entity.User;
-import com.example.spring.oauth2.service.UserService;
+import com.example.ics.assembler.UserAssembler;
+import com.example.ics.dto.UserDto;
+import com.example.ics.entity.User;
+import com.example.ics.service.UserService;
 import java.net.URI;
 import javax.validation.Valid;
 import org.slf4j.Logger;

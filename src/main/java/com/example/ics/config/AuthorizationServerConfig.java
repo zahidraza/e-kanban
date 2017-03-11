@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.config;
+package com.example.ics.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.RelaxedPropertyResolver;

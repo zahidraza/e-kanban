@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.entity;
+package com.example.ics.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;

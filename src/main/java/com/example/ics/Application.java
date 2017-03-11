@@ -1,7 +1,7 @@
-package com.example.spring.oauth2;
+package com.example.ics;
 
-import com.example.spring.oauth2.dto.UserDto;
-import com.example.spring.oauth2.service.UserService;
+import com.example.ics.dto.UserDto;
+import com.example.ics.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import org.dozer.DozerBeanMapper;

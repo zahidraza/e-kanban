@@ -1,4 +1,4 @@
-package com.example.spring.oauth2.dto;
+package com.example.ics.dto;
 
 public class FieldError {
     private String field;
