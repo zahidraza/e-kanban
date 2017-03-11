@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://dozer.sourceforge.net
+   http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    
+    <mapping >
+      <class-a>com.example.spring.oauth2.dto.UserDto</class-a>
+      <class-b>com.example.spring.oauth2.entity.User</class-b>
+
+      <field custom-converter="com.example.spring.oauth2.dozer.converter.RoleConverter">
+         <a>role</a>
+         <b>role</b>
+      </field>
+      
+   </mapping> 
+</mappings>
