@@ -1,5 +1,6 @@
 package com.example.ics.entity;
 
+import com.example.ics.enums.Role;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,11 +28,11 @@ public class User implements Serializable{
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "ROLE", nullable = false)
-    private String role;
-
     @Column(name = "MOBILE", nullable = true)
     private String mobile;
+    
+    @Column(name = "ROLE", nullable = false)
+    private String role;
 
     public User() {
     }

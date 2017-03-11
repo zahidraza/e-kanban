@@ -45,7 +45,7 @@ public class Application extends SpringBootServletInitializer{
 
         return (args) -> {
             if(userService.count() == 0){
-                userService.save(new UserDto("Md Zahid Raza","zahid7292@gmail.com","ADMIN","8987525008"));
+                userService.save(new UserDto("Md Zahid Raza","zahid7292@gmail.com","ROLE_ADMIN","8987525008"));
             }           
         };
     }

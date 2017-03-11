@@ -1,6 +1,6 @@
 package com.example.ics.dozer.converter;
 
-import com.example.ics.entity.Role;
+import com.example.ics.enums.Role;
 import org.dozer.DozerConverter;
 
 public class RoleConverter extends DozerConverter<String, Role>{
