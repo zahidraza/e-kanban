@@ -34,12 +34,14 @@ public class Product {
     @JoinColumn(name = "SUB_CATEGORY_ID")
     private SubCategory subCategory;
     
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PRODUCT_SECTION",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECTION_ID")
     )
     private Set<Section> sectionList;
     
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PRODUCT_SUPPLIER",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
