@@ -9,12 +9,12 @@ package com.example.ics.enums;
  *
  * @author razamd
  */
-public enum SupplierType {
-    LOCAL("LOCAL"), NON_LOCAL("NON_LOCAL");
+public enum BinState {
+    STORE("STORE"), PURCHASE("PURCHASE"), ORDERED("ORDERED");
 
     private final String value;
 
-    private SupplierType(String value) {
+    private BinState(String value) {
         this.value = value;
     }
 
@@ -22,14 +22,14 @@ public enum SupplierType {
         return value;
     }
 
-    public static SupplierType parse(String value) {
-        SupplierType supplierType = null;
-        for (SupplierType item : SupplierType.values()) {
+    public static BinState parse(String value) {
+        BinState binState = null;
+        for (BinState item : BinState.values()) {
             if (item.getValue().equals(value)) {
-                supplierType = item;
+                binState = item;
                 break;
             }
         }
-        return supplierType;
+        return binState;
     }
 }

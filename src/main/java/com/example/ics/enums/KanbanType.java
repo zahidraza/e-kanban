@@ -12,7 +12,7 @@ package com.example.ics.enums;
 public enum KanbanType {
     N_BIN("N_BIN"), TWO_BIN("TWO_BIN");
 
-    private String value;
+    private final String value;
 
     private KanbanType(String value) {
         this.value = value;

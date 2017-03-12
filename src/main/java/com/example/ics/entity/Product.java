@@ -7,10 +7,11 @@ package com.example.ics.entity;
 
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,19 +34,17 @@ public class Product {
     @JoinColumn(name = "SUB_CATEGORY_ID")
     private SubCategory subCategory;
     
-    @ManyToMany
     @JoinTable(name = "PRODUCT_SECTION",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECTION_ID")
     )
-    private Collection<Section> sectionList;
+    private Set<Section> sectionList;
     
-    @ManyToMany
     @JoinTable(name = "PRODUCT_SUPPLIER",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
     )
-    private Collection<Supplier> supplierList;
+    private Set<Supplier> supplierList;
     
     @Column(name = "NAME",nullable = false)
     private String name;
@@ -264,19 +263,19 @@ public class Product {
         this.binQty = binQty;
     }
 
-    public Collection<Section> getSectionList() {
+    public Set<Section> getSectionList() {
         return sectionList;
     }
 
-    public void setSectionList(Collection<Section> sectionList) {
+    public void setSectionList(Set<Section> sectionList) {
         this.sectionList = sectionList;
     }
 
-    public Collection<Supplier> getSupplierList() {
+    public Set<Supplier> getSupplierList() {
         return supplierList;
     }
 
-    public void setSupplierList(Collection<Supplier> supplierList) {
+    public void setSupplierList(Set<Supplier> supplierList) {
         this.supplierList = supplierList;
     }
 

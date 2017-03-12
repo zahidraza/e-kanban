@@ -5,6 +5,7 @@
  */
 package com.example.ics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
@@ -15,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -26,9 +29,11 @@ public class Category implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull @Size(min = 3, max = 255)
     @Column(name = "NAME",nullable = false, unique = true)
     private String name;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
     private Collection<SubCategory> subCategoryList;
 

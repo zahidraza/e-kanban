@@ -1,25 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.example.ics.entity;
 
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-/**
- *
- * @author razamd
- */
 @Entity
-public class Supplier {
+public class Supplier implements Serializable{
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,9 +25,12 @@ public class Supplier {
     
     @Column(name = "SUPPLIER_TYPE")
     private String supplierType;   //Local | NonLocal
+    
+    @Embedded
+    private Address address;
 
     @ManyToMany(mappedBy = "supplierList")
-    private Collection<Product> productList;
+    private Set<Product> productList;
     
     public Supplier() {
     }
@@ -71,12 +67,20 @@ public class Supplier {
         this.supplierType = supplierType;
     }
 
-    public Collection<Product> getProductList() {
+    public Set<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(Collection<Product> productList) {
+    public void setProductList(Set<Product> productList) {
         this.productList = productList;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
@@ -103,7 +107,5 @@ public class Supplier {
         }
         return true;
     }
-    
-    
-    
+
 }

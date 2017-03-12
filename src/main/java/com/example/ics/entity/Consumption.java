@@ -5,37 +5,40 @@
  */
 package com.example.ics.entity;
 
-import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
  *
  * @author razamd
  */
+
 @Entity
-public class Section {
+public class Consumption {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "NAME", nullable = false, unique = true)
-    private String name;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
     
-    @ManyToMany(mappedBy = "sectionList")
-    private Set<Product> productList;
+    @Column(name = "YEAR")
+    private Integer year;
+    
+    @Column(name = "MONTH")
+    private Integer month;
+    
+    @Column(name = "VALUE")
+    private Long value;
 
-    public Section() {
-    }
-
-    public Section(String name) {
-        this.name = name;
+    public Consumption() {
     }
 
     public Long getId() {
@@ -46,26 +49,42 @@ public class Section {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public Set<Product> getProductList() {
-        return productList;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setProductList(Set<Product> productList) {
-        this.productList = productList;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.id);
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -80,12 +99,11 @@ public class Section {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Section other = (Section) obj;
+        final Consumption other = (Consumption) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
     }
-    
-    
+
 }

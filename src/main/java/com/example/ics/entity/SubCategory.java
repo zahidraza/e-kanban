@@ -5,6 +5,7 @@
  */
 package com.example.ics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
@@ -17,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -28,13 +31,16 @@ public class SubCategory implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull @Size(min = 3,max = 255)
     @Column(name = "NAME",nullable = false)
     private String name;
     
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
     private Collection<Product> productList;
 

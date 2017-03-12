@@ -2,10 +2,9 @@ package com.example.ics.restcontroller;
 
 import com.example.ics.assembler.UserAssembler;
 import com.example.ics.dto.UserDto;
-import com.example.ics.entity.User;
 import com.example.ics.service.UserService;
+import com.example.ics.util.ApiUrls;
 import java.net.URI;
-import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(value = ApiUrls.ROOT_URL_USERS)
 public class UserRestController{
     
     private final Logger logger = LoggerFactory.getLogger(UserRestController.class);
@@ -43,10 +42,10 @@ public class UserRestController{
         return new ResponseEntity<>(assembler.toResource(page, userAssembler), HttpStatus.OK);
     }
   
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
-        logger.debug("getUser(): id = {}",id);
-        UserDto user = userService.findOne(id);
+    @GetMapping(value = ApiUrls.URL_USERS_USER)
+    public ResponseEntity<?> getUser(@PathVariable("userId") long userId) {
+        logger.debug("getUser(): userId = {}",userId);
+        UserDto user = userService.findOne(userId);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -54,31 +53,31 @@ public class UserRestController{
     }
    
     @PostMapping
-    public ResponseEntity<Void> createUser(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<Void> createUser(@Validated @RequestBody UserDto user) {
         logger.debug("createUser():\n {}", user.toString());
         user = userService.save(user);
         Link selfLink = linkTo(UserRestController.class).slash(user.getId()).withSelfRel();
         return ResponseEntity.created(URI.create(selfLink.getHref())).build();
     }
  
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id,@Validated @RequestBody UserDto user) {
-        logger.debug("updateUser(): id = {} \n {}",id,user);
-        if (!userService.exists(id)) {
+    @PutMapping(value = ApiUrls.URL_USERS_USER)
+    public ResponseEntity<?> updateUser(@PathVariable("userId") long userId,@Validated @RequestBody UserDto user) {
+        logger.debug("updateUser(): userId = {} \n {}",userId,user);
+        if (!userService.exists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        user.setId(id);  
+        user.setId(userId);  
         user = userService.update(user);
         return new ResponseEntity<>(userAssembler.toResource(user), HttpStatus.OK);
     }
   
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
-        logger.debug("deleteUser(): id = {}",id);
-        if (!userService.exists(id)) {
+    @DeleteMapping(value = ApiUrls.URL_USERS_USER)
+    public ResponseEntity<Void> deleteUser(@PathVariable("userId") long userId) {
+        logger.debug("deleteUser(): id = {}",userId);
+        if (!userService.exists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        userService.delete(id);
+        userService.delete(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

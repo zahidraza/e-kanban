@@ -3,7 +3,7 @@ package com.example.ics.enums;
 public enum Role {
     ADMIN("ROLE_ADMIN"), MERCHANT("ROLE_MERCHANT"), USER("ROLE_USER");
 
-    private String value;
+    private final String value;
 
     private Role(String value) {
         this.value = value;

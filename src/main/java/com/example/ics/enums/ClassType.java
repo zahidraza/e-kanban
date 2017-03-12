@@ -12,7 +12,7 @@ package com.example.ics.enums;
 public enum ClassType {
     CLASS_A("CLASS_A"), CLASS_B("CLASS_B"), CLASS_C("CLASS_C");
 
-    private String value;
+    private final String value;
 
     private ClassType(String value) {
         this.value = value;
