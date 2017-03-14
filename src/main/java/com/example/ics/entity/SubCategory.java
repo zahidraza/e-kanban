@@ -7,7 +7,7 @@ package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,11 +42,17 @@ public class SubCategory implements Serializable{
     
     @JsonIgnore
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
-    private Collection<Product> productList;
+    private Set<Product> productList;
 
     public SubCategory() {
     }
 
+    public SubCategory(Long id) {
+        this.id = id;
+    }
+
+    
+    
     public SubCategory(String name) {
         this.name = name;
     }
@@ -75,11 +81,11 @@ public class SubCategory implements Serializable{
         this.category = category;
     }
 
-    public Collection<Product> getProductList() {
+    public Set<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(Collection<Product> productList) {
+    public void setProductList(Set<Product> productList) {
         this.productList = productList;
     }
 

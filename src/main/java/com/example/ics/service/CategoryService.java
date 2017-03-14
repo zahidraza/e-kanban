@@ -3,11 +3,13 @@ package com.example.ics.service;
 import com.example.ics.entity.Category;
 import com.example.ics.respository.CategoryRepository;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,12 @@ public class CategoryService {
     
     @Autowired CategoryRepository categoryRepository;
     
-    public Category findOne(Long id){
+    public Category findOne(Long id, boolean initSubCategory){
         logger.debug("findOne(): id = {}",id);
+        Category category = categoryRepository.findOne(id);
+        if(initSubCategory){
+            Hibernate.initialize(category.getSubCategoryList());
+        }
         return categoryRepository.findOne(id);
     }
     
