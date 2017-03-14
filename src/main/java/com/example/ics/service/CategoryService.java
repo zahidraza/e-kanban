@@ -21,11 +21,16 @@ public class CategoryService {
     
     @Autowired CategoryRepository categoryRepository;
     
-    public Category findOne(Long id, boolean initSubCategory){
+    public Category findOne(Long id, boolean initSubCategory, boolean initProduct){
         logger.debug("findOne(): id = {}",id);
         Category category = categoryRepository.findOne(id);
-        if(initSubCategory){
+        if(category != null && initSubCategory && !initProduct){
             Hibernate.initialize(category.getSubCategoryList());
+        }
+        if(category != null && initSubCategory && initProduct){
+            Hibernate.initialize(category.getSubCategoryList());
+            category.getSubCategoryList()
+                    .forEach(s -> Hibernate.initialize(s.getProductList()));
         }
         return categoryRepository.findOne(id);
     }

@@ -7,6 +7,7 @@ package com.example.ics.entity;
 
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -51,11 +52,11 @@ public class Product {
     @Column(name = "NAME",nullable = false)
     private String name;
     
-    @Column(name = "DESCRIPTION",nullable = true)
+    @Column(name = "DESCRIPTION",nullable = true,length = 500)
     private String description;
     
     @Column(name = "PRICE",nullable = false)
-    private Double price;
+    private BigDecimal price;
     
     @Column(name = "ITEM_CODE",nullable = true)
     private String itemCode;
@@ -79,7 +80,7 @@ public class Product {
     private String uomConsumption;
     
     @Column(name = "CONVERSION_FACTOR",nullable = false)
-    private Double conversionFactor;
+    private BigDecimal conversionFactor;
     
     @Column(name = "MIN_ORDER_QTY",nullable = false)
     private Long minOrderQty;
@@ -137,11 +138,11 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -201,11 +202,11 @@ public class Product {
         this.uomConsumption = uomConsumption;
     }
 
-    public Double getConversionFactor() {
+    public BigDecimal getConversionFactor() {
         return conversionFactor;
     }
 
-    public void setConversionFactor(Double conversionFactor) {
+    public void setConversionFactor(BigDecimal conversionFactor) {
         this.conversionFactor = conversionFactor;
     }
 

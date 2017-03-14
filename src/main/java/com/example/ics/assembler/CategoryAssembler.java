@@ -27,11 +27,9 @@ public class CategoryAssembler extends ResourceAssemblerSupport<Category, Resour
 
     @Override
     public Resource toResource(Category category) {
-        Pageable pageable = null;
-        PagedResourcesAssembler assembler = null;
         Collection<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(CategoryRestController.class).loadCategory(category.getId())).withSelfRel());
-        links.add(linkTo(methodOn(CategoryRestController.class).loadCategorySubCategories(category.getId(),pageable,assembler)).withRel("subCategoryList"));
+        links.add(linkTo(methodOn(CategoryRestController.class).loadCategorySubCategories(category.getId(),null,null)).withRel("subCategoryList"));
         return new Resource<>(category, links); 
     }
     

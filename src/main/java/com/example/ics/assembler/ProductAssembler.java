@@ -5,37 +5,37 @@
  */
 package com.example.ics.assembler;
 
-import com.example.ics.entity.SubCategory;
+import com.example.ics.dto.ProductDto;
 import com.example.ics.restcontroller.CategoryRestController;
-import com.example.ics.restcontroller.SubCategoryRestController;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-import org.springframework.stereotype.Component;
+import org.springframework.hateoas.ResourceSupport;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.stereotype.Component;
 
+/**
+ *
+ * @author razamd
+ */
 @Component
-public class SubCategoryAssembler extends ResourceAssemblerSupport<SubCategory, Resource>{
+public class ProductAssembler extends ResourceAssemblerSupport<ProductDto, Resource>{
 
-    public SubCategoryAssembler() {
+    public ProductAssembler() {
         super(CategoryRestController.class, Resource.class);
     }
 
     @Override
-    public Resource toResource(SubCategory subCategory) {
+    public Resource toResource(ProductDto productDto) {
         Collection<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(CategoryRestController.class)
-                        .loadCategorySubCategory(subCategory.getId(),subCategory.getCategory().getId()))
+                        .loadCategorySubCategoryProduct(productDto.getCategoryId(),productDto.getSubCategoryId(),productDto.getId()))
                         .withSelfRel()
         );
-        links.add(linkTo(methodOn(CategoryRestController.class)
-                .loadCategorySubCategoryProducts(subCategory.getCategory().getId(),subCategory.getId(),null,null))
-                .withRel("productList")
-        );
-        return new Resource<>(subCategory, links); 
+        return new Resource<>(productDto, links);
     }
     
 }
