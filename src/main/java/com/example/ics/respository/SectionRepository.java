@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author razamd
  */
 public interface SectionRepository extends JpaRepository<Section, Long>{
-    
+    public Section findByName(String name);
 }

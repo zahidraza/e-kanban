@@ -5,6 +5,7 @@ import com.example.ics.dto.UserDto;
 import com.example.ics.service.UserService;
 import com.example.ics.util.ApiUrls;
 import java.net.URI;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -53,7 +53,7 @@ public class UserRestController{
     }
    
     @PostMapping
-    public ResponseEntity<Void> createUser(@Validated @RequestBody UserDto user) {
+    public ResponseEntity<Void> createUser(@Valid @RequestBody UserDto user) {
         logger.debug("createUser():\n {}", user.toString());
         user = userService.save(user);
         Link selfLink = linkTo(UserRestController.class).slash(user.getId()).withSelfRel();
@@ -61,7 +61,7 @@ public class UserRestController{
     }
  
     @PutMapping(value = ApiUrls.URL_USERS_USER)
-    public ResponseEntity<?> updateUser(@PathVariable("userId") long userId,@Validated @RequestBody UserDto user) {
+    public ResponseEntity<?> updateUser(@PathVariable("userId") long userId,@Valid @RequestBody UserDto user) {
         logger.debug("updateUser(): userId = {} \n {}",userId,user);
         if (!userService.exists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -5,6 +5,7 @@
  */
 package com.example.ics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -13,7 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -25,9 +27,11 @@ public class Section {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull @Size(min = 2,max = 255)
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
     
+    @JsonIgnore
     @ManyToMany(mappedBy = "sectionList")
     private Set<Product> productList;
 

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,13 @@ public class GenericExceptionHandler {
     }
 
     private List<FieldError> processFieldError(List<org.springframework.validation.FieldError> fieldErrors) {
+        //NoSuchMessageException
+        //messageSource.
         List<FieldError> errors = fieldErrors.stream()
                 .map(error -> {
                     return new FieldError(error.getField(),
                             error.getRejectedValue(),
-                            messageSource.getMessage(error.getCodes()[0], null, LocaleContextHolder.getLocale())
+                            messageSource.getMessage(error.getCodes()[0], null,error.getDefaultMessage(), LocaleContextHolder.getLocale())
                     );
                 })
                 .collect(Collectors.toList());
@@ -56,7 +59,13 @@ public class GenericExceptionHandler {
     @ExceptionHandler
     ResponseEntity<?> handleException(Exception e) {
         logger.debug("handleException: {}",e.getMessage());
-        return response(HttpStatus.INTERNAL_SERVER_ERROR, 500, e.getMessage(), e.getMessage(), "");
+        String msg = e.getMessage();
+        String devMsg = "";
+        do{
+            devMsg += e.getMessage() + "\n";
+            e = (Exception)e.getCause();
+        }while(e != null);
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, 500, msg, devMsg, "");
     }
 
     private ResponseEntity<RestError> response(HttpStatus status, int code, String msg) {

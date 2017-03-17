@@ -9,8 +9,6 @@ import com.example.ics.entity.Category;
 import com.example.ics.restcontroller.CategoryRestController;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

@@ -10,6 +10,10 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -19,21 +23,26 @@ import javax.persistence.Embeddable;
 public class Address implements Serializable{
     
     @Column(name = "STREET")
+    @NotEmpty
     private String street;
     
     @Column(name = "LANDMARK")
     private String landmark;
     
     @Column(name = "CITY")
+    @NotEmpty
     private String city;
     
     @Column(name = "STATE")
+    @NotEmpty
     private String state;
     
     @Column(name = "ZIP_CODE")
+    @NotNull @Pattern(regexp="[0-9]{6}")
     private String zip;
     
     @Column(name = "COUNTRY")
+    @NotEmpty
     private String country;
 
     public Address() {

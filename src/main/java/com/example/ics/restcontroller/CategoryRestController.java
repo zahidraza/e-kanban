@@ -14,6 +14,7 @@ import com.example.ics.service.SubCategoryService;
 import com.example.ics.util.ApiUrls;
 import java.net.URI;
 import java.util.Set;
+import javax.validation.Valid;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,7 +94,7 @@ public class CategoryRestController {
     }
     
     @PostMapping
-    public ResponseEntity<Void> createCategory(@Validated @RequestBody Category category) {
+    public ResponseEntity<Void> createCategory(@Valid @RequestBody Category category) {
         logger.debug("createCategory():\n {}", category.toString());
         category = categoryService.save(category);
         Link selfLink = linkTo(CategoryRestController.class).slash(category.getId()).withSelfRel();
@@ -102,7 +102,7 @@ public class CategoryRestController {
     }
     
     @PutMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY)
-    public ResponseEntity<?> updateCategory(@PathVariable("categoryId") long categoryId,@Validated @RequestBody Category category) {
+    public ResponseEntity<?> updateCategory(@PathVariable("categoryId") long categoryId,@Valid @RequestBody Category category) {
         logger.debug("updateCategory(): id = {} \n {}",categoryId,category);
         if (!categoryService.exists(categoryId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -163,7 +163,7 @@ public class CategoryRestController {
     @PostMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES)
     public ResponseEntity<?> createCategorySubCategory(
             @PathVariable("categoryId") Long categoryId,
-            @Validated @RequestBody SubCategory subCategory
+            @Valid @RequestBody SubCategory subCategory
             ) {
         logger.debug("createCategorySubCategory(): categoryId= {} , subCategory = \n {}", categoryId, subCategory.toString());
         Category category = categoryService.findOne(categoryId,false,false);
@@ -180,7 +180,7 @@ public class CategoryRestController {
     public ResponseEntity<?> updateCategorySubCategory(
             @PathVariable("categoryId") long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
-            @Validated @RequestBody SubCategory subCategory) {
+            @Valid @RequestBody SubCategory subCategory) {
         
         logger.debug("updateCategorySubCategory(): categoryId = {} , subCategoryId = {}, {}",categoryId, subCategoryId,subCategory );
         Category category = categoryService.findOne(categoryId,true,false);
@@ -285,7 +285,7 @@ public class CategoryRestController {
     public ResponseEntity<?> createCategorySubCategoryProduct(
             @PathVariable("categoryId") Long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
-            @Validated @RequestBody ProductDto productDto
+            @Valid @RequestBody ProductDto productDto
             ) {
         logger.debug("createCategorySubCategoryProduct(): categoryId= {} , subCategoryId = {}, {}", categoryId, subCategoryId, productDto);
         Category category = categoryService.findOne(categoryId,true,false);
@@ -315,7 +315,7 @@ public class CategoryRestController {
 //    public ResponseEntity<?> updateCategorySubCategory(
 //            @PathVariable("categoryId") long categoryId,
 //            @PathVariable("subCategoryId") Long subCategoryId,
-//            @Validated @RequestBody SubCategory subCategory) {
+//            @Valid @RequestBody SubCategory subCategory) {
 //        
 //        logger.debug("updateCategorySubCategory(): categoryId = {} , subCategoryId = {}, {}",categoryId, subCategoryId,subCategory );
 //        Category category = categoryService.findOne(categoryId,true);

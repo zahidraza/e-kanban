@@ -1,5 +1,7 @@
 package com.example.ics.dto;
 
+import com.example.ics.enums.Role;
+import com.example.ics.enums.StringEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -14,17 +16,18 @@ public class UserDto {
     private String name;
 
     @NotNull
-    @Pattern(regexp=".+@.+\\..+", message="Incorrect email!")
+    @Pattern(regexp=".+@.+\\..+")
     private String email;
 
     @JsonIgnore
     private String password;
 
     @NotNull
+    @StringEnum(enumClass = Role.class)
     private String role;
 
     @NotNull
-    @Pattern(regexp="[0-9]{10}", message="Incorrect mobile")
+    @Pattern(regexp="[0-9]{10}")
     private String mobile;
 
     public UserDto() {

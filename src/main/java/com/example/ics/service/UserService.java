@@ -3,7 +3,6 @@ package com.example.ics.service;
 import com.example.ics.dto.UserDto;
 import com.example.ics.entity.User;
 import com.example.ics.page.converter.UserConverter;
-import com.example.ics.respository.UserRespository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.dozer.Mapper;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.ics.respository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +21,7 @@ public class UserService {
     
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired UserRespository userRepository;
+    @Autowired UserRepository userRepository;
     
     @Autowired Mapper mapper;
     

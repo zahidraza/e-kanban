@@ -1,5 +1,8 @@
 package com.example.ics.dto;
 
+import com.example.ics.enums.ClassType;
+import com.example.ics.enums.KanbanType;
+import com.example.ics.enums.StringEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import javax.validation.constraints.Digits;
@@ -58,9 +61,10 @@ public class ProductDto {
     @NotNull
     private Integer packetSize;
     
+    @StringEnum(enumClass = ClassType.class)
     private String classType;
     
-    @Size(max = 255)
+    @StringEnum(enumClass = KanbanType.class)
     private String kanbanType;
     
     @Digits(integer = 10,fraction = 0)

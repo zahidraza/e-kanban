@@ -1,5 +1,8 @@
 package com.example.ics.entity;
 
+import com.example.ics.enums.StringEnum;
+import com.example.ics.enums.SupplierType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.Objects;
@@ -10,6 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class Supplier implements Serializable{
@@ -17,18 +25,23 @@ public class Supplier implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotNull @Size(min = 2, max = 255) 
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
     
+    @NotEmpty
     @Column(name = "CONTACT_PERSON")
     private String contactPerson;
     
+    @NotNull @StringEnum(enumClass = SupplierType.class)
     @Column(name = "SUPPLIER_TYPE")
     private String supplierType;   //Local | NonLocal
     
     @Embedded
+    @Valid
     private Address address;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "supplierList")
     private Set<Product> productList;
     

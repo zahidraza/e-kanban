@@ -12,13 +12,13 @@ public class StringRoleConverter extends DozerConverter<String, Role>{
     @Override
     public Role convertTo(String source, Role destination) {
         if(source == null) return null;
-        return Role.parse(source);
+        return Role.parse("ROLE_"+source);
     }
 
     @Override
     public String convertFrom(Role source, String destination) {
         if(source == null) return null;
-        return source.getValue();
+        return source.name();
     }
     
 }
