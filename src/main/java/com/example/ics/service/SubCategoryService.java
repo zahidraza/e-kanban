@@ -14,11 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class SubCategoryService {
-    
+public class SubCategoryService {    
     private final Logger logger = LoggerFactory.getLogger(SubCategoryService.class);
     
-    @Autowired SubCategoryRepository subCategoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
+    
+    @Autowired
+    public SubCategoryService(SubCategoryRepository subCategoryRepository) {
+        this.subCategoryRepository = subCategoryRepository;
+    }
     
     public SubCategory findOne(Long id){
         logger.debug("findOne(): id = {}",id);

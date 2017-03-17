@@ -18,14 +18,21 @@ import com.example.ics.respository.UserRepository;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
-    
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final Mapper mapper;
+    private UserConverter converter;
     
-    @Autowired Mapper mapper;
-    
-    @Autowired UserConverter converter;
+    public UserService(UserRepository userRepository, Mapper mapper){
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+    }
+
+    @Autowired
+    public void setConverter(UserConverter converter) {
+        this.converter = converter;
+    }
 
     public UserDto findOne(Long id) {
         logger.debug("findOne(): id = {}",id);

@@ -17,7 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SupplierService {
     private final Logger logger = LoggerFactory.getLogger(SupplierService.class);
 
-    @Autowired SupplierRepository supplierRepository;
+    private final SupplierRepository supplierRepository;
+
+    @Autowired
+    public SupplierService(SupplierRepository supplierRepository) {
+        this.supplierRepository = supplierRepository;
+    }
 
     public Supplier findOne(Long id) {
         logger.debug("findOne(): id = {}",id);

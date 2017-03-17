@@ -13,7 +13,6 @@ import com.example.ics.service.ProductService;
 import com.example.ics.service.SubCategoryService;
 import com.example.ics.util.ApiUrls;
 import java.net.URI;
-import java.util.Set;
 import javax.validation.Valid;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -38,22 +37,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 @RestController
 @RequestMapping(value = ApiUrls.ROOT_URL_CATEGORIES)
 public class CategoryRestController {
-
     private final Logger logger = LoggerFactory.getLogger(CategoryRestController.class);
     
-    Mapper mapper;
-    
-    CategoryService categoryService;
-    
-    SubCategoryService subCategoryService;
-
-    CategoryAssembler categoryAssembler;
-    
-    SubCategoryAssembler subCategoryAssembler;
-    
-    ProductService productService;
-    
-    ProductAssembler productAssembler;
+    private final Mapper mapper;
+    private final CategoryService categoryService;
+    private final SubCategoryService subCategoryService;
+    private final CategoryAssembler categoryAssembler;   
+    private final SubCategoryAssembler subCategoryAssembler;   
+    private final ProductService productService;   
+    private final ProductAssembler productAssembler;
     
     @Autowired
     public CategoryRestController(

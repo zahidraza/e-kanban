@@ -27,13 +27,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping(value = ApiUrls.ROOT_URL_USERS)
-public class UserRestController{
-    
+public class UserRestController{   
     private final Logger logger = LoggerFactory.getLogger(UserRestController.class);
     
-    @Autowired UserService userService;  //Service which will do all data retrieval/manipulation work
+    private final UserAssembler userAssembler;
 
-    @Autowired UserAssembler userAssembler;
+    @Autowired
+    public UserRestController(UserService userService, UserAssembler userAssembler) {
+        this.userService = userService;
+        this.userAssembler = userAssembler;
+    }
     
     @GetMapping
     public ResponseEntity<?> listAllUsers(Pageable pageable, PagedResourcesAssembler assembler) {

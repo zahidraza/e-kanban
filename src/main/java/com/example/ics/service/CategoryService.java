@@ -16,10 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class CategoryService {
-    
     private final Logger logger = LoggerFactory.getLogger(CategoryService.class);
     
-    @Autowired CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    
+    @Autowired 
+    public CategoryService(CategoryRepository categoryRepository){
+        this.categoryRepository = categoryRepository;
+    }
     
     public Category findOne(Long id, boolean initSubCategory, boolean initProduct){
         logger.debug("findOne(): id = {}",id);

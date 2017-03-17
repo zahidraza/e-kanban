@@ -26,9 +26,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
     private final Logger logger = LoggerFactory.getLogger(ProductService.class);
     
-    @Autowired ProductRepository productRepository;
-    
-    @Autowired ProductConverter converter;
+    private final ProductRepository productRepository;
+    private ProductConverter converter;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Autowired
+    public void setConverter(ProductConverter converter) {
+        this.converter = converter;
+    }
     
     public Product findOne(Long id, boolean initSections, boolean initSuupliers){
         logger.debug("findOne(): id = {}",id);

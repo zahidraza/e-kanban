@@ -24,14 +24,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = ApiUrls.ROOT_URL_SECTIONS)
-public class SectionRestController {
-    
+public class SectionRestController {    
     private final Logger logger = LoggerFactory.getLogger(SectionRestController.class);
     
-    @Autowired SectionService sectionService;
-    
-    @Autowired SectionAssembler sectionAssembler;
-    
+    private final SectionService sectionService;    
+    private final SectionAssembler sectionAssembler;
+
+    @Autowired
+    public SectionRestController(SectionService sectionService, SectionAssembler sectionAssembler) {
+        this.sectionService = sectionService;
+        this.sectionAssembler = sectionAssembler;
+    }
+
     @GetMapping(value = ApiUrls.URL_SECTIONS_SECTION)
     public ResponseEntity<?> loadSection(@PathVariable("secId") Long secId){
         logger.debug("loadSection(): secId = {}",secId);

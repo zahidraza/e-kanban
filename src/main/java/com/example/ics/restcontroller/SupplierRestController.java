@@ -27,13 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = ApiUrls.ROOT_URL_SUPPLIERS)
-public class SupplierRestController {
-    
+public class SupplierRestController { 
     private final Logger logger = LoggerFactory.getLogger(SupplierRestController.class);
     
-    @Autowired SupplierService supplierService;
-    
-    @Autowired SupplierAssembler supplierAssembler;
+    private final SupplierService supplierService;
+    private final SupplierAssembler supplierAssembler;
+
+    @Autowired
+    public SupplierRestController(SupplierService supplierService, SupplierAssembler supplierAssembler) {
+        this.supplierService = supplierService;
+        this.supplierAssembler = supplierAssembler;
+    }
     
     @GetMapping
     public ResponseEntity<?> listAllSuppliers(Pageable pageable, PagedResourcesAssembler assembler) {

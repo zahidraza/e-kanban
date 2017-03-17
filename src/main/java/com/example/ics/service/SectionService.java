@@ -17,7 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SectionService {
     private final Logger logger = LoggerFactory.getLogger(SectionService.class);
 
-    @Autowired SectionRepository sectionRepository;
+    private final SectionRepository sectionRepository;
+
+    @Autowired
+    public SectionService(SectionRepository sectionRepository) {
+        this.sectionRepository = sectionRepository;
+    }
 
     public Section findOne(Long id) {
         logger.debug("findOne(): id = {}",id);
