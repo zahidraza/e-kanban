@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class UserRestController{   
     private final Logger logger = LoggerFactory.getLogger(UserRestController.class);
     
+    private final UserService userService;
     private final UserAssembler userAssembler;
 
     @Autowired
