@@ -10,7 +10,8 @@ INSERT INTO `category` VALUES
 
 INSERT INTO `sub_category` VALUES 
 (1,'Test Sub Category 1',1),
-(2,'Test Sub Category 1',1);
+(2,'Test Sub Category 2',1),
+(3,'Test Sub Category 3',1);
 
 INSERT INTO `product` VALUES 
 (1,NULL,NULL,1.50,20000,NULL,NULL,NULL,1000,'Product 1',NULL,10,1.00,4,1,2,3,'DOZEN','KG',1),

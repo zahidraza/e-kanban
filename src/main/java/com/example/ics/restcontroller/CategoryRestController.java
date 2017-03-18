@@ -123,8 +123,10 @@ public class CategoryRestController {
             PagedResourcesAssembler assembler) {
         logger.debug("loadCategorySubCategories(): categoryId = {}",categoryId );
         Category category = categoryService.findOne(categoryId,false,false);
+        RestError error;
         if(category == null){
-            return new ResponseEntity<>("Category with id = " + categoryId + " not found", HttpStatus.NOT_FOUND);
+            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
         Page<SubCategory> page = subCategoryService.findPageByCategory(category, pageable);
         return new ResponseEntity<>(assembler.toResource(page, subCategoryAssembler), HttpStatus.OK);
@@ -159,8 +161,10 @@ public class CategoryRestController {
             ) {
         logger.debug("createCategorySubCategory(): categoryId= {} , subCategory = \n {}", categoryId, subCategory.toString());
         Category category = categoryService.findOne(categoryId,false,false);
+        RestError error;
         if(category == null){
-            return new ResponseEntity<>("Category with id = " + categoryId + " not found", HttpStatus.NOT_FOUND);
+            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
         subCategory.setCategory(category);
         subCategory = subCategoryService.save(subCategory);
