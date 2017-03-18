@@ -87,6 +87,22 @@ public class UserDto {
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
+    
+    public String toJsonString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\n");
+        if(id != null) builder.append("\"id\":" + id + ",\n");
+        if(name != null) builder.append("\"name\":\"" + name + "\",\n");
+        if(email != null) builder.append("\"email\":\"" + email + "\",\n");
+        if(role != null) builder.append("\"role\":\"" + role + "\",\n");
+        if(mobile != null) builder.append("\"mobile\":\"" + mobile + "\",");
+        
+        if(builder.length() > 2){
+            builder.setLength(builder.length()-1);
+        }
+        builder.append("\n}");
+        return builder.toString();
+    }
 
     @Override
     public String toString() {

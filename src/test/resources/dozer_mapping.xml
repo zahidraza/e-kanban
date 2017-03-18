@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://dozer.sourceforge.net
+   http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    
+    <mapping >
+      <class-a>com.example.ics.dto.UserDto</class-a>
+      <class-b>com.example.ics.entity.User</class-b>
+
+      <field custom-converter="com.example.ics.dozer.converter.StringRoleConverter">
+         <a>role</a>
+         <b>role</b>
+      </field>
+      
+   </mapping> 
+   
+   <mapping >
+      <class-a>com.example.ics.dto.ProductDto</class-a>
+      <class-b>com.example.ics.entity.Product</class-b>
+
+      <field custom-converter="com.example.ics.dozer.converter.LongCategoryConverter">
+         <a>categoryId</a>
+         <b>subCategory</b>
+      </field>
+      
+      <field custom-converter="com.example.ics.dozer.converter.LongSubCategoryConverter">
+         <a>subCategoryId</a>
+         <b>subCategory</b>
+      </field>
+      
+   </mapping>
+</mappings>

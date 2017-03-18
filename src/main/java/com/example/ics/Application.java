@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -40,12 +41,13 @@ public class Application extends SpringBootServletInitializer{
     
     
     @Bean
+    @Profile(value = {"production","default"})
     CommandLineRunner init(
             UserService userService) {
 
         return (args) -> {
             if(userService.count() == 0){
-                userService.save(new UserDto("Md Zahid Raza","zahid7292@gmail.com","ROLE_ADMIN","8987525008"));
+                userService.save(new UserDto("Md Zahid Raza","zahid7292@gmail.com","ADMIN","8987525008"));
             }           
         };
     }
