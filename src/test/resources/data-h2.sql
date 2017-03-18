@@ -4,7 +4,9 @@ INSERT INTO `user` VALUES
 (3,'taufeeque8@gmail.com','8987525008','Md Taufeeque Alam','$2a$10$77hLDsxw.pDU5eG/cPqlgOjQ8UQ.YLZjK2qHMmN3sD.qbkL8EOn/a','ROLE_USER');
 
 INSERT INTO `category` VALUES 
-(1,'Test Category 1');
+(1,'Test Category 1'),
+(2,'Test Category 2'),
+(3,'Test Category 3');
 
 INSERT INTO `sub_category` VALUES 
 (1,'Test Sub Category 1',1),

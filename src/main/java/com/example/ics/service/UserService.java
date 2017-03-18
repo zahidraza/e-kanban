@@ -33,7 +33,7 @@ public class UserService {
     public void setConverter(UserConverter converter) {
         this.converter = converter;
     }
-
+///////////////////////////////////////////////////////////////////////////////////
     public UserDto findOne(Long id) {
         logger.debug("findOne(): id = {}",id);
         User user = userRepository.findOne(id);

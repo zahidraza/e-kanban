@@ -1,8 +1,8 @@
 package com.example.ics.restcontroller;
 
 import com.example.ics.dto.UserDto;
+import com.example.ics.util.ApiUrls;
 import org.codehaus.jackson.map.ObjectMapper;
-import static org.hamcrest.Matchers.is;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,16 +40,17 @@ public class UserIntegrationTest {
     
     @Test
     public void getAllUsers() throws Exception{
-        this.mvc.perform(get("/api/users?sort=id,asc"))
+        this.mvc.perform(get(ApiUrls.ROOT_URL_USERS + "?sort=id,asc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$._embedded.userDtoList",hasSize(3)))
-                .andExpect(jsonPath("$._embedded.userDtoList[1].name",is("Md Jawed Akhtar")));
+                .andExpect(jsonPath("$._embedded.userDtoList[1].name",is("Md Jawed Akhtar")))
+                .andExpect(jsonPath("$._embedded.userDtoList[1]._links.self").exists());
     }
     
     @Test
     public void getAllUsersPage() throws Exception{
-        this.mvc.perform(get("/api/users?page=1&size=1&sort=id,asc"))
+        this.mvc.perform(get(ApiUrls.ROOT_URL_USERS + "?page=1&size=1&sort=id,asc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$._embedded.userDtoList",hasSize(1)))
@@ -64,13 +65,13 @@ public class UserIntegrationTest {
     
     @Test
     public void getUser() throws Exception{
-        this.mvc.perform(get("/api/users/1"))
+        this.mvc.perform(get(ApiUrls.ROOT_URL_USERS +"/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.name", is("Md Zahid Raza")))
                 .andExpect(jsonPath("$._links.self").exists());
         
-        this.mvc.perform(get("/api/users/10"))
+        this.mvc.perform(get(ApiUrls.ROOT_URL_USERS +"/10"))
                 .andExpect(status().isNotFound());
     }
     
@@ -78,33 +79,33 @@ public class UserIntegrationTest {
     @Test
     public void createAndDeleteUser() throws Exception{
         UserDto user = new UserDto("Test User", "test@gmail.com", "USER", "8987525008");
-        MvcResult mvcResult = mvc.perform(post("/api/users")
+        MvcResult mvcResult = mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isCreated())
                 .andReturn();
         String locationUri = mvcResult.getResponse().getHeader("Location");
-        assertTrue(locationUri.contains("/api/users"));
+        assertTrue(locationUri.contains(ApiUrls.ROOT_URL_USERS));
         
         int idx = locationUri.lastIndexOf('/');
         String id = locationUri.substring(idx+1);
         
-        this.mvc.perform(get("/api/users/{id}",id))
+        this.mvc.perform(get( ApiUrls.ROOT_URL_USERS +"/{id}",id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.name", is("Test User")));
         
-        this.mvc.perform(delete("/api/users/{id}", id))
+        this.mvc.perform(delete(ApiUrls.ROOT_URL_USERS + "/{id}", id))
                 .andExpect(status().isNoContent());
 
-        this.mvc.perform(get("/api/users/{id}", id))
+        this.mvc.perform(get(ApiUrls.ROOT_URL_USERS + "/{id}", id))
                 .andExpect(status().isNotFound());
     }
     
     @Test
     public void createUserBadRequest() throws Exception{
         UserDto user = new UserDto();
-        this.mvc.perform(post("/api/users")
+        this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -112,7 +113,7 @@ public class UserIntegrationTest {
 
         //Test each fields one by one
         user = new UserDto("", "test@gmail.com", "ADMIN", "8987525008");
-        this.mvc.perform(post("/api/users")
+        this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -121,7 +122,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].message", containsString("length must be between 5")));
         
         user = new UserDto("Md Zahid Raza", "test", "ADMIN", "8987525008");
-        this.mvc.perform(post("/api/users")
+        this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -130,7 +131,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].message", containsString("Incorrect email")));
         
         user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMINISTARTOR", "8987525008");
-        this.mvc.perform(post("/api/users")
+        this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -139,7 +140,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].message", containsString("Accepted values are [ADMIN,USER")));
         
         user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMIN", "8987525");
-        this.mvc.perform(post("/api/users")
+        this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())

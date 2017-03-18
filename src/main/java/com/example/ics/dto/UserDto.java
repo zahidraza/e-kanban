@@ -95,10 +95,10 @@ public class UserDto {
         if(name != null) builder.append("\"name\":\"" + name + "\",\n");
         if(email != null) builder.append("\"email\":\"" + email + "\",\n");
         if(role != null) builder.append("\"role\":\"" + role + "\",\n");
-        if(mobile != null) builder.append("\"mobile\":\"" + mobile + "\",");
+        if(mobile != null) builder.append("\"mobile\":\"" + mobile + "\",\n");
         
         if(builder.length() > 2){
-            builder.setLength(builder.length()-1);
+            builder.setLength(builder.length()-2);
         }
         builder.append("\n}");
         return builder.toString();

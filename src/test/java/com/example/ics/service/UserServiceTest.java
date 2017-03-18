@@ -1,11 +1,16 @@
 package com.example.ics.service;
 
+import com.example.ics.dto.UserDto;
+import com.example.ics.entity.User;
+import com.example.ics.enums.Role;
 import com.example.ics.respository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
+import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.BDDMockito.*;
 import org.mockito.Mockito;
 
 public class UserServiceTest {
@@ -13,14 +18,34 @@ public class UserServiceTest {
     private UserRepository userRepository;
     private Mapper mapper;
     
-    //@Before
+    private List<User> userList = new ArrayList<>();
+    private List<UserDto> userDtoList = new ArrayList<>();
+    
+    @Before
     public void setUp(){
         this.userRepository = Mockito.mock(UserRepository.class);
-        List<String> list = new ArrayList<>();
-        list.add("dozer_mapping.xml");
-        this.mapper =  new DozerBeanMapper(list);
+        this.mapper = Mockito.mock(Mapper.class);
         this.userService = new UserService(userRepository, mapper);
+        userList.add(new User("Md Zahid Raza", "zahid7292@gmail.com", "admin", Role.ADMIN.getValue(), "8987525008"));
+        userDtoList.add(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", Role.ADMIN.name(), "8987525008"));
     }
     
+    @Test
+    public void findOneSuccess(){
+        given(this.userRepository.findOne(anyLong())).willReturn(userList.get(0));
+        given(this.mapper.map(userList.get(0), UserDto.class)).willReturn(userDtoList.get(0));
+        
+        assertNotNull(this.userService.findOne(1L));
+        
+        verify(userRepository,atLeastOnce()).findOne(anyLong());
+        verify(mapper,atLeastOnce()).map(userList.get(0), UserDto.class);
+    }
+    
+    @Test
+    public void findOneFail(){
+        given(this.userRepository.findOne(anyLong())).willReturn(null);       
+        assertNull(this.userService.findOne(1L));        
+        verify(userRepository,atLeastOnce()).findOne(anyLong());
+    }
     
 }
