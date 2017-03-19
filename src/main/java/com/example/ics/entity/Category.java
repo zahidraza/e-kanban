@@ -7,6 +7,7 @@ package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -16,6 +17,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -36,6 +40,11 @@ public class Category implements Serializable{
     @JsonIgnore
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
     private Set<SubCategory> subCategoryList;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
 
     public Category() {
     }
@@ -71,7 +80,15 @@ public class Category implements Serializable{
     public void setSubCategoryList(Set<SubCategory> subCategorySet) {
         this.subCategoryList = subCategorySet;
     }
-    
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     public String toJsonString(){
         StringBuilder builder = new StringBuilder();
         builder.append("{\n");

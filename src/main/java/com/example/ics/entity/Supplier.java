@@ -4,6 +4,7 @@ import com.example.ics.enums.StringEnum;
 import com.example.ics.enums.SupplierType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -13,6 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -44,6 +48,11 @@ public class Supplier implements Serializable{
     @JsonIgnore
     @ManyToMany(mappedBy = "supplierList")
     private Set<Product> productList;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
     
     public Supplier() {
     }
@@ -102,6 +111,13 @@ public class Supplier implements Serializable{
         this.address = address;
     }
 
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 
     public String toJsonString(){
         StringBuilder builder = new StringBuilder();

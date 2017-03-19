@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  *
@@ -38,8 +39,9 @@ public class Inventory implements Serializable{
     
     @Column(name = "BIN_STATE", nullable = false)
     private String binState;
-    
-    @Column(name = "LAST_UPDATED",nullable = false)
+
+    @Version
+    @Column(name = "LAST_UPDATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 

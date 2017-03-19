@@ -5,6 +5,7 @@
  */
 package com.example.ics.entity;
 
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  *
@@ -37,6 +41,11 @@ public class Consumption {
     
     @Column(name = "VALUE")
     private Long value;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
 
     public Consumption() {
     }
@@ -79,6 +88,14 @@ public class Consumption {
 
     public void setValue(Long value) {
         this.value = value;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.ics.entity;
 
 import com.example.ics.enums.Role;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,6 +39,11 @@ public class User implements Serializable{
     
     @Column(name = "ROLE", nullable = false)
     private String role;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
 
     public User() {
     }
@@ -93,6 +103,14 @@ public class User implements Serializable{
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override

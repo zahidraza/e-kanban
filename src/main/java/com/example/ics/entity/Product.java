@@ -8,6 +8,7 @@ package com.example.ics.entity;
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,6 +22,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  *
@@ -89,7 +93,7 @@ public class Product {
     @Column(name = "PACKET_SIZE",nullable = false)
     private Integer packetSize;
     
-    @Column(name = "CALSS_TYPE",nullable = true)
+    @Column(name = "CLASS_TYPE",nullable = true)
     private String classType;
     
     @Column(name = "KANBAN_TYPE",nullable = true)
@@ -103,6 +107,11 @@ public class Product {
     
     @Column(name = "BIN_QTY",nullable = true)
     private Long binQty;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
 
     public Product() {
     }
@@ -282,6 +291,15 @@ public class Product {
 //    public void setSupplierList(Set<Supplier> supplierList) {
 //        this.supplierList = supplierList;
 //    }
+
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 
     @Override
     public int hashCode() {

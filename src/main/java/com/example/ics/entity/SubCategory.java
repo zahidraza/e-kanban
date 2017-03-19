@@ -7,6 +7,7 @@ package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -18,6 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -43,6 +47,11 @@ public class SubCategory implements Serializable{
     @JsonIgnore
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
     private Set<Product> productList;
+
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
+    private Date lastUpdated;
 
     public SubCategory() {
     }
@@ -87,6 +96,14 @@ public class SubCategory implements Serializable{
 
     public void setProductList(Set<Product> productList) {
         this.productList = productList;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override

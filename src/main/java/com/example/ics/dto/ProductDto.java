@@ -10,6 +10,7 @@ import com.example.ics.enums.StringEnum;
 import com.example.ics.util.MiscUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
@@ -79,6 +80,8 @@ public class ProductDto {
     
     @Digits(integer = 10,fraction = 0)
     private Long binQty;
+
+    private Date lastUpdated;
     
     private List<String> sections;
     
@@ -287,6 +290,14 @@ public class ProductDto {
 
     public void setSuppliers(List<String> suppliers) {
         this.suppliers = suppliers;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
