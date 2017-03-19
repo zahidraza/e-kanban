@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,22 @@ public class GenericExceptionHandler {
 
     @Autowired
     MessageSource messageSource;
+    
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<?> methodNotSupported(HttpRequestMethodNotSupportedException e){
+        logger.debug("methodNotSupported()");
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        for(String s : e.getSupportedMethods()){
+            builder.append(s + ",");
+        }
+        if(builder.length() > 1){
+            builder.setLength(builder.length()-1);
+        }
+        builder.append(']');
+        
+        return response(HttpStatus.METHOD_NOT_ALLOWED, 405,"Supported methods are " + builder.toString() , e.getMessage(), "");
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> processValidationError(MethodArgumentNotValidException ex) {
@@ -58,7 +75,8 @@ public class GenericExceptionHandler {
 //    }
     @ExceptionHandler
     ResponseEntity<?> handleException(Exception e) {
-        logger.debug("handleException: {}",e.getMessage());
+        e.printStackTrace();
+        logger.debug("handleException: {} \n {}",e , e.getMessage());
         String msg = e.getMessage();
         String devMsg = "";
         do{

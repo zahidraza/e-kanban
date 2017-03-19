@@ -8,6 +8,7 @@ package com.example.ics.entity;
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -40,14 +41,14 @@ public class Product {
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECTION_ID")
     )
-    private Set<Section> sectionList;
+    private Set<Section> sectionList = new HashSet<>();
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PRODUCT_SUPPLIER",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
     )
-    private Set<Supplier> supplierList;
+    private Set<Supplier> supplierList = new HashSet<>();
     
     @Column(name = "NAME",nullable = false)
     private String name;
@@ -270,17 +271,17 @@ public class Product {
         return sectionList;
     }
 
-    public void setSectionList(Set<Section> sectionList) {
-        this.sectionList = sectionList;
-    }
+//    public void setSectionList(Set<Section> sectionList) {
+//        this.sectionList = sectionList;
+//    }
 
     public Set<Supplier> getSupplierList() {
         return supplierList;
     }
-
-    public void setSupplierList(Set<Supplier> supplierList) {
-        this.supplierList = supplierList;
-    }
+//
+//    public void setSupplierList(Set<Supplier> supplierList) {
+//        this.supplierList = supplierList;
+//    }
 
     @Override
     public int hashCode() {
@@ -306,7 +307,7 @@ public class Product {
         }
         return true;
     }
-    
+       
 //    public String toJsonString(){
 //        StringBuilder builder = new StringBuilder();
 //        builder.append("{\n");
@@ -323,4 +324,8 @@ public class Product {
 //        return builder.toString();
 //    }
 
+    @Override
+    public String toString() {
+        return "Product{" + "id=" + id + ", subCategory=" + subCategory + ", name=" + name + ", description=" + description + ", price=" + price + ", itemCode=" + itemCode + ", timeOrdering=" + timeOrdering + ", timeProcurement=" + timeProcurement + ", timeTransporation=" + timeTransporation + ", timeBuffer=" + timeBuffer + ", uomPurchase=" + uomPurchase + ", uomConsumption=" + uomConsumption + ", conversionFactor=" + conversionFactor + ", minOrderQty=" + minOrderQty + ", packetSize=" + packetSize + ", classType=" + classType + ", kanbanType=" + kanbanType + ", demand=" + demand + ", noOfBins=" + noOfBins + ", binQty=" + binQty + '}';
+    }
 }

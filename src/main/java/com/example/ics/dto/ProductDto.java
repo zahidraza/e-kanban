@@ -1,10 +1,16 @@
 package com.example.ics.dto;
 
+import com.example.ics.entity.Category;
+import com.example.ics.entity.Section;
+import com.example.ics.entity.SubCategory;
+import com.example.ics.entity.Supplier;
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
 import com.example.ics.enums.StringEnum;
+import com.example.ics.util.MiscUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -13,11 +19,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class ProductDto {
     
-    @JsonIgnore
-    private Long categoryId;
+    private Category category;
     
-    @JsonIgnore
-    private Long subCategoryId;
+    private SubCategory subCategory;
     
     private Long id;
     
@@ -75,22 +79,31 @@ public class ProductDto {
     
     @Digits(integer = 10,fraction = 0)
     private Long binQty;
+    
+    private List<String> sections;
+    
+    private List<String> suppliers;
+    
+    private List<Section> sectionList ;
+    
+    private List<Supplier> supplierList;
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public Long getSubCategoryId() {
-        return subCategoryId;
+    public SubCategory getSubCategory() {
+        return subCategory;
     }
 
-    public void setSubCategoryId(Long subCategoryId) {
-        this.subCategoryId = subCategoryId;
+    public void setSubCategory(SubCategory subCategory) {
+        this.subCategory = subCategory;
     }
+
 
     public Long getId() {
         return id;
@@ -244,8 +257,41 @@ public class ProductDto {
         this.binQty = binQty;
     }
 
+    public List<Section> getSectionList() {
+        return sectionList;
+    }
+
+    public void setSectionList(List<Section> sectionList) {
+        this.sectionList = sectionList;
+    }
+
+    public List<Supplier> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<Supplier> supplierList) {
+        this.supplierList = supplierList;
+    }
+
+    public List<String> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<String> sections) {
+        this.sections = sections;
+    }
+
+    public List<String> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<String> suppliers) {
+        this.suppliers = suppliers;
+    }
+
     @Override
     public String toString() {
-        return "ProductDto{" + "id=" + id + ", name=" + name + ", description=" + description + ", price=" + price + ", itemCode=" + itemCode + ", timeOrdering=" + timeOrdering + ", timeProcurement=" + timeProcurement + ", timeTransporation=" + timeTransporation + ", timeBuffer=" + timeBuffer + ", uomPurchase=" + uomPurchase + ", uomConsumption=" + uomConsumption + ", conversionFactor=" + conversionFactor + ", minOrderQty=" + minOrderQty + ", packetSize=" + packetSize + ", classType=" + classType + ", kanbanType=" + kanbanType + ", demand=" + demand + ", noOfBins=" + noOfBins + ", binQty=" + binQty + '}';
+        return "ProductDto{" + "category=" + category + ", subCategory=" + subCategory + ", id=" + id + ", name=" + name + ", description=" + description + ", price=" + price + ", itemCode=" + itemCode + ", timeOrdering=" + timeOrdering + ", timeProcurement=" + timeProcurement + ", timeTransporation=" + timeTransporation + ", timeBuffer=" + timeBuffer + ", uomPurchase=" + uomPurchase + ", uomConsumption=" + uomConsumption + ", conversionFactor=" + conversionFactor + ", minOrderQty=" + minOrderQty + ", packetSize=" + packetSize + ", classType=" + classType + ", kanbanType=" + kanbanType + ", demand=" + demand + ", noOfBins=" + noOfBins + ", binQty=" + binQty + '}';
     }
+
 }

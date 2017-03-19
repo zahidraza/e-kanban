@@ -8,10 +8,15 @@ package com.example.ics.service;
 import com.example.ics.dto.ProductDto;
 import com.example.ics.entity.Category;
 import com.example.ics.entity.Product;
+import com.example.ics.entity.Section;
 import com.example.ics.entity.SubCategory;
+import com.example.ics.entity.Supplier;
 import com.example.ics.page.converter.ProductConverter;
 import com.example.ics.respository.ProductRepository;
+import com.example.ics.respository.SectionRepository;
+import com.example.ics.respository.SupplierRepository;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +32,15 @@ public class ProductService {
     private final Logger logger = LoggerFactory.getLogger(ProductService.class);
     
     private final ProductRepository productRepository;
+    private final SectionRepository sectionRepository;
+    private final SupplierRepository supplierRepository;
     private ProductConverter converter;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,SectionRepository sectionRepository,SupplierRepository supplierRepository) {
         this.productRepository = productRepository;
+        this.sectionRepository = sectionRepository;
+        this.supplierRepository = supplierRepository;
     }
 
     @Autowired
@@ -57,8 +66,13 @@ public class ProductService {
     }
     
     public Page<ProductDto> findPageBySubCategory(SubCategory subCategory, Pageable pageable){
-        logger.debug("findAllByPage()");
-        return productRepository.findBySubCategory(subCategory,pageable).map(converter);
+        logger.debug("findPageBySubCategory()");
+        Page<Product> page = productRepository.findBySubCategory(subCategory,pageable);
+        page.forEach(p -> {
+            Hibernate.initialize(p.getSectionList());
+            Hibernate.initialize(p.getSupplierList());
+        });
+        return page.map(converter);
     }
 
     
@@ -78,9 +92,22 @@ public class ProductService {
     }
 
     @Transactional
-    public Product save(Product product) {
+    public Product save(Product product, List<Long> sections, List<Long> suppliers ) {
         logger.debug("save()");
-        return productRepository.save(product);
+        product = productRepository.save(product);
+        Set<Section> sectionList = product.getSectionList();
+        Set<Supplier> supplierList = product.getSupplierList();
+        if(sections != null){
+            sections.forEach(secId -> {
+                sectionList.add(sectionRepository.findOne(secId));
+            });
+        }
+        if(suppliers != null){
+            suppliers.forEach(secId -> {
+                supplierList.add(supplierRepository.findOne(secId));
+            });
+        }
+        return product;
     }
 
 //    @Transactional

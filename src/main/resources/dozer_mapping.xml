@@ -19,13 +19,13 @@
       <class-a>com.example.ics.dto.ProductDto</class-a>
       <class-b>com.example.ics.entity.Product</class-b>
 
-      <field custom-converter="com.example.ics.dozer.converter.LongCategoryConverter">
-         <a>categoryId</a>
+      <field custom-converter="com.example.ics.dozer.converter.CategorySubCategoryConverter">
+         <a>category</a>
          <b>subCategory</b>
       </field>
       
-      <field custom-converter="com.example.ics.dozer.converter.LongSubCategoryConverter">
-         <a>subCategoryId</a>
+      <field copy-by-reference="true">
+         <a>subCategory</a>
          <b>subCategory</b>
       </field>
       

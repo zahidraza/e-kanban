@@ -29,10 +29,10 @@ public class ProductAssembler extends ResourceAssemblerSupport<ProductDto, Resou
     }
 
     @Override
-    public Resource toResource(ProductDto productDto) {
+    public Resource toResource(ProductDto productDto) {       
         Collection<Link> links = new ArrayList<>();
         links.add(linkTo(methodOn(CategoryRestController.class)
-                        .loadCategorySubCategoryProduct(productDto.getCategoryId(),productDto.getSubCategoryId(),productDto.getId()))
+                        .loadCategorySubCategoryProduct(productDto.getCategory().getId(),productDto.getSubCategory().getId(),productDto.getId()))
                         .withSelfRel()
         );
         return new Resource<>(productDto, links);

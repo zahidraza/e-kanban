@@ -9,10 +9,12 @@ import java.util.List;
 import org.dozer.Mapper;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.mockito.BDDMockito.*;
 import org.mockito.Mockito;
 
+//@Ignore
 public class UserServiceTest {
     private UserService userService;
     private UserRepository userRepository;

@@ -13,19 +13,19 @@ import org.dozer.DozerConverter;
  *
  * @author razamd
  */
-public class LongCategoryConverter extends DozerConverter<Long, SubCategory>{
-    public LongCategoryConverter() {
-        super(Long.class, SubCategory.class);
+public class CategorySubCategoryConverter extends DozerConverter<Category, SubCategory>{
+    public CategorySubCategoryConverter() {
+        super(Category.class, SubCategory.class);
     }
 
     @Override
-    public SubCategory convertTo(Long source, SubCategory destination) {
+    public SubCategory convertTo(Category source, SubCategory destination) {
         return null;
     }
 
     @Override
-    public Long convertFrom(SubCategory source, Long destination) {
+    public Category convertFrom(SubCategory source, Category destination) {
         if(source == null) return null;
-        return source.getCategory().getId();
+        return source.getCategory();
     }
 }
