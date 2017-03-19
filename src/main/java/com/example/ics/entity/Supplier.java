@@ -48,6 +48,12 @@ public class Supplier implements Serializable{
     public Supplier() {
     }
 
+    public Supplier(String name, String contactPerson, String supplierType) {
+        this.name = name;
+        this.contactPerson = contactPerson;
+        this.supplierType = supplierType;
+    }
+
     public Long getId() {
         return id;
     }
@@ -94,6 +100,34 @@ public class Supplier implements Serializable{
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+
+    public String toJsonString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\n");
+        if(id != null) builder.append("\"id\":" + id + ",\n");
+        if(name != null) builder.append("\"name\":\"" + name + "\",\n");
+        if(contactPerson != null) builder.append("\"contactPerson\":\"" + contactPerson + "\",\n");
+        if(supplierType != null) builder.append("\"supplierType\":\"" + supplierType + "\",\n");
+        if(address != null){
+            builder.append("\"address\":{\n");
+            if(address.getStreet() != null) builder.append("\"street\":\"" + address.getStreet() + "\",\n");
+            if(address.getLandmark() != null) builder.append("\"landmark\":\"" + address.getLandmark() + "\",\n");
+            if(address.getCity() != null) builder.append("\"city\":\"" + address.getCity() + "\",\n");
+            if(address.getState() != null) builder.append("\"state\":\"" + address.getState() + "\",\n");
+            if(address.getCountry() != null) builder.append("\"country\":\"" + address.getCountry() + "\",\n");
+            if(address.getZip() != null) builder.append("\"zip\":\"" + address.getZip() + "\",\n");
+            if(address.getStreet() != null || address.getLandmark() != null || address.getCity() != null || address.getState() != null || address.getCountry() != null || address.getZip() != null){
+                builder.setLength(builder.length()-2);
+            }
+            builder.append("\n}");
+        }
+        if(builder.length() > 2){
+            builder.setLength(builder.length()-2);
+        }
+        builder.append("\n}");
+        return builder.toString();
     }
 
     @Override

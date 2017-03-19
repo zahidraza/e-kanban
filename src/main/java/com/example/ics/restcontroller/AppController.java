@@ -17,6 +17,9 @@ public class AppController {
         ResourceSupport resources = new ResourceSupport();
         ControllerLinkBuilder linkBuilder = linkTo(AppController.class);
         resources.add(linkBuilder.slash("users").withRel("users"));
+        resources.add(linkBuilder.slash("categories").withRel("categories"));
+        resources.add(linkBuilder.slash("sections").withRel("section"));
+        resources.add(linkBuilder.slash("suppliers").withRel("suppliers"));
         return ResponseEntity.ok(resources);
     }
 }

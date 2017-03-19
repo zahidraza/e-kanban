@@ -17,6 +17,17 @@ INSERT INTO `product` VALUES
 (1,NULL,NULL,1.50,20000,NULL,NULL,NULL,1000,'Product 1',NULL,10,1.00,4,1,2,3,'DOZEN','KG',1),
 (2,NULL,NULL,456.56,20000,NULL,NULL,NULL,1000,'Product 2',NULL,10,5234523456.34,4,1,2,3,'DOZEN','KG',1),
 (3,NULL,NULL,456.56,20000,NULL,NULL,NULL,1000,'Product 3',NULL,10,5234523456.34,4,1,2,3,'DOZEN','KG',2);
+
+INSERT INTO `section` VALUES
+(1,'Test Section 1'),
+(2,'Test Section 2'),
+(3,'Test Section 3');
+
+INSERT INTO `supplier` VALUES
+(1,'BLR','IN',NULL,NULL,'Test Street 1','560001','Test Contact Person 1','Test Supplier 1','LOCAL'),
+(2,'BLR','IN',NULL,NULL,'Test Street 1','560001','Test Contact Person 2','Test Supplier 2','NON_LOCAL'),
+(3,'BLR','IN',NULL,NULL,'Test Street 3','560001','Test Contact Person 3','Test Supplier 3','LOCAL');
+
 /*
 CREATE TABLE `product` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

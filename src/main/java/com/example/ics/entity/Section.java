@@ -66,6 +66,19 @@ public class Section {
         this.productList = productList;
     }
 
+
+    public String toJsonString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\n");
+        if(id != null) builder.append("\"id\":" + id + ",\n");
+        if(name != null) builder.append("\"name\":\"" + name + "\",\n");
+        if(builder.length() > 2){
+            builder.setLength(builder.length()-2);
+        }
+        builder.append("\n}");
+        return builder.toString();
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;

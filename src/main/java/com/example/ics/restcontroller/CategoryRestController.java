@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 @RestController
-@RequestMapping(value = ApiUrls.ROOT_URL_CATEGORIES)
+@RequestMapping(ApiUrls.ROOT_URL_CATEGORIES)
 public class CategoryRestController {
 
     private final Logger logger = LoggerFactory.getLogger(CategoryRestController.class);
@@ -89,7 +89,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(assembler.toResource(page, categoryAssembler), HttpStatus.OK);
     }
 
-    @GetMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY)
+    @GetMapping(ApiUrls.URL_CATEGORIES_CATEGORY)
     public ResponseEntity<?> loadCategory(@PathVariable("categoryId") Long categoryId) {
         logger.debug("getCategory(): categoryId = {}", categoryId);
         Category category = categoryService.findOne(categoryId, false, false);
@@ -107,7 +107,7 @@ public class CategoryRestController {
         return ResponseEntity.created(URI.create(selfLink.getHref())).build();
     }
 
-    @PutMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY)
+    @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY)
     public ResponseEntity<?> updateCategory(@PathVariable("categoryId") long categoryId, @Valid @RequestBody Category category) {
         logger.debug("updateCategory(): id = {} \n {}", categoryId, category);
         if (!categoryService.exists(categoryId)) {
@@ -118,7 +118,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(categoryAssembler.toResource(category), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY)
+    @DeleteMapping(ApiUrls.URL_CATEGORIES_CATEGORY)
     public ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") long categoryId) {
         logger.debug("deleteCategory(): categoryId = {}", categoryId);
         if (!categoryService.exists(categoryId)) {
@@ -129,7 +129,7 @@ public class CategoryRestController {
     }
 
     /////////////////////////////SubCategory API /////////////////////////
-    @GetMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES)
+    @GetMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES)
     public ResponseEntity<?> loadCategorySubCategories(
             @PathVariable("categoryId") Long categoryId,
             Pageable pageable,
@@ -145,7 +145,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(assembler.toResource(page, subCategoryAssembler), HttpStatus.OK);
     }
 
-    @GetMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
+    @GetMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
     public ResponseEntity<?> loadCategorySubCategory(
             @PathVariable("categoryId") Long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId) {
@@ -167,7 +167,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(subCategoryAssembler.toResource(subCategory), HttpStatus.OK);
     }
 
-    @PostMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES)
+    @PostMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES)
     public ResponseEntity<?> createCategorySubCategory(
             @PathVariable("categoryId") Long categoryId,
             @Valid @RequestBody SubCategory subCategory
@@ -185,7 +185,7 @@ public class CategoryRestController {
         return ResponseEntity.created(URI.create(link.getHref())).build();
     }
 
-    @PutMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
+    @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
     public ResponseEntity<?> updateCategorySubCategory(
             @PathVariable("categoryId") long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
@@ -209,7 +209,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(subCategoryAssembler.toResource(subCategory), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
+    @DeleteMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
     public ResponseEntity<?> deleteCategorySubCategory(@PathVariable("categoryId") long categoryId, @PathVariable("subCategoryId") Long subCategoryId) {
 
         logger.debug("deleteCategorySubCategory(): categoryId = {} , subCategoryId = {}", categoryId, subCategoryId);
@@ -232,7 +232,7 @@ public class CategoryRestController {
     }
 
     /////////////////////////////Product API /////////////////////////
-    @GetMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS)
+    @GetMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS)
     public ResponseEntity<?> loadCategorySubCategoryProducts(
             @PathVariable("categoryId") Long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
@@ -258,7 +258,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(assembler.toResource(page, productAssembler), HttpStatus.OK);
     }
 
-    @GetMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS_PRODUCT)
+    @GetMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS_PRODUCT)
     public ResponseEntity<?> loadCategorySubCategoryProduct(
             @PathVariable("categoryId") Long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
@@ -289,7 +289,7 @@ public class CategoryRestController {
         return new ResponseEntity<>(productAssembler.toResource(mapper.map(product, ProductDto.class)), HttpStatus.OK);
     }
 
-    @PostMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS)
+    @PostMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS)
     public ResponseEntity<?> createCategorySubCategoryProduct(
             @PathVariable("categoryId") Long categoryId,
             @PathVariable("subCategoryId") Long subCategoryId,
@@ -372,7 +372,7 @@ public class CategoryRestController {
 
     }
 
-//    @PutMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
+//    @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
 //    public ResponseEntity<?> updateCategorySubCategory(
 //            @PathVariable("categoryId") long categoryId,
 //            @PathVariable("subCategoryId") Long subCategoryId,
@@ -397,7 +397,7 @@ public class CategoryRestController {
 //        return new ResponseEntity<>(subCategoryAssembler.toResource(subCategory), HttpStatus.OK);
 //    }
 //  
-//    @DeleteMapping(value = ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
+//    @DeleteMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
 //    public ResponseEntity<?> deleteCategorySubCategory(@PathVariable("categoryId") long categoryId,@PathVariable("subCategoryId") Long subCategoryId) {
 //        
 //        logger.debug("deleteCategorySubCategory(): categoryId = {} , subCategoryId = {}",categoryId, subCategoryId );

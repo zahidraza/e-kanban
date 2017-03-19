@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping(value = ApiUrls.ROOT_URL_USERS)
+@RequestMapping(ApiUrls.ROOT_URL_USERS)
 public class UserRestController{   
     private final Logger logger = LoggerFactory.getLogger(UserRestController.class);
     
@@ -46,7 +46,7 @@ public class UserRestController{
         return new ResponseEntity<>(assembler.toResource(page, userAssembler), HttpStatus.OK);
     }
   
-    @GetMapping(value = ApiUrls.URL_USERS_USER)
+    @GetMapping(ApiUrls.URL_USERS_USER)
     public ResponseEntity<?> getUser(@PathVariable("userId") long userId) {
         logger.debug("getUser(): userId = {}",userId);
         UserDto user = userService.findOne(userId);
@@ -64,7 +64,7 @@ public class UserRestController{
         return ResponseEntity.created(URI.create(selfLink.getHref())).build();
     }
  
-    @PutMapping(value = ApiUrls.URL_USERS_USER)
+    @PutMapping(ApiUrls.URL_USERS_USER)
     public ResponseEntity<?> updateUser(@PathVariable("userId") long userId,@Valid @RequestBody UserDto user) {
         logger.debug("updateUser(): userId = {} \n {}",userId,user);
         if (!userService.exists(userId)) {
@@ -75,7 +75,7 @@ public class UserRestController{
         return new ResponseEntity<>(userAssembler.toResource(user), HttpStatus.OK);
     }
   
-    @DeleteMapping(value = ApiUrls.URL_USERS_USER)
+    @DeleteMapping(ApiUrls.URL_USERS_USER)
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") long userId) {
         logger.debug("deleteUser(): id = {}",userId);
         if (!userService.exists(userId)) {

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @SpringBootApplication
 @Controller
-public class Application extends SpringBootServletInitializer{
+public class Application/* extends SpringBootServletInitializer*/{
     
     private final Logger logger = LoggerFactory.getLogger(Application.class);
     
@@ -33,11 +33,11 @@ public class Application extends SpringBootServletInitializer{
         SpringApplication.run(Application.class, args);
     }
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Application.class);
-    }
-    
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(Application.class);
+//    }
+//    
     
     
     @Bean

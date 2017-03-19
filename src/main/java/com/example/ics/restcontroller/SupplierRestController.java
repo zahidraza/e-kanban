@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = ApiUrls.ROOT_URL_SUPPLIERS)
+@RequestMapping(ApiUrls.ROOT_URL_SUPPLIERS)
 public class SupplierRestController { 
     private final Logger logger = LoggerFactory.getLogger(SupplierRestController.class);
     
@@ -46,7 +46,7 @@ public class SupplierRestController {
         return new ResponseEntity<>(assembler.toResource(page, supplierAssembler), HttpStatus.OK);
     }
     
-    @GetMapping(value = ApiUrls.URL_SUPPLIERS_SUPPLIER)
+    @GetMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
     public ResponseEntity<?> loadSupplier(@PathVariable("supplierId") Long supplierId){
         logger.debug("loadSupplier(): supplierId = {}",supplierId);
         Supplier supplier = supplierService.findOne(supplierId);
@@ -65,7 +65,7 @@ public class SupplierRestController {
         return ResponseEntity.created(URI.create(selfLink.getHref())).build();
     }
  
-//    @PutMapping(value = ApiUrls.URL_SECTIONS_SECTION)
+//    @PutMapping(ApiUrls.URL_SECTIONS_SECTION)
 //    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") long supplierId,@Valid @RequestBody Supplier supplier) {
 //        logger.debug("updateSupplier(): supplierId = {} \n {}",supplierId,supplier);
 //        if (!supplierService.exists(supplierId)) {
@@ -76,7 +76,7 @@ public class SupplierRestController {
 //        return new ResponseEntity<>(supplierAssembler.toResource(supplier), HttpStatus.OK);
 //    }
   
-    @DeleteMapping(value = ApiUrls.URL_SUPPLIERS_SUPPLIER)
+    @DeleteMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
     public ResponseEntity<Void> deleteSupplier(@PathVariable("supplierId") long supplierId) {
         logger.debug("deleteSupplier(): id = {}",supplierId);
         if (!supplierService.exists(supplierId)) {
