@@ -2,6 +2,7 @@ package com.example.ics.service;
 
 import com.example.ics.dto.UserDto;
 import com.example.ics.entity.User;
+import com.example.ics.enums.Role;
 import com.example.ics.page.converter.UserConverter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final Mapper mapper;
     private UserConverter converter;
-    
+
+    @Autowired
     public UserService(UserRepository userRepository, Mapper mapper){
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -90,7 +92,10 @@ public class UserService {
     public UserDto update(UserDto userDto) {
         logger.debug("update()");
         User user = userRepository.findOne(userDto.getId());
-        user = mapper.map(userDto, User.class);
+        if(userDto.getName() != null)   user.setName(userDto.getName());
+        if(userDto.getEmail() != null)   user.setEmail(userDto.getEmail());
+        if(userDto.getMobile() != null)   user.setMobile(userDto.getMobile());
+        if(userDto.getRole() != null)   user.setRole(Role.parse("ROLE_" + userDto.getRole()));
         return mapper.map(user, UserDto.class);
     }
     

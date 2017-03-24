@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ics
+    username: root
+    password: zahid
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    format-sql: false

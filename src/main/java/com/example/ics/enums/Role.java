@@ -1,7 +1,7 @@
 package com.example.ics.enums;
 
 public enum Role {
-    ADMIN("ROLE_ADMIN"), MERCHANT("ROLE_MERCHANT"), USER("ROLE_USER");
+    ADMIN("ROLE_ADMIN"), STORE("ROLE_STORE"),PURCHASE("ROLE_PURCHASE"), USER("ROLE_USER");
 
     private final String value;
 
