@@ -36,7 +36,7 @@ public class CategoryService {
             category.getSubCategoryList()
                     .forEach(s -> Hibernate.initialize(s.getProductList()));
         }
-        return categoryRepository.findOne(id);
+        return category;
     }
     
     public List<Category> findAll() {
@@ -44,9 +44,11 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
     
-    public Page<Category> findAllByPage(Pageable pageable){
+    public Page<Category> findAllByPage(Pageable pageable,boolean expand){
         logger.debug("findAllByPage()");
-        return categoryRepository.findAll(pageable);
+        Page<Category> page = categoryRepository.findAll(pageable);
+        if(!expand)  page.forEach(category -> category.setSubCategoryList(null));
+        return page;
     }
 
     

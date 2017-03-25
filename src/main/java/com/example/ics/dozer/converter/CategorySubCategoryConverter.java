@@ -26,6 +26,8 @@ public class CategorySubCategoryConverter extends DozerConverter<Category, SubCa
     @Override
     public Category convertFrom(SubCategory source, Category destination) {
         if(source == null) return null;
-        return source.getCategory();
+        Category category = source.getCategory();
+        category.setSubCategoryList(null);
+        return category;
     }
 }

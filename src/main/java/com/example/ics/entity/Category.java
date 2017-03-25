@@ -5,7 +5,10 @@
  */
 package com.example.ics.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -37,8 +40,8 @@ public class Category implements Serializable{
     @Column(name = "NAME",nullable = false, unique = true)
     private String name;
     
-    @JsonIgnore
-    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
+    @JsonInclude(Include.NON_NULL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<SubCategory> subCategoryList;
 
     @Version

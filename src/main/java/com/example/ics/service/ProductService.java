@@ -57,7 +57,7 @@ public class ProductService {
         if(product != null && initSuupliers){
             Hibernate.initialize(product.getSupplierList());
         }
-        return productRepository.findOne(id);
+        return product;
     }
     
     public List<Product> findAll() {

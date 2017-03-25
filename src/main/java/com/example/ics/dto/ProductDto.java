@@ -16,6 +16,9 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class ProductDto {
@@ -82,9 +85,11 @@ public class ProductDto {
     private Long binQty;
 
     private Date lastUpdated;
-    
+
+    @JsonInclude(Include.NON_NULL)
     private List<String> sections;
-    
+
+    @JsonInclude(Include.NON_NULL)
     private List<String> suppliers;
     
     private List<Section> sectionList ;
