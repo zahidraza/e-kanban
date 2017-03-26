@@ -171,4 +171,14 @@ public class Supplier implements Serializable{
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Supplier{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", contactPerson='" + contactPerson + '\'' +
+               ", supplierType='" + supplierType + '\'' +
+               ", address=" + address +
+               '}';
+    }
 }

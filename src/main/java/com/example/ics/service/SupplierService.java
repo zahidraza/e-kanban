@@ -1,6 +1,7 @@
 package com.example.ics.service;
 
 
+import com.example.ics.entity.Address;
 import com.example.ics.entity.Supplier;
 import com.example.ics.respository.SupplierRepository;
 import java.util.List;
@@ -61,13 +62,27 @@ public class SupplierService {
         return supplier;
     }
 
-//    @Transactional
-//    public Supplier update(Supplier supplier) {
-//        logger.debug("update()");
-//        Supplier supplier2 = supplierRepository.findOne(supplier.getId());
-//        supplier2.setName(supplier.getName());
-//        return supplier2;
-//    }
+    @Transactional
+    public Supplier update(Supplier supplier) {
+        logger.debug("update()");
+        Supplier supplier2 = supplierRepository.findOne(supplier.getId());
+
+        if(supplier.getName() != null)  supplier2.setName(supplier.getName());
+        if(supplier.getContactPerson() != null)  supplier2.setContactPerson(supplier.getContactPerson());
+        if(supplier.getSupplierType() != null)  supplier2.setSupplierType(supplier.getSupplierType());
+        if(supplier.getAddress() != null){
+            Address address = supplier.getAddress();
+            Address address2 = (supplier2.getAddress() != null) ? supplier2.getAddress() : new Address();
+            if(address.getStreet() != null) address2.setStreet(address.getStreet());
+            if(address.getLandmark() != null) address2.setLandmark(address.getLandmark());
+            if(address.getCity() != null) address2.setCity(address.getCity());
+            if(address.getState() != null) address2.setState(address.getState());
+            if(address.getCountry() != null) address2.setCountry(address.getCountry());
+            if(address.getZip() != null) address2.setZip(address.getZip());
+            supplier2.setAddress(address2);
+        }
+        return supplier2;
+    }
     
     @Transactional
     public void delete(Long id) {

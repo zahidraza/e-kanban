@@ -61,7 +61,7 @@ public class SupplierRestController {
     
     @PostMapping
     public ResponseEntity<?> createSupplier(@Valid @RequestBody Supplier supplier) {
-        logger.debug("createSupplier():\n {}", supplier.toString());
+        logger.debug("createSupplier(): {}", supplier);
         supplier = supplierService.save(supplier);
         Link selfLink = linkTo(SupplierRestController.class).slash(supplier.getId()).withSelfRel();
         HttpHeaders headers = new HttpHeaders();
@@ -69,16 +69,16 @@ public class SupplierRestController {
         return new ResponseEntity<>(supplierAssembler.toResource(supplier),headers,HttpStatus.CREATED);
     }
  
-//    @PutMapping(ApiUrls.URL_SECTIONS_SECTION)
-//    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") long supplierId,@Valid @RequestBody Supplier supplier) {
-//        logger.debug("updateSupplier(): supplierId = {} \n {}",supplierId,supplier);
-//        if (!supplierService.exists(supplierId)) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        supplier.setId(supplierId);  
-//        supplier = supplierService.update(supplier);
-//        return new ResponseEntity<>(supplierAssembler.toResource(supplier), HttpStatus.OK);
-//    }
+    @PutMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
+    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") long supplierId,@Valid @RequestBody Supplier supplier) {
+        logger.debug("updateSupplier(): supplierId = {} \n {}",supplierId,supplier);
+        if (!supplierService.exists(supplierId)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        supplier.setId(supplierId);
+        supplier = supplierService.update(supplier);
+        return new ResponseEntity<>(supplierAssembler.toResource(supplier), HttpStatus.OK);
+    }
   
     @DeleteMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
     public ResponseEntity<Void> deleteSupplier(@PathVariable("supplierId") long supplierId) {
