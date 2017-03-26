@@ -35,6 +35,7 @@ public class SubCategoryAssembler extends ResourceAssemblerSupport<SubCategory, 
                 .loadCategorySubCategoryProducts(subCategory.getCategory().getId(),subCategory.getId(),null,null))
                 .withRel("productList")
         );
+        links.add(linkTo(methodOn(CategoryRestController.class).loadCategory(subCategory.getCategory().getId())).withRel("category"));
         return new Resource<>(subCategory, links); 
     }
     

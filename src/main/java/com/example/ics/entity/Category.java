@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -42,7 +43,7 @@ public class Category implements Serializable{
     
     @JsonInclude(Include.NON_NULL)
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<SubCategory> subCategoryList;
+    private Set<SubCategory> subCategoryList = new HashSet<>();
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)

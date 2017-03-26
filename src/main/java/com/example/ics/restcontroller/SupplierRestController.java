@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,11 +60,13 @@ public class SupplierRestController {
     
     
     @PostMapping
-    public ResponseEntity<Void> createSupplier(@Valid @RequestBody Supplier supplier) {
+    public ResponseEntity<?> createSupplier(@Valid @RequestBody Supplier supplier) {
         logger.debug("createSupplier():\n {}", supplier.toString());
         supplier = supplierService.save(supplier);
         Link selfLink = linkTo(SupplierRestController.class).slash(supplier.getId()).withSelfRel();
-        return ResponseEntity.created(URI.create(selfLink.getHref())).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(selfLink.getHref()));
+        return new ResponseEntity<>(supplierAssembler.toResource(supplier),headers,HttpStatus.CREATED);
     }
  
 //    @PutMapping(ApiUrls.URL_SECTIONS_SECTION)

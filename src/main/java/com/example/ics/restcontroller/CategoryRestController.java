@@ -102,11 +102,13 @@ public class CategoryRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<?> createCategory(@Valid @RequestBody Category category) {
         logger.debug("createCategory():\n {}", category.toString());
         category = categoryService.save(category);
         Link selfLink = linkTo(CategoryRestController.class).slash(category.getId()).withSelfRel();
-        return ResponseEntity.created(URI.create(selfLink.getHref())).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(selfLink.getHref()));
+        return new ResponseEntity<>(categoryAssembler.toResource(category),headers,HttpStatus.CREATED);
     }
 
     @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY)
@@ -183,9 +185,9 @@ public class CategoryRestController {
         }
         subCategory.setCategory(category);
         subCategory = subCategoryService.save(subCategory);
-        Link link = linkTo(methodOn(CategoryRestController.class).createCategorySubCategory(categoryId, subCategory)).slash(subCategory.getId()).withSelfRel();
+        Link selfLink= linkTo(methodOn(CategoryRestController.class).createCategorySubCategory(categoryId, subCategory)).slash(subCategory.getId()).withSelfRel();
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(link.getHref()));
+        headers.setLocation(URI.create(selfLink.getHref()));
         return new ResponseEntity<>(subCategoryAssembler.toResource(subCategory),headers,HttpStatus.CREATED);
     }
 
@@ -370,9 +372,11 @@ public class CategoryRestController {
                     .collect(Collectors.toList());
         }
 
-        product = productService.save(product,sectionIdList,supplierIdList);
-        Link link = linkTo(methodOn(CategoryRestController.class).createCategorySubCategoryProduct(categoryId, subCategoryId, productDto)).slash(product.getId()).withSelfRel();
-        return ResponseEntity.created(URI.create(link.getHref())).build();
+        productDto = productService.save(product,sectionIdList,supplierIdList);
+        Link selfLink= linkTo(methodOn(CategoryRestController.class).createCategorySubCategoryProduct(categoryId, subCategoryId, productDto)).slash(productDto.getId()).withSelfRel();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(selfLink.getHref()));
+        return new ResponseEntity<>(productAssembler.toResource(productDto),headers,HttpStatus.CREATED);
 
     }
 

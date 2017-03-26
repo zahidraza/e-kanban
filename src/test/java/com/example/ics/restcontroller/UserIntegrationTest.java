@@ -137,7 +137,7 @@ public class UserIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].field", is("role")))
-                .andExpect(jsonPath("$[0].message", containsString("Accepted values are [ADMIN,USER")));
+                .andExpect(jsonPath("$[0].message", containsString("Accepted values are [STORE,ADMIN,USER,PURCHASE]")));
         
         user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMIN", "8987525");
         this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)

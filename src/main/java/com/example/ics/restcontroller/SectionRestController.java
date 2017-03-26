@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,11 +60,13 @@ public class SectionRestController {
     
     
     @PostMapping
-    public ResponseEntity<Void> createSection(@Valid @RequestBody Section section) {
+    public ResponseEntity<?> createSection(@Valid @RequestBody Section section) {
         logger.debug("createSection():\n {}", section.toString());
         section = sectionService.save(section);
         Link selfLink = linkTo(SectionRestController.class).slash(section.getId()).withSelfRel();
-        return ResponseEntity.created(URI.create(selfLink.getHref())).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(selfLink.getHref()));
+        return new ResponseEntity<>(sectionAssembler.toResource(section),headers,HttpStatus.CREATED);
     }
  
     @PutMapping(ApiUrls.URL_SECTIONS_SECTION)

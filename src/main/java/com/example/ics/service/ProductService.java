@@ -15,8 +15,13 @@ import com.example.ics.page.converter.ProductConverter;
 import com.example.ics.respository.ProductRepository;
 import com.example.ics.respository.SectionRepository;
 import com.example.ics.respository.SupplierRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.dozer.Mapper;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,7 @@ public class ProductService {
     private final SectionRepository sectionRepository;
     private final SupplierRepository supplierRepository;
     private ProductConverter converter;
+    private Mapper mapper;
 
     @Autowired
     public ProductService(ProductRepository productRepository,SectionRepository sectionRepository,SupplierRepository supplierRepository) {
@@ -47,8 +53,13 @@ public class ProductService {
     public void setConverter(ProductConverter converter) {
         this.converter = converter;
     }
-    
-    public Product findOne(Long id, boolean initSections, boolean initSuupliers){
+
+    @Autowired
+    public void setMapper(Mapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public ProductDto findOne(Long id, boolean initSections, boolean initSuupliers){
         logger.debug("findOne(): id = {}",id);
         Product product = productRepository.findOne(id);
         if(product != null && initSections){
@@ -57,12 +68,15 @@ public class ProductService {
         if(product != null && initSuupliers){
             Hibernate.initialize(product.getSupplierList());
         }
-        return product;
+        return mapper.map(product,ProductDto.class);
     }
     
-    public List<Product> findAll() {
+    public List<ProductDto> findAll() {
         logger.debug("findAll()");
-        return productRepository.findAll();
+        return productRepository
+            .findAll().stream()
+                 .map(product -> mapper.map(product,ProductDto.class))
+                 .collect(Collectors.toList());
     }
     
     public Page<ProductDto> findPageBySubCategory(SubCategory subCategory, Pageable pageable){
@@ -76,9 +90,9 @@ public class ProductService {
     }
 
     
-    public Product findByName(String name) {
+    public ProductDto findByName(String name) {
         logger.debug("findByName(): name = " , name);
-        return productRepository.findByName(name);
+        return mapper.map(productRepository.findByName(name),ProductDto.class);
     }
 
     public Boolean exists(Long id) {
@@ -92,7 +106,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product save(Product product, List<Long> sections, List<Long> suppliers ) {
+    public ProductDto save(Product product, List<Long> sections, List<Long> suppliers ) {
         logger.debug("save()");
         product = productRepository.save(product);
         Set<Section> sectionList = product.getSectionList();
@@ -107,7 +121,7 @@ public class ProductService {
                 supplierList.add(supplierRepository.findOne(secId));
             });
         }
-        return product;
+        return mapper.map(product, ProductDto.class);
     }
 
 //    @Transactional
