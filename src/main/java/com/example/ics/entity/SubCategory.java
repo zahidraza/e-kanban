@@ -8,6 +8,7 @@ package com.example.ics.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -43,10 +44,9 @@ public class SubCategory implements Serializable{
     @ManyToOne(optional = false)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
-    
-    @JsonIgnore
+
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
-    private Set<Product> productList;
+    private Set<Product> productList = new HashSet<>();
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)

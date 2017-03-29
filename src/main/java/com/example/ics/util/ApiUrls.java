@@ -33,5 +33,9 @@ public class ApiUrls {
     /*Supplier Resource*/
     public static final String ROOT_URL_SUPPLIERS = "/api/suppliers";
     public static final String URL_SUPPLIERS_SUPPLIER = "/{supplierId}";
+
+    /*Upload Resource*/
+    public static final String ROOT_URL_UPLOADS = "/api/uploads";
+    public static final String URL_UPLOADS_PRODUCTS = "/products";
     
 }

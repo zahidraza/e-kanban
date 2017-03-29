@@ -316,7 +316,8 @@ public class CategoryRestController {
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-
+        /*////////////////////////////////////////////////////////////////////////*/
+        /*///////////////////checking if category and sub category exist ////////////*/
         Category category = categoryService.findOne(categoryId, true, false);
         RestError error;
         if (category == null) {
@@ -328,10 +329,12 @@ public class CategoryRestController {
                 .filter(s -> s.getId().equals(subCategoryId))
                 .findAny().orElse(null);
         if (subCategory == null) {
-            String msg = "Sub Category with id = " + subCategoryId + " not found in " + category;
+            String msg = "Sub Category with id = " + subCategoryId + " not found in Category: " + category.getName();
             error = new RestError(404, 404, msg, "", "");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        /*///////////////////////////////////////////////////////*/
+        /*////////////checking if section resources got in ProductDto object exist in db /////// */
         List<String> sectionsNotFound = null;
         if (productDto.getSections() != null) {
             sectionsNotFound = productDto.getSections().stream()
@@ -343,7 +346,8 @@ public class CategoryRestController {
             error = new RestError(404, 404, msg, "", "");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-
+        /*///////////////////////////////////////////////////////*/
+        /*////////////checking if supplier resources got in ProductDto object exist in db /////// */
         List<String> suppliersNotFound = null;
         if (productDto.getSections() != null) {
             suppliersNotFound = productDto.getSuppliers().stream()
@@ -358,13 +362,14 @@ public class CategoryRestController {
 
         Product product = mapper.map(productDto, Product.class);
         product.setSubCategory(subCategory);
-
+        /*//////get list of section resource id's corresponding to the resources*/
         List<Long> sectionIdList = null;
         if (productDto.getSections() != null) {
             sectionIdList = productDto.getSections().stream()
                     .map(uri -> MiscUtil.extractIdFromUri(uri))
                     .collect(Collectors.toList());
         }
+        /*//////get list of section resource id's corresponding to the resources*/
         List<Long> supplierIdList = null;
         if (productDto.getSuppliers() != null) {
             supplierIdList = productDto.getSuppliers().stream()
@@ -380,51 +385,142 @@ public class CategoryRestController {
 
     }
 
-//    @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
-//    public ResponseEntity<?> updateCategorySubCategory(
-//            @PathVariable("categoryId") long categoryId,
-//            @PathVariable("subCategoryId") Long subCategoryId,
-//            @Valid @RequestBody SubCategory subCategory) {
-//        
-//        logger.debug("updateCategorySubCategory(): categoryId = {} , subCategoryId = {}, {}",categoryId, subCategoryId,subCategory );
-//        Category category = categoryService.findOne(categoryId,true);
-//        RestError error;
-//        if(category == null){
-//            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-//        Set<SubCategory> subCategories = category.getSubCategoryList();
-//        subCategory.setId(subCategoryId);
-//        if(!subCategories.contains(subCategory)){
-//            String msg = "Sub Category with id = " + subCategoryId + " not found in " + category;
-//            error = new RestError(404, 404,msg, "", "");
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-//
-//        subCategory = subCategoryService.update(subCategory);
-//        return new ResponseEntity<>(subCategoryAssembler.toResource(subCategory), HttpStatus.OK);
-//    }
-//  
-//    @DeleteMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY)
-//    public ResponseEntity<?> deleteCategorySubCategory(@PathVariable("categoryId") long categoryId,@PathVariable("subCategoryId") Long subCategoryId) {
-//        
-//        logger.debug("deleteCategorySubCategory(): categoryId = {} , subCategoryId = {}",categoryId, subCategoryId );
-//        Category category = categoryService.findOne(categoryId,true);
-//        RestError error;
-//        if(category == null){
-//            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-//        Set<SubCategory> subCategories = category.getSubCategoryList();
-//        SubCategory subCategory = subCategories.stream()
-//                .filter(s -> s.getId().equals(subCategoryId))
-//                .findAny().orElse(null);
-//        if(subCategory == null){
-//            String msg = "Sub Category with id = " + subCategoryId + " not found in " + category;
-//            error = new RestError(404, 404,msg, "", "");
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-//        subCategoryService.delete(subCategoryId);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @PutMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS_PRODUCT)
+    public ResponseEntity<?> updateCategorySubCategoryProduct(
+            @PathVariable("categoryId") long categoryId,
+            @PathVariable("subCategoryId") Long subCategoryId,
+            @PathVariable("productId") Long productId,
+            @Valid @RequestBody ProductDto productDto) {
+
+        logger.debug("createCategorySubCategoryProduct(): categoryId= {} , subCategoryId = {}, productId = {}, {}", categoryId, subCategoryId,productId, productDto);
+
+        /*//////////////Validating resources/////////////////*/
+        List<String> invalidSections = MiscUtil.findInvalidResources(productDto.getSections(), SectionRestController.class);
+        List<String> invalidSuppliers = MiscUtil.findInvalidResources(productDto.getSuppliers(), SupplierRestController.class);
+        List<FieldError> errors = new ArrayList<>();
+        if (!(invalidSections == null || invalidSections.isEmpty())) {
+            errors.add(new FieldError("sections", MiscUtil.toStringList(productDto.getSections()), "Resource/Resources " + MiscUtil.toStringList(invalidSections) + " is/are inavlid."));
+        }
+        if (!(invalidSuppliers == null || invalidSuppliers.isEmpty())) {
+            errors.add(new FieldError("suppliers", MiscUtil.toStringList(productDto.getSuppliers()), "Resource/Resources " + MiscUtil.toStringList(invalidSuppliers) + " is/are inavlid."));
+        }
+        if (!errors.isEmpty()) {
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        /*////////////////////////////////////////////////////////////////////////*/
+        /*///////////////////checking if category, sub category and product exist ////////////*/
+        Category category = categoryService.findOne(categoryId, true, false);
+        RestError error;
+        if (category == null) {
+            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+
+        }
+        SubCategory subCategory = category.getSubCategoryList().stream()
+                                          .filter(s -> s.getId().equals(subCategoryId))
+                                          .findAny().orElse(null);
+        if (subCategory == null) {
+            String msg = "Sub Category with id = " + subCategoryId + " not found in Category: " + category.getName();
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        Product pdct = subCategory.getProductList().stream()
+                .filter(p -> p.getId().equals(productId))
+                .findAny().orElse(null);
+
+        if (pdct == null) {
+            String msg = "Product with id = " + productId + " not found in SubCategory:  " + subCategory.getName() + ", Category: " + category.getName();
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        /*///////////////////////////////////////////////////////*/
+        /*////////////checking if section resources got in ProductDto object exist in db /////// */
+        List<String> sectionsNotFound = null;
+        if (productDto.getSections() != null) {
+            sectionsNotFound = productDto.getSections().stream()
+                                         .filter(uri -> sectionService.exists(MiscUtil.extractIdFromUri(uri)) ? false : true)
+                                         .collect(Collectors.toList());
+        }
+        if (!(sectionsNotFound == null || sectionsNotFound.isEmpty())) {
+            String msg = "Resource/Resources " + MiscUtil.toStringList(sectionsNotFound) + " not found";
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        /*///////////////////////////////////////////////////////*/
+        /*////////////checking if supplier resources got in ProductDto object exist in db /////// */
+        List<String> suppliersNotFound = null;
+        if (productDto.getSections() != null) {
+            suppliersNotFound = productDto.getSuppliers().stream()
+                                          .filter(uri -> supplierService.exists(MiscUtil.extractIdFromUri(uri)) ? false : true)
+                                          .collect(Collectors.toList());
+        }
+        if (!(suppliersNotFound == null || suppliersNotFound.isEmpty())) {
+            String msg = "Resource/Resources " + MiscUtil.toStringList(suppliersNotFound) + " not found";
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        Product product = mapper.map(productDto, Product.class);
+        product.setSubCategory(subCategory);
+        /*//////get list of section resource id's corresponding to the resources*/
+        List<Long> sectionIdList = null;
+        if (productDto.getSections() != null) {
+            sectionIdList = productDto.getSections().stream()
+                                      .map(uri -> MiscUtil.extractIdFromUri(uri))
+                                      .collect(Collectors.toList());
+        }
+        /*//////get list of section resource id's corresponding to the resources*/
+        List<Long> supplierIdList = null;
+        if (productDto.getSuppliers() != null) {
+            supplierIdList = productDto.getSuppliers().stream()
+                                       .map(uri -> MiscUtil.extractIdFromUri(uri))
+                                       .collect(Collectors.toList());
+        }
+
+        productDto = productService.update(product,sectionIdList,supplierIdList);
+        return new ResponseEntity<>(productAssembler.toResource(productDto),HttpStatus.OK);
+    }
+
+    @DeleteMapping(ApiUrls.URL_CATEGORIES_CATEGORY_SUBCATEGORIES_SUBCATEGORY_PRODUCTS_PRODUCT)
+    public ResponseEntity<?> deleteCategorySubCategoryProduct(
+            @PathVariable("categoryId") long categoryId,
+            @PathVariable("subCategoryId") Long subCategoryId,
+            @PathVariable("productId") Long productId) {
+
+        logger.debug("deleteCategorySubCategoryProduct(): categoryId = {} , subCategoryId = {}, productId = {}",categoryId, subCategoryId, productId );
+
+        /*///////////////////checking if category, sub category and product exist ////////////*/
+        Category category = categoryService.findOne(categoryId, true, false);
+        RestError error;
+        if (category == null) {
+            error = new RestError(404, 404, "Category with id = " + categoryId + " not found", "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+
+        }
+        SubCategory subCategory = category.getSubCategoryList().stream()
+                                          .filter(s -> s.getId().equals(subCategoryId))
+                                          .findAny().orElse(null);
+        if (subCategory == null) {
+            String msg = "Sub Category with id = " + subCategoryId + " not found in Category: " + category.getName();
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        Product pdct = subCategory.getProductList().stream()
+                                  .filter(p -> p.getId().equals(productId))
+                                  .findAny().orElse(null);
+
+        if (pdct == null) {
+            String msg = "Product with id = " + productId + " not found in SubCategory:  " + subCategory.getName() + ", Category: " + category.getName();
+            error = new RestError(404, 404, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        /*///////////////////////////////////////////////////////*/
+
+        productService.delete(productId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

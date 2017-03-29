@@ -7,6 +7,8 @@ package com.example.ics.entity;
 
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -35,7 +37,8 @@ public class Product {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "SUB_CATEGORY_ID")
     private SubCategory subCategory;
