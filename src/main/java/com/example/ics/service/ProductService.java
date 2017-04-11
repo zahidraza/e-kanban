@@ -13,9 +13,7 @@ import com.example.ics.entity.Section;
 import com.example.ics.entity.SubCategory;
 import com.example.ics.entity.Supplier;
 import com.example.ics.page.converter.ProductConverter;
-import com.example.ics.respository.ProductRepository;
-import com.example.ics.respository.SectionRepository;
-import com.example.ics.respository.SupplierRepository;
+import com.example.ics.respository.*;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -47,6 +45,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SectionRepository sectionRepository;
     private final SupplierRepository supplierRepository;
+    @Autowired private CategoryRepository categoryRepository;
+    @Autowired SubCategoryRepository subCategoryRepository;
     private ProductConverter converter;
     private Mapper mapper;
 
@@ -158,35 +158,84 @@ public class ProductService {
         productRepository.delete(id);
     }
 
+    @Transactional
     public void addProductsBatch(MultipartFile file) {
+        logger.debug("addProductsBatch");
+
         try {
             //convert to csv string
             String output = null;
-            if (file.getName().contains("xlsx")) {
+            if (file.getOriginalFilename().contains("xlsx")) {
                 output = CsvUtils.fromXlsx(file.getInputStream());
-            } else if (file.getName().contains("xls")) {
+            } else if (file.getOriginalFilename().contains("xls")) {
                 output = CsvUtils.fromXls(file.getInputStream());
             }
 
             //Read as Bean from csv String
-            CSVReader reader = new CSVReader(new StringReader(output));
+            CSVReader reader = new CSVReader(new StringReader(output), ';');
             HeaderColumnNameMappingStrategy<ProductCsv> strategy = new HeaderColumnNameMappingStrategy<>();
             strategy.setType(ProductCsv.class);
             CsvToBean<ProductCsv> csvToBean = new CsvToBean<>();
             List<ProductCsv> list = csvToBean.parse(strategy, reader);
 
-            //validate value
-
+            //validate value : Supplier Type
 
             //convert from DTO to ENTITY
-
+            List<Product> products = map(list);
+            productRepository.save(products);
 
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
-    //src object is latest value, dest object is old value
+    /**
+     * Called by addProductsBatch() method to map from ProductCsv List to Product List
+     * @param list List of ProductCsv
+     * @return List of Product
+     */
+    private List<Product> map(List<ProductCsv> list){
+        List<Product> products = new ArrayList<>();
+
+        list.forEach(productCsv -> {
+            Product product = mapper.map(productCsv, Product.class);
+            /*////////Mapping SubCategory////////////*/
+            SubCategory subCategory = subCategoryRepository.findByName(productCsv.getSubCategory().trim());
+
+            //If SubCategory is null or category of existing subcategory is not equal to category of coming product,
+            // add new SubCategory
+            if (subCategory == null || !subCategory.getCategory().getName().trim().equalsIgnoreCase(productCsv.getCategory().trim())) {
+                Category category = categoryRepository.findByName(productCsv.getCategory().trim());
+                if (category == null) {
+                    category = categoryRepository.save(new Category(productCsv.getCategory().trim()));
+                }
+                subCategory = new SubCategory(productCsv.getSubCategory().trim());
+                subCategory.setCategory(category);
+                subCategory = subCategoryRepository.save(subCategory);
+            }
+            product.setSubCategory(subCategory);
+
+            /*////////Mapping Suuplier////////////*/
+            Supplier supplier = supplierRepository.findByName(productCsv.getSupplier().trim());
+            if (supplier == null) {
+                supplier = supplierRepository.save(new Supplier(productCsv.getSupplier().trim(),productCsv.getContactPerson(),productCsv.getSupplierType()));
+            }
+            Set<Supplier> suppliers = new HashSet<>();
+            suppliers.add(supplier);
+            product.setSupplierList(suppliers);
+
+            products.add(product);
+
+        });
+        return products;
+    }
+
+
+    /**
+     * Called by Update method
+     * @param src New value that needs to be updated
+     * @param dest Old Value from Repository
+     */
     private void map(Product src, Product dest) {
         if(src.getName() != null) dest.setName(src.getName());
         if(src.getDescription() != null) dest.setDescription(src.getDescription());

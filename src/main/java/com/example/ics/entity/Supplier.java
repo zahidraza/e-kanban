@@ -33,11 +33,11 @@ public class Supplier implements Serializable{
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
     
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "CONTACT_PERSON")
     private String contactPerson;
     
-    @NotNull @StringEnum(enumClass = SupplierType.class)
+    @StringEnum(enumClass = SupplierType.class)
     @Column(name = "SUPPLIER_TYPE")
     private String supplierType;   //Local | NonLocal
     
@@ -55,6 +55,10 @@ public class Supplier implements Serializable{
     private Date lastUpdated;
     
     public Supplier() {
+    }
+
+    public Supplier(String name) {
+        this.name = name;
     }
 
     public Supplier(String name, String contactPerson, String supplierType) {

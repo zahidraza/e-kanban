@@ -29,16 +29,16 @@ public class ProductCsv {
     private String itemCode;
 
     @CsvBindByName(column = "ORDERING_TIME")
-    private Integer timeOrdering;
+    private double timeOrdering;
 
     @CsvBindByName(column = "PRODUCTION_TIME")
-    private Integer timeProcurement;
+    private double timeProcurement;
 
     @CsvBindByName(column = "TRANSPORTATION_TIME")
-    private Integer timeTransporation;
+    private double timeTransporation;
 
     @CsvBindByName(column = "BUFFER_TIME")
-    private Integer timeBuffer;
+    private double timeBuffer;
 
     @CsvBindByName(column = "UOM_PURCHASE")
     private String uomPurchase;
@@ -59,10 +59,35 @@ public class ProductCsv {
     private String supplierType;
 
     @CsvBindByName(column = "MIN_ORDER_QTY")
-    private Long minOrderQty;
+    private double minOrderQty;
 
     @CsvBindByName(column = "PACKET_SIZE")
-    private Integer packetSize;
+    private double packetSize;
+
+    public ProductCsv() {
+    }
+
+    public ProductCsv(String name, String category, String subCategory, String description, String sections, double price, String itemCode, Integer timeOrdering, Integer timeProcurement, Integer timeTransporation, Integer timeBuffer, String uomPurchase, String uomConsumption, double conversionFactor, String supplier, String contactPerson, String supplierType, Long minOrderQty, Integer packetSize) {
+        this.name = name;
+        this.category = category;
+        this.subCategory = subCategory;
+        this.description = description;
+        this.sections = sections;
+        this.price = price;
+        this.itemCode = itemCode;
+        this.timeOrdering = timeOrdering;
+        this.timeProcurement = timeProcurement;
+        this.timeTransporation = timeTransporation;
+        this.timeBuffer = timeBuffer;
+        this.uomPurchase = uomPurchase;
+        this.uomConsumption = uomConsumption;
+        this.conversionFactor = conversionFactor;
+        this.supplier = supplier;
+        this.contactPerson = contactPerson;
+        this.supplierType = supplierType;
+        this.minOrderQty = minOrderQty;
+        this.packetSize = packetSize;
+    }
 
     public String getName() {
         return name;
@@ -120,35 +145,35 @@ public class ProductCsv {
         this.itemCode = itemCode;
     }
 
-    public Integer getTimeOrdering() {
+    public double getTimeOrdering() {
         return timeOrdering;
     }
 
-    public void setTimeOrdering(Integer timeOrdering) {
+    public void setTimeOrdering(double timeOrdering) {
         this.timeOrdering = timeOrdering;
     }
 
-    public Integer getTimeProcurement() {
+    public double getTimeProcurement() {
         return timeProcurement;
     }
 
-    public void setTimeProcurement(Integer timeProcurement) {
+    public void setTimeProcurement(double timeProcurement) {
         this.timeProcurement = timeProcurement;
     }
 
-    public Integer getTimeTransporation() {
+    public double getTimeTransporation() {
         return timeTransporation;
     }
 
-    public void setTimeTransporation(Integer timeTransporation) {
+    public void setTimeTransporation(double timeTransporation) {
         this.timeTransporation = timeTransporation;
     }
 
-    public Integer getTimeBuffer() {
+    public double getTimeBuffer() {
         return timeBuffer;
     }
 
-    public void setTimeBuffer(Integer timeBuffer) {
+    public void setTimeBuffer(double timeBuffer) {
         this.timeBuffer = timeBuffer;
     }
 
@@ -200,19 +225,44 @@ public class ProductCsv {
         this.supplierType = supplierType;
     }
 
-    public Long getMinOrderQty() {
+    public double getMinOrderQty() {
         return minOrderQty;
     }
 
-    public void setMinOrderQty(Long minOrderQty) {
+    public void setMinOrderQty(double minOrderQty) {
         this.minOrderQty = minOrderQty;
     }
 
-    public Integer getPacketSize() {
+    public double getPacketSize() {
         return packetSize;
     }
 
-    public void setPacketSize(Integer packetSize) {
+    public void setPacketSize(double packetSize) {
         this.packetSize = packetSize;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductCsv{" +
+                "name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", subCategory='" + subCategory + '\'' +
+                ", description='" + description + '\'' +
+                ", sections='" + sections + '\'' +
+                ", price=" + price +
+                ", itemCode='" + itemCode + '\'' +
+                ", timeOrdering=" + timeOrdering +
+                ", timeProcurement=" + timeProcurement +
+                ", timeTransporation=" + timeTransporation +
+                ", timeBuffer=" + timeBuffer +
+                ", uomPurchase='" + uomPurchase + '\'' +
+                ", uomConsumption='" + uomConsumption + '\'' +
+                ", conversionFactor=" + conversionFactor +
+                ", supplier='" + supplier + '\'' +
+                ", contactPerson='" + contactPerson + '\'' +
+                ", supplierType='" + supplierType + '\'' +
+                ", minOrderQty=" + minOrderQty +
+                ", packetSize=" + packetSize +
+                '}';
     }
 }

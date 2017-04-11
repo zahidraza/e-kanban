@@ -283,17 +283,17 @@ public class Product {
         return sectionList;
     }
 
-//    public void setSectionList(Set<Section> sectionList) {
-//        this.sectionList = sectionList;
-//    }
+    public void setSectionList(Set<Section> sectionList) {
+        this.sectionList = sectionList;
+    }
 
     public Set<Supplier> getSupplierList() {
         return supplierList;
     }
-//
-//    public void setSupplierList(Set<Supplier> supplierList) {
-//        this.supplierList = supplierList;
-//    }
+
+    public void setSupplierList(Set<Supplier> supplierList) {
+        this.supplierList = supplierList;
+    }
 
 
     public Date getLastUpdated() {

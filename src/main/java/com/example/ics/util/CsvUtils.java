@@ -22,7 +22,7 @@ public class CsvUtils {
     private static final String SEPARATOR = ";";
 
     public static String fromXlsx(InputStream inputStream) {
-        logger.info("fromXlsx()");
+        logger.debug("fromXlsx()");
         StringBuilder builder = new StringBuilder();
         String output = null;
         try {
@@ -62,6 +62,7 @@ public class CsvUtils {
     }
 
     public static String fromXls(InputStream inputStream) {
+        logger.debug("fromXls()");
         StringBuilder builder = new StringBuilder();
         String output = null;
         try {

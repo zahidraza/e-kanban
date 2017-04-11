@@ -30,4 +30,14 @@
       </field>
       
    </mapping>
+
+    <mapping type="one-way">
+        <class-a>com.example.ics.dto.ProductCsv</class-a>
+        <class-b>com.example.ics.entity.Product</class-b>
+
+        <field custom-converter="com.example.ics.dozer.converter.SectionConverter">
+            <a>sections</a>
+            <b>sectionList</b>
+        </field>
+    </mapping>
 </mappings>
