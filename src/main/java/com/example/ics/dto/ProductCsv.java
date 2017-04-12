@@ -23,22 +23,22 @@ public class ProductCsv {
     private String sections;
 
     @CsvBindByName(column = "PRICE")
-    private double price;
+    private Double price;
 
     @CsvBindByName(column = "ITEM_CODE")
     private String itemCode;
 
     @CsvBindByName(column = "ORDERING_TIME")
-    private double timeOrdering;
+    private Double timeOrdering;
 
     @CsvBindByName(column = "PRODUCTION_TIME")
-    private double timeProcurement;
+    private Double timeProcurement;
 
     @CsvBindByName(column = "TRANSPORTATION_TIME")
-    private double timeTransporation;
+    private Double timeTransporation;
 
     @CsvBindByName(column = "BUFFER_TIME")
-    private double timeBuffer;
+    private Double timeBuffer;
 
     @CsvBindByName(column = "UOM_PURCHASE")
     private String uomPurchase;
@@ -47,7 +47,7 @@ public class ProductCsv {
     private String uomConsumption;
 
     @CsvBindByName(column = "CONVERSION_FACTOR")
-    private double conversionFactor;
+    private Double conversionFactor;
 
     @CsvBindByName(column = "SUPPLIER_NAME")
     private String supplier;
@@ -59,15 +59,54 @@ public class ProductCsv {
     private String supplierType;
 
     @CsvBindByName(column = "MIN_ORDER_QTY")
-    private double minOrderQty;
+    private Double minOrderQty;
 
     @CsvBindByName(column = "PACKET_SIZE")
-    private double packetSize;
+    private Double packetSize;
+
+    @CsvBindByName(column = "JAN")
+    private Double jan;
+
+    @CsvBindByName(column = "FEB")
+    private Double feb;
+
+    @CsvBindByName(column = "MAR")
+    private Double mar;
+
+    @CsvBindByName(column = "APR")
+    private Double apr;
+
+    @CsvBindByName(column = "MAY")
+    private Double may;
+
+    @CsvBindByName(column = "JUN")
+    private Double jun;
+
+    @CsvBindByName(column = "JUL")
+    private Double jul;
+
+    @CsvBindByName(column = "AUG")
+    private Double aug;
+
+    @CsvBindByName(column = "SEP")
+    private Double sep;
+
+    @CsvBindByName(column = "OCT")
+    private Double oct;
+
+    @CsvBindByName(column = "NOV")
+    private Double nov;
+
+    @CsvBindByName(column = "DEC")
+    private Double dec;
 
     public ProductCsv() {
     }
 
-    public ProductCsv(String name, String category, String subCategory, String description, String sections, double price, String itemCode, Integer timeOrdering, Integer timeProcurement, Integer timeTransporation, Integer timeBuffer, String uomPurchase, String uomConsumption, double conversionFactor, String supplier, String contactPerson, String supplierType, Long minOrderQty, Integer packetSize) {
+    public ProductCsv(String name, String category, String subCategory, String description, String sections, Double
+            price, String itemCode, Double timeOrdering, Double timeProcurement, Double timeTransporation, Double
+            timeBuffer, String uomPurchase, String uomConsumption, Double conversionFactor, String supplier, String
+            contactPerson, String supplierType, Double minOrderQty, Double packetSize) {
         this.name = name;
         this.category = category;
         this.subCategory = subCategory;
@@ -129,11 +168,11 @@ public class ProductCsv {
         this.sections = sections;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -145,35 +184,35 @@ public class ProductCsv {
         this.itemCode = itemCode;
     }
 
-    public double getTimeOrdering() {
+    public Double getTimeOrdering() {
         return timeOrdering;
     }
 
-    public void setTimeOrdering(double timeOrdering) {
+    public void setTimeOrdering(Double timeOrdering) {
         this.timeOrdering = timeOrdering;
     }
 
-    public double getTimeProcurement() {
+    public Double getTimeProcurement() {
         return timeProcurement;
     }
 
-    public void setTimeProcurement(double timeProcurement) {
+    public void setTimeProcurement(Double timeProcurement) {
         this.timeProcurement = timeProcurement;
     }
 
-    public double getTimeTransporation() {
+    public Double getTimeTransporation() {
         return timeTransporation;
     }
 
-    public void setTimeTransporation(double timeTransporation) {
+    public void setTimeTransporation(Double timeTransporation) {
         this.timeTransporation = timeTransporation;
     }
 
-    public double getTimeBuffer() {
+    public Double getTimeBuffer() {
         return timeBuffer;
     }
 
-    public void setTimeBuffer(double timeBuffer) {
+    public void setTimeBuffer(Double timeBuffer) {
         this.timeBuffer = timeBuffer;
     }
 
@@ -193,11 +232,11 @@ public class ProductCsv {
         this.uomConsumption = uomConsumption;
     }
 
-    public double getConversionFactor() {
+    public Double getConversionFactor() {
         return conversionFactor;
     }
 
-    public void setConversionFactor(double conversionFactor) {
+    public void setConversionFactor(Double conversionFactor) {
         this.conversionFactor = conversionFactor;
     }
 
@@ -225,20 +264,116 @@ public class ProductCsv {
         this.supplierType = supplierType;
     }
 
-    public double getMinOrderQty() {
+    public Double getMinOrderQty() {
         return minOrderQty;
     }
 
-    public void setMinOrderQty(double minOrderQty) {
+    public void setMinOrderQty(Double minOrderQty) {
         this.minOrderQty = minOrderQty;
     }
 
-    public double getPacketSize() {
+    public Double getPacketSize() {
         return packetSize;
     }
 
-    public void setPacketSize(double packetSize) {
+    public void setPacketSize(Double packetSize) {
         this.packetSize = packetSize;
+    }
+
+    public Double getJan() {
+        return jan;
+    }
+
+    public void setJan(Double jan) {
+        this.jan = jan;
+    }
+
+    public Double getFeb() {
+        return feb;
+    }
+
+    public void setFeb(Double feb) {
+        this.feb = feb;
+    }
+
+    public Double getMar() {
+        return mar;
+    }
+
+    public void setMar(Double mar) {
+        this.mar = mar;
+    }
+
+    public Double getApr() {
+        return apr;
+    }
+
+    public void setApr(Double apr) {
+        this.apr = apr;
+    }
+
+    public Double getMay() {
+        return may;
+    }
+
+    public void setMay(Double may) {
+        this.may = may;
+    }
+
+    public Double getJun() {
+        return jun;
+    }
+
+    public void setJun(Double jun) {
+        this.jun = jun;
+    }
+
+    public Double getJul() {
+        return jul;
+    }
+
+    public void setJul(Double jul) {
+        this.jul = jul;
+    }
+
+    public Double getAug() {
+        return aug;
+    }
+
+    public void setAug(Double aug) {
+        this.aug = aug;
+    }
+
+    public Double getSep() {
+        return sep;
+    }
+
+    public void setSep(Double sep) {
+        this.sep = sep;
+    }
+
+    public Double getOct() {
+        return oct;
+    }
+
+    public void setOct(Double oct) {
+        this.oct = oct;
+    }
+
+    public Double getNov() {
+        return nov;
+    }
+
+    public void setNov(Double nov) {
+        this.nov = nov;
+    }
+
+    public Double getDec() {
+        return dec;
+    }
+
+    public void setDec(Double dec) {
+        this.dec = dec;
     }
 
     @Override
@@ -263,6 +398,18 @@ public class ProductCsv {
                 ", supplierType='" + supplierType + '\'' +
                 ", minOrderQty=" + minOrderQty +
                 ", packetSize=" + packetSize +
+                ", jan=" + jan +
+                ", feb=" + feb +
+                ", mar=" + mar +
+                ", apr=" + apr +
+                ", may=" + may +
+                ", jun=" + jun +
+                ", jul=" + jul +
+                ", aug=" + aug +
+                ", sep=" + sep +
+                ", oct=" + oct +
+                ", nov=" + nov +
+                ", dec=" + dec +
                 '}';
     }
 }

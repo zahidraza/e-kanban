@@ -1,10 +1,37 @@
 package com.example.ics.util;
 
+import org.apache.commons.collections.map.HashedMap;
+
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class MiscUtil {
+    private static Map<String,Integer> mapMonth = new HashedMap();
+
+    static {
+        mapMonth.put("JAN",1);
+        mapMonth.put("FEB",2);
+        mapMonth.put("MAR",3);
+        mapMonth.put("APR",4);
+        mapMonth.put("MAY",5);
+        mapMonth.put("JUN",6);
+        mapMonth.put("JUL",7);
+        mapMonth.put("AUG",8);
+        mapMonth.put("SEP",9);
+        mapMonth.put("OCT",10);
+        mapMonth.put("NOV",11);
+        mapMonth.put("DEC",12);
+    }
+
+    public static Map<String,Integer> getMapMonth(){
+        return mapMonth;
+    }
+
     /**
      * method for checking invalid resources
      * @param resources List resource uri that needs to to be checked for invalid resource 
@@ -46,5 +73,13 @@ public class MiscUtil {
         }
         builder.append("]");
         return builder.toString();
+    }
+
+    public static int getCurrentYear(){
+        return Year.now().getValue();
+    }
+
+    public static int getCurrentMonth(){
+        return YearMonth.now().getMonthValue();
     }
 }

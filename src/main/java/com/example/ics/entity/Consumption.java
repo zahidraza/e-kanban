@@ -6,17 +6,7 @@
 package com.example.ics.entity;
 
 import java.util.Date;
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 /**
  *
@@ -24,6 +14,7 @@ import javax.persistence.Version;
  */
 
 @Entity
+@Table(indexes = @Index(columnList = "PRODUCT_ID"))
 public class Consumption {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +39,12 @@ public class Consumption {
     private Date lastUpdated;
 
     public Consumption() {
+    }
+
+    public Consumption(Integer year, Integer month, Long value) {
+        this.year = year;
+        this.month = month;
+        this.value = value;
     }
 
     public Long getId() {
@@ -99,28 +96,31 @@ public class Consumption {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Consumption that = (Consumption) o;
+
+        if (!year.equals(that.year)) return false;
+        if (!month.equals(that.month)) return false;
+        return value.equals(that.value);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Consumption other = (Consumption) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        int result = year.hashCode();
+        result = 31 * result + month.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
     }
 
+    @Override
+    public String toString() {
+        return "Consumption{" +
+                "year=" + year +
+                ", month=" + month +
+                ", value=" + value +
+                '}';
+    }
 }

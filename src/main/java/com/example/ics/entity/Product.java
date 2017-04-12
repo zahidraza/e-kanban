@@ -14,19 +14,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 /**
  *
@@ -56,6 +44,9 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
     )
     private Set<Supplier> supplierList = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<Consumption> consumptions = new HashSet<>();
     
     @Column(name = "NAME",nullable = false)
     private String name;
@@ -117,6 +108,15 @@ public class Product {
     private Date lastUpdated;
 
     public Product() {
+    }
+
+    public void addConsumption(Consumption consumption){
+        consumption.setProduct(this);
+        consumptions.add(consumption);
+    }
+
+    public Set<Consumption> getConsumptions() {
+        return consumptions;
     }
 
     public Long getId() {

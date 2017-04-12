@@ -40,15 +40,6 @@ public class UploadRestController {
     @GetMapping("/test")
     public ResponseEntity<?> test(){
 
-        ProductCsv productCsv = new ProductCsv("Test Product","Test Category 1","Test SubCategory 1","Test desc " +
-                "1","Test Section 1",20.45,
-                "CODE1",1,2,3,4,"KG","DOZEN",1.5,"Test Supplier","test Contact persion","LOCAL",1000L,50);
-
-
-        Product product = mapper.map(productCsv, Product.class);
-
-        System.out.println(product);
-
         return ResponseEntity.ok("OK");
     }
 }

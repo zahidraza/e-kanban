@@ -7,22 +7,16 @@ package com.example.ics.service;
 
 import com.example.ics.dto.ProductCsv;
 import com.example.ics.dto.ProductDto;
-import com.example.ics.entity.Category;
-import com.example.ics.entity.Product;
-import com.example.ics.entity.Section;
-import com.example.ics.entity.SubCategory;
-import com.example.ics.entity.Supplier;
+import com.example.ics.entity.*;
 import com.example.ics.page.converter.ProductConverter;
 import com.example.ics.respository.*;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.ics.util.CsvUtils;
+import com.example.ics.util.MiscUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
@@ -46,7 +40,7 @@ public class ProductService {
     private final SectionRepository sectionRepository;
     private final SupplierRepository supplierRepository;
     @Autowired private CategoryRepository categoryRepository;
-    @Autowired SubCategoryRepository subCategoryRepository;
+    @Autowired private SubCategoryRepository subCategoryRepository;
     private ProductConverter converter;
     private Mapper mapper;
 
@@ -197,6 +191,11 @@ public class ProductService {
     private List<Product> map(List<ProductCsv> list){
         List<Product> products = new ArrayList<>();
 
+        Map<String,Integer> mapMonth = MiscUtil.getMapMonth();
+        Set<String> months = mapMonth.keySet();
+        int currYear = MiscUtil.getCurrentYear();
+        int currMonth = MiscUtil.getCurrentMonth();
+
         list.forEach(productCsv -> {
             Product product = mapper.map(productCsv, Product.class);
             /*////////Mapping SubCategory////////////*/
@@ -224,10 +223,43 @@ public class ProductService {
             suppliers.add(supplier);
             product.setSupplierList(suppliers);
 
+            /*/////Adding Consumptions//////////*/
+            Consumption consumption;
+            int mnth;
+            Long value;
+            for (String m: months){
+                mnth = mapMonth.get(m);
+                value = getConsumptionForMonth(productCsv,m);
+                if (value != null) {
+                    if (mnth <= currMonth) {
+                        consumption = new Consumption(currYear,mnth,value);
+                    }else {
+                        consumption = new Consumption(currYear-1,mnth,value);
+                    }
+                    product.addConsumption(consumption);
+                }
+            }
             products.add(product);
-
         });
         return products;
+    }
+    
+    private Long getConsumptionForMonth(ProductCsv productCsv,String month){
+        switch (month) {
+            case "JAN": return productCsv.getJan() != null ? productCsv.getJan().longValue(): null;
+            case "FEB": return productCsv.getFeb() != null ? productCsv.getFeb().longValue(): null;
+            case "MAR": return productCsv.getMar() != null ? productCsv.getMar().longValue(): null;
+            case "APR": return productCsv.getApr() != null ? productCsv.getApr().longValue(): null;
+            case "MAY": return productCsv.getMay() != null ? productCsv.getMay().longValue(): null;
+            case "JUN": return productCsv.getJun() != null ? productCsv.getJun().longValue(): null;
+            case "JUL": return productCsv.getJul() != null ? productCsv.getJul().longValue(): null;
+            case "AUG": return productCsv.getAug() != null ? productCsv.getAug().longValue(): null;
+            case "SEP": return productCsv.getSep() != null ? productCsv.getSep().longValue(): null;
+            case "OCT": return productCsv.getOct() != null ? productCsv.getOct().longValue(): null;
+            case "NOV": return productCsv.getNov() != null ? productCsv.getNov().longValue(): null;
+            case "DEC": return productCsv.getDec() != null ? productCsv.getDec().longValue(): null;
+        }
+        return null;
     }
 
 
