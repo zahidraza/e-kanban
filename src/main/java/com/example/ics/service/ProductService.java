@@ -231,11 +231,13 @@ public class ProductService {
             product.setDemand(maxValue/NO_OF_DAYS_IN_MONTH);
 
             long binQty = product.getDemand() > product.getMinOrderQty() ? product.getDemand() : product.getMinOrderQty();
-            binQty = (binQty/product.getPacketSize() + 1)*product.getPacketSize();
+            binQty = (long)((binQty/product.getPacketSize().doubleValue() + 1)*product.getPacketSize().doubleValue());
             product.setBinQty(binQty);
-
-            int tat = product.getTimeOrdering() + product.getTimeProcurement() + product.getTimeTransporation() + product.getTimeBuffer();
-            int noOfBins = (int)(((product.getDemand()*tat)/binQty) + 2);
+            int noOfBins = 2;
+            if (classType != ClassType.CLASS_C) {
+                int tat = product.getTimeOrdering() + product.getTimeProcurement() + product.getTimeTransporation() + product.getTimeBuffer();
+                noOfBins = (int)(((product.getDemand()*tat)/binQty) + 2);
+            }
             product.setNoOfBins(noOfBins);
         });
 
@@ -324,11 +326,10 @@ public class ProductService {
         i = 2;
         list.forEach(productCsv -> {
             /*check packet value if it is zero*/
-            if (productCsv.getPacketSize() == 0) {
+            if (productCsv.getPacketSize().doubleValue() == 0) {
                 errors.add(new ProductError("PACKET_SIZE", i, "Packet Size cannot be zero."));
             }
             Product product = mapper.map(productCsv, Product.class);
-            System.out.println(productCsv);
             /*////////Mapping SubCategory////////////*/
             SubCategory subCategory = subCategoryRepository.findByName(productCsv.getSubCategory().trim());
 

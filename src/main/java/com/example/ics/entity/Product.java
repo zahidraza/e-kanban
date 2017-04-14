@@ -86,7 +86,7 @@ public class Product {
     private Long minOrderQty;
 
     @Column(name = "PACKET_SIZE", nullable = false)
-    private Integer packetSize;
+    private BigDecimal packetSize;
 
     @Column(name = "CLASS_TYPE", nullable = true)
     private String classType;
@@ -232,11 +232,11 @@ public class Product {
         this.minOrderQty = minOrderQty;
     }
 
-    public Integer getPacketSize() {
+    public BigDecimal getPacketSize() {
         return packetSize;
     }
 
-    public void setPacketSize(Integer packetSize) {
+    public void setPacketSize(BigDecimal packetSize) {
         this.packetSize = packetSize;
     }
 
