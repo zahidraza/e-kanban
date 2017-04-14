@@ -10,6 +10,7 @@ import com.example.ics.dto.ProductCsv;
 import com.example.ics.dto.ProductDto;
 import com.example.ics.dto.ProductError;
 import com.example.ics.entity.*;
+import com.example.ics.enums.BinState;
 import com.example.ics.enums.ClassType;
 import com.example.ics.enums.KanbanType;
 import com.example.ics.exception.ProductDetailsNotValidException;
@@ -58,6 +59,7 @@ public class ProductService {
     int i = -1;
     long totalMonthyConsumption = 0L;
     double commulativePercentage = 0.0;
+    Inventory testInventory;
 
     @Autowired
     public ProductService(ProductRepository productRepository, SectionRepository sectionRepository, SupplierRepository supplierRepository) {
@@ -203,14 +205,15 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
         Map<Long,PConsumption> consumptionMap = new HashedMap();
 
+        /*/////////Processing monthly consumption/////////*/
         products.forEach(product -> {
             Long avgValue = consumptionRepository.findAvgConsumptionOfLastYear(product.getId());
             consumptionMap.put(product.getId(),new PConsumption(product.getPrice().longValue()*avgValue));
             totalMonthyConsumption += product.getPrice().longValue()*avgValue;
         });
-
+        //Sort on basis of consumption value descending
         Map<Long,PConsumption> sortedConsumptionMap = MiscUtil.sortByValueDesc(consumptionMap);
-
+        //Calculate percentage contribution and commulative contribution
         sortedConsumptionMap.forEach((id, pConsumption) -> {
             double percent = (double)pConsumption.getMonthlyConsumption()/(double) totalMonthyConsumption;
             percent *= 100;
@@ -218,18 +221,18 @@ public class ProductService {
             pConsumption.setCommulativePercentage(commulativePercentage+percent);
             commulativePercentage += percent;
         });
-
+        //Update product dynamically calculated values
         products.forEach(product -> {
             double cp = sortedConsumptionMap.get(product.getId()).getCommulativePercentage();
             ClassType classType = (cp <= 60) ? ClassType.CLASS_A : ((cp <= 80) ? ClassType.CLASS_B : ClassType.CLASS_C);
             product.setClassType(classType);
-
+            /////////////////
             KanbanType kanbanType = (classType == ClassType.CLASS_A || classType == ClassType.CLASS_B) ? KanbanType.N_BIN : KanbanType.TWO_BIN;
             product.setKanbanType(kanbanType);
-
+            ///////////////
             Long maxValue = consumptionRepository.findMaxConsumptionOfLastYear(product.getId());
             product.setDemand(maxValue/NO_OF_DAYS_IN_MONTH);
-
+            ///////////////////
             long binQty = product.getDemand() > product.getMinOrderQty() ? product.getDemand() : product.getMinOrderQty();
             binQty = (long)((binQty/product.getPacketSize().doubleValue() + 1)*product.getPacketSize().doubleValue());
             product.setBinQty(binQty);
@@ -239,6 +242,19 @@ public class ProductService {
                 noOfBins = (int)(((product.getDemand()*tat)/binQty) + 2);
             }
             product.setNoOfBins(noOfBins);
+        });
+
+        //Update Inventory
+        products.forEach(product -> {
+            int noOfInventory = product.getInventorySet().size();
+            //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
+            if (noOfInventory < product.getNoOfBins()){
+                for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
+                    product.addInventory(new Inventory(i, BinState.UNAVAILABLE));
+                    System.out.println("productId =" + product.getId() + ", size = " +product.getInventorySet().size());
+                }
+                System.out.println();
+            }
         });
 
     }

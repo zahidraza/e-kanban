@@ -48,6 +48,11 @@ public class Inventory implements Serializable{
     public Inventory() {
     }
 
+    public Inventory(Integer binNo, BinState binState) {
+        this.binNo = binNo;
+        this.binState = binState.getValue();
+    }
+
     public Long getId() {
         return id;
     }
@@ -89,29 +94,20 @@ public class Inventory implements Serializable{
     }
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Inventory inventory = (Inventory) o;
+
+        if (!product.equals(inventory.product)) return false;
+        return binNo.equals(inventory.binNo);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Inventory other = (Inventory) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        int result = product.hashCode();
+        result = 31 * result + binNo.hashCode();
+        return result;
     }
-    
-    
 }

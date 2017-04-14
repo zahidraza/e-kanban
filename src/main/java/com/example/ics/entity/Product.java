@@ -49,6 +49,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Consumption> consumptions = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Inventory> inventorySet = new HashSet<>();
+
     @Column(name = "NAME", nullable = false)
     private String name;
 
@@ -114,6 +118,15 @@ public class Product {
     public void addConsumption(Consumption consumption) {
         consumption.setProduct(this);
         consumptions.add(consumption);
+    }
+
+    public void addInventory(Inventory inventory) {
+        inventory.setProduct(this);
+        inventorySet.add(inventory);
+    }
+
+    public Set<Inventory> getInventorySet() {
+        return inventorySet;
     }
 
     public Set<Consumption> getConsumptions() {
