@@ -36,7 +36,7 @@ public class SubCategory implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull @Size(min = 3,max = 255)
+    @NotNull
     @Column(name = "NAME",nullable = false)
     private String name;
     

@@ -10,11 +10,11 @@ package com.example.ics.enums;
  * @author razamd
  */
 public enum BinState {
-    STORE("STORE"), PURCHASE("PURCHASE"), ORDERED("ORDERED");
+    UNAVAILABLE("UNAVAILABLE"), STORE("STORE"), PURCHASE("PURCHASE"), ORDERED("ORDERED");
 
     private final String value;
 
-    private BinState(String value) {
+    BinState(String value) {
         this.value = value;
     }
 

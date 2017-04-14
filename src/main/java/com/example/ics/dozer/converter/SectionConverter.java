@@ -19,6 +19,7 @@ public class SectionConverter extends DozerConverter {
 
     @Override
     public Object convertTo(Object o, Object o2) {
+        if (o == null) return null;
         if (o instanceof String) {
             Set<Section> sections = new HashSet<>();
             String sec = (String)o;

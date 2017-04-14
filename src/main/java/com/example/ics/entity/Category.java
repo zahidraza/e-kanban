@@ -37,7 +37,7 @@ public class Category implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull @Size(min = 3, max = 255)
+    @NotNull
     @Column(name = "NAME",nullable = false, unique = true)
     private String name;
     

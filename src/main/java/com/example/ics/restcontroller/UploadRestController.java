@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * Created by razamd on 3/29/2017.
  */
@@ -34,11 +36,13 @@ public class UploadRestController {
             return new ResponseEntity<>(new Error("FILE_NOT_SUPPORTED"), HttpStatus.CONFLICT);
         }
         productService.addProductsBatch(file);
+        System.out.println("Check");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/test")
     public ResponseEntity<?> test(){
+        productService.sync();
 
         return ResponseEntity.ok("OK");
     }

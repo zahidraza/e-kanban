@@ -8,6 +8,8 @@ package com.example.ics.respository;
 import com.example.ics.entity.Product;
 import com.example.ics.entity.SubCategory;
 import java.io.Serializable;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author razamd
  */
 public interface ProductRepository extends JpaRepository<Product, Long>{
-    
+
     public Page<Product> findBySubCategory(SubCategory subCategory, Pageable pageable);
     
     public Product findByName(String name);

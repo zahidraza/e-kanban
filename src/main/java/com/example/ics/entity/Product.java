@@ -17,27 +17,27 @@ import java.util.Set;
 import javax.persistence.*;
 
 /**
- *
  * @author razamd
  */
 @Entity
 public class Product {
-    
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "SUB_CATEGORY_ID")
     private SubCategory subCategory;
-    
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PRODUCT_SECTION",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "SECTION_ID")
     )
     private Set<Section> sectionList = new HashSet<>();
-    
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "PRODUCT_SUPPLIER",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
@@ -45,61 +45,62 @@ public class Product {
     )
     private Set<Supplier> supplierList = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Consumption> consumptions = new HashSet<>();
-    
-    @Column(name = "NAME",nullable = false)
+
+    @Column(name = "NAME", nullable = false)
     private String name;
-    
-    @Column(name = "DESCRIPTION",nullable = true,length = 500)
+
+    @Column(name = "DESCRIPTION", nullable = true, length = 500)
     private String description;
-    
-    @Column(name = "PRICE",nullable = false)
+
+    @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
-    
-    @Column(name = "ITEM_CODE",nullable = true)
+
+    @Column(name = "ITEM_CODE", nullable = true)
     private String itemCode;
-    
-    @Column(name = "TIME_ORDERING",nullable = false)
+
+    @Column(name = "TIME_ORDERING", nullable = false)
     private Integer timeOrdering;
-    
-    @Column(name = "TIME_PROCUREMENT",nullable = false)
+
+    @Column(name = "TIME_PROCUREMENT", nullable = false)
     private Integer timeProcurement;
-    
-    @Column(name = "TIME_TRANSPORTION",nullable = false)
+
+    @Column(name = "TIME_TRANSPORTION", nullable = false)
     private Integer timeTransporation;
-    
-    @Column(name = "TIME_BUFFER",nullable = false) 
+
+    @Column(name = "TIME_BUFFER", nullable = false)
     private Integer timeBuffer;
-    
-    @Column(name = "UOM_PURCHASE",nullable = false)
+
+    @Column(name = "UOM_PURCHASE", nullable = false)
     private String uomPurchase; //Unit of Measurment Purchase
-    
-    @Column(name = "UOM_CONSUMPTION",nullable = false)
+
+    @Column(name = "UOM_CONSUMPTION", nullable = false)
     private String uomConsumption;
-    
-    @Column(name = "CONVERSION_FACTOR",nullable = false)
+
+    @Column(name = "CONVERSION_FACTOR", nullable = false)
     private BigDecimal conversionFactor;
-    
-    @Column(name = "MIN_ORDER_QTY",nullable = false)
+
+    @Column(name = "MIN_ORDER_QTY", nullable = false)
     private Long minOrderQty;
-    
-    @Column(name = "PACKET_SIZE",nullable = false)
+
+    @Column(name = "PACKET_SIZE", nullable = false)
     private Integer packetSize;
-    
-    @Column(name = "CLASS_TYPE",nullable = true)
+
+    @Column(name = "CLASS_TYPE", nullable = true)
     private String classType;
-    
-    @Column(name = "KANBAN_TYPE",nullable = true)
+
+    @Column(name = "KANBAN_TYPE", nullable = true)
     private String kanbanType;
-    
-    @Column(name = "DEMAND",nullable = true)
+
+    @Column(name = "DEMAND", nullable = true)
     private Long demand;
-    
-    @Column(name = "NO_OF_BINS",nullable = true)
+
+    @Column(name = "NO_OF_BINS", nullable = true)
     private Integer noOfBins;
-    
-    @Column(name = "BIN_QTY",nullable = true)
+
+    @Column(name = "BIN_QTY", nullable = true)
     private Long binQty;
 
     @Version
@@ -110,7 +111,7 @@ public class Product {
     public Product() {
     }
 
-    public void addConsumption(Consumption consumption){
+    public void addConsumption(Consumption consumption) {
         consumption.setProduct(this);
         consumptions.add(consumption);
     }
@@ -328,7 +329,7 @@ public class Product {
         }
         return true;
     }
-       
+
 //    public String toJsonString(){
 //        StringBuilder builder = new StringBuilder();
 //        builder.append("{\n");

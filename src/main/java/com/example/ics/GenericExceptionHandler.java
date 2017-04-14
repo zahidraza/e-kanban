@@ -1,9 +1,14 @@
 package com.example.ics;
 
 import com.example.ics.dto.FieldError;
+import com.example.ics.dto.ProductError;
 import com.example.ics.dto.RestError;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.ics.exception.ProductDetailsNotValidException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import org.apache.commons.beanutils.ConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +54,12 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(processFieldError(result.getFieldErrors()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ProductDetailsNotValidException.class)
+    public ResponseEntity<?> processProductError(ProductDetailsNotValidException e){
+        logger.debug("processProductError: {}", e.getMessage());
+        return new ResponseEntity<>(e.getProductErrors(), HttpStatus.BAD_REQUEST);
+    }
+
     private List<FieldError> processFieldError(List<org.springframework.validation.FieldError> fieldErrors) {
         //NoSuchMessageException
         //messageSource.
@@ -75,8 +86,21 @@ public class GenericExceptionHandler {
 //    }
     @ExceptionHandler
     ResponseEntity<?> handleException(Exception e) {
-        e.printStackTrace();
         logger.debug("handleException: {} \n {}",e , e.getMessage());
+        e.printStackTrace();
+
+        if (e.getCause() instanceof CsvDataTypeMismatchException){
+            CsvDataTypeMismatchException cause = (CsvDataTypeMismatchException) e.getCause();
+            long i = cause.getLineNumber();
+            if (cause.getCause() instanceof ConversionException){
+                ConversionException cause2 = (ConversionException) cause.getCause();
+                String msg = cause2.getMessage();
+                return new ResponseEntity<Object>(new ProductError("",(int)(i+1),msg),HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<Object>(new ProductError("",(int)(i+1),cause.getMessage()),HttpStatus.BAD_REQUEST);
+
+        }
+
         String msg = e.getMessage();
         String devMsg = "";
         do{
