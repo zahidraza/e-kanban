@@ -40,4 +40,24 @@
             <b>sectionList</b>
         </field>
     </mapping>
+
+    <mapping>
+        <class-a>com.example.ics.entity.Inventory</class-a>
+        <class-b>com.example.ics.dto.InventoryDto</class-b>
+
+        <field custom-converter="com.example.ics.dozer.converter.ProductCategoryConverter">
+            <a>product</a>
+            <b>categoryId</b>
+        </field>
+
+        <field custom-converter="com.example.ics.dozer.converter.ProductSubCategoryConverter">
+            <a>product</a>
+            <b>subCategoryId</b>
+        </field>
+
+        <field custom-converter="com.example.ics.dozer.converter.ProductLongConverter">
+            <a>product</a>
+            <b>productId</b>
+        </field>
+    </mapping>
 </mappings>
