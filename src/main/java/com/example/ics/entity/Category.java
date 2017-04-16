@@ -8,6 +8,7 @@ package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class Category implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull
+    @NotEmpty
     @Column(name = "NAME",nullable = false, unique = true)
     private String name;
     

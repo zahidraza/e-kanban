@@ -1,6 +1,7 @@
 package com.example.ics.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -21,8 +22,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()               
 //                    .antMatchers("/api/users","/api/users/**").access("hasRole('ADMIN')")
 //                    .antMatchers("/api/categories","/api/categories/**").access("hasRole('ADMIN')")
-//                    .antMatchers("/api/**").authenticated()
-                    .antMatchers("/api/**").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/categories").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/sections").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/suppliers").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/users").permitAll()
+                    .antMatchers("/api/**").authenticated()
+//                    .antMatchers("/api/**").permitAll()
                 
             .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());

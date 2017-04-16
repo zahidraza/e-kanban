@@ -5,6 +5,8 @@
  */
 package com.example.ics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -19,7 +21,8 @@ public class Consumption {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;

@@ -6,6 +6,8 @@
 package com.example.ics.entity;
 
 import com.example.ics.enums.BinState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -29,7 +31,8 @@ public class Inventory implements Serializable{
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;

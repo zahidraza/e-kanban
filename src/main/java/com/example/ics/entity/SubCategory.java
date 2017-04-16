@@ -6,6 +6,8 @@
 package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,7 +38,7 @@ public class SubCategory implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull
+    @NotEmpty
     @Column(name = "NAME",nullable = false)
     private String name;
     

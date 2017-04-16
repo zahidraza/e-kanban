@@ -37,5 +37,10 @@ public class ApiUrls {
     /*Upload Resource*/
     public static final String ROOT_URL_UPLOADS = "/api/uploads";
     public static final String URL_UPLOADS_PRODUCTS = "/products";
+
+    /*Product Resource*/
+    public static final String ROOT_URL_PRODUCTS = "/api/products";
+    public static final String URL_PRODUCTS_SYNC = "/sync";
+
     
 }

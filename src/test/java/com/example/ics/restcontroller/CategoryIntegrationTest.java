@@ -118,7 +118,7 @@ public class CategoryIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].field", is("name")))
-                .andExpect(jsonPath("$[0].message", containsString("length must be between 3")));
+                .andExpect(jsonPath("$[0].message", containsString("empty")));
         
     }
     
@@ -213,7 +213,7 @@ public class CategoryIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].field", is("name")))
-                .andExpect(jsonPath("$[0].message", containsString("length must be between 3")));
+                .andExpect(jsonPath("$[0].message", containsString("empty")));
         
     }
 

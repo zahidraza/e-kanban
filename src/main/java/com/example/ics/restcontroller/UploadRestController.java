@@ -42,8 +42,6 @@ public class UploadRestController {
 
     @GetMapping("/test")
     public ResponseEntity<?> test(){
-        productService.sync();
-
         return ResponseEntity.ok("OK");
     }
 }

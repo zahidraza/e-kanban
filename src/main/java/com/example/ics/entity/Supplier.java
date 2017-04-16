@@ -29,7 +29,7 @@ public class Supplier implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull @Size(min = 2, max = 255) 
+    @NotEmpty
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
     

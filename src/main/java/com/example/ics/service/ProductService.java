@@ -127,9 +127,9 @@ public class ProductService {
     @Transactional
     public ProductDto save(Product product, List<Long> sections, List<Long> suppliers) {
         logger.debug("save()");
-        product = productRepository.save(product);
-        Set<Section> sectionList = product.getSectionList();
-        Set<Supplier> supplierList = product.getSupplierList();
+        Set<Section> sectionList = new HashSet<>();
+        Set<Supplier> supplierList = new HashSet<>();
+
         if (sections != null) {
             sections.forEach(secId -> {
                 sectionList.add(sectionRepository.findOne(secId));
@@ -140,6 +140,9 @@ public class ProductService {
                 supplierList.add(supplierRepository.findOne(secId));
             });
         }
+        product.setSectionList(sectionList);
+        product.setSupplierList(supplierList);
+        product = productRepository.save(product);
         return mapper.map(product, ProductDto.class);
     }
 
@@ -202,6 +205,8 @@ public class ProductService {
 
     @Transactional
     public void sync(){
+        totalMonthyConsumption = 0L;
+        commulativePercentage = 0.0;
         List<Product> products = productRepository.findAll();
         Map<Long,PConsumption> consumptionMap = new HashedMap();
 
@@ -251,9 +256,7 @@ public class ProductService {
             if (noOfInventory < product.getNoOfBins()){
                 for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
                     product.addInventory(new Inventory(i, BinState.UNAVAILABLE));
-                    System.out.println("productId =" + product.getId() + ", size = " +product.getInventorySet().size());
                 }
-                System.out.println();
             }
         });
 
