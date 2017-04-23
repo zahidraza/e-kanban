@@ -17,7 +17,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-                .requestMatchers().antMatchers("/api/**")
+                .requestMatchers().antMatchers("/**","/api/**")
             .and()
                 .authorizeRequests()               
 //                    .antMatchers("/api/users","/api/users/**").access("hasRole('ADMIN')")
@@ -28,7 +28,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                     .antMatchers(HttpMethod.GET,"/api/users").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/inventory").permitAll()
                     .antMatchers("/api/**").authenticated()
-//                    .antMatchers("/api/**").permitAll()
+                    .antMatchers("/**").permitAll()
                 
             .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());

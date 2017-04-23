@@ -67,9 +67,8 @@ public class Application/* extends SpringBootServletInitializer*/ {
     }
 
     @GetMapping(value = "/")
-    @ResponseBody
-    public ResponseEntity<?> hello() {
+    public String hello() {
         logger.debug("home page");
-        return new ResponseEntity<>("Hello World", HttpStatus.OK);
+        return "index";
     }
 }
