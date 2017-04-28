@@ -179,7 +179,8 @@ class SubCategory extends Component {
   }
 
   _onHelpClick () {
-    window.open(Window.baseUrl + "/help/subCategory");
+    const helpUrl = window.baseUrl + "/help/subCategory";
+    window.open(helpUrl);
   }
 
   _onCloseLayer (layer) {

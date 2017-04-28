@@ -128,7 +128,8 @@ class Supplier extends Component {
   }
 
   _onHelpClick () {
-    window.open(Window.baseUrl + "/help/supplier");
+    const helpUrl = window.baseUrl + "/help/supplier";
+    window.open(helpUrl);
   }
 
   render() {

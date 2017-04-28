@@ -184,7 +184,8 @@ class Product extends Component {
   }
 
   _onHelpClick () {
-    window.open(Window.baseUrl + "/help/product");
+    const helpUrl = window.baseUrl + "/help/product";
+    window.open(helpUrl);
   }
 
   /*_renderProducts (products) {

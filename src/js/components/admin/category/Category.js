@@ -93,7 +93,8 @@ class Category extends Component {
   }
 
   _onHelpClick () {
-    window.open(Window.baseUrl + "/help/category");
+    const helpUrl = window.baseUrl + "/help/category";
+    window.open(helpUrl);
   }
 
   _onCloseLayer (layer) {
