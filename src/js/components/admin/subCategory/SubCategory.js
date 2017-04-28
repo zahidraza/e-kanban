@@ -179,7 +179,7 @@ class SubCategory extends Component {
   }
 
   _onHelpClick () {
-    window.open("http://localhost:8080/help/subCategory");
+    window.open(Window.baseUrl + "/help/subCategory");
   }
 
   _onCloseLayer (layer) {

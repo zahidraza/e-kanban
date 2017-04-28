@@ -184,7 +184,7 @@ class Product extends Component {
   }
 
   _onHelpClick () {
-    window.open("http://localhost:8080/help/product");
+    window.open(Window.baseUrl + "/help/product");
   }
 
   /*_renderProducts (products) {

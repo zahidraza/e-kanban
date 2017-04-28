@@ -128,7 +128,7 @@ class Supplier extends Component {
   }
 
   _onHelpClick () {
-    window.open("http://localhost:8080/help/supplier");
+    window.open(Window.baseUrl + "/help/supplier");
   }
 
   render() {

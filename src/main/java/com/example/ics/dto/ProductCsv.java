@@ -64,6 +64,12 @@ public class ProductCsv {
     @CsvBindByName(column = "PACKET_SIZE")
     private Double packetSize;
 
+    @CsvBindByName(column = "STOCK_ON_FLOOR")
+    private Double stkOnFloor;
+
+    @CsvBindByName(column = "ORDERED_QTY")
+    private Double orderedQty;
+
     @CsvBindByName(column = "JAN")
     private Double jan;
 
@@ -376,6 +382,22 @@ public class ProductCsv {
         this.dec = dec;
     }
 
+    public Double getStkOnFloor() {
+        return stkOnFloor;
+    }
+
+    public void setStkOnFloor(Double stkOnFloor) {
+        this.stkOnFloor = stkOnFloor;
+    }
+
+    public Double getOrderedQty() {
+        return orderedQty;
+    }
+
+    public void setOrderedQty(Double orderedQty) {
+        this.orderedQty = orderedQty;
+    }
+
     @Override
     public String toString() {
         return "ProductCsv{" +
@@ -398,6 +420,8 @@ public class ProductCsv {
                 ", supplierType='" + supplierType + '\'' +
                 ", minOrderQty=" + minOrderQty +
                 ", packetSize=" + packetSize +
+                ", stkOnFloor=" + stkOnFloor +
+                ", orderedQty=" + orderedQty +
                 ", jan=" + jan +
                 ", feb=" + feb +
                 ", mar=" + mar +

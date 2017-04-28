@@ -19,8 +19,7 @@ export function authenticate (username, password) {
     dispatch({type: u.USER_AUTH_PROGRESS});
     const config = {
       method: 'post',
-      url: "http://localhost:8000/oauth/token",
-      //url: "http://zahidraza.in/andon-system/oauth/token",
+      url: window.baseUrl + "/oauth/token",
       headers: {'Authorization': 'Basic ' + btoa('client:secret')},
       params: {
         grant_type: 'password',

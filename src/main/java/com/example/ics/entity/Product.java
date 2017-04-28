@@ -107,6 +107,12 @@ public class Product {
     @Column(name = "BIN_QTY", nullable = true)
     private Long binQty;
 
+    @Column(name = "STK_ON_FLOOR", nullable = false)
+    private Long stkOnFloor;
+
+    @Column(name = "ORDERED_QTY", nullable = false)
+    private Long orderedQty;
+
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED")
@@ -316,6 +322,30 @@ public class Product {
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
+    }
+
+    public void setKanbanType(String kanbanType) {
+        this.kanbanType = kanbanType;
+    }
+
+    public Long getStkOnFloor() {
+        return stkOnFloor;
+    }
+
+    public void setStkOnFloor(Long stkOnFloor) {
+        this.stkOnFloor = stkOnFloor;
+    }
+
+    public Long getOrderedQty() {
+        return orderedQty;
+    }
+
+    public void setOrderedQty(Long orderedQty) {
+        this.orderedQty = orderedQty;
     }
 
     @Override

@@ -397,6 +397,9 @@ public class ProductService {
                         product.addConsumption(consumption);
                     }
                 }
+                product.setStkOnFloor(0L);
+                product.setOrderedQty(0L);
+
                 products.add(product);
             }
 

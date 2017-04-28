@@ -88,7 +88,7 @@ class Sections extends Component {
     this.props.dispatch({type: c.SECTION_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
   _onHelpClick () {
-    window.open("http://localhost:8080/help/section");
+    window.open(Window.baseUrl + "/help/section");
   }
 
   _onCloseLayer (layer) {

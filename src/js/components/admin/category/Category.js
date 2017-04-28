@@ -93,7 +93,7 @@ class Category extends Component {
   }
 
   _onHelpClick () {
-    window.open("http://localhost:8080/help/category");
+    window.open(Window.baseUrl + "/help/category");
   }
 
   _onCloseLayer (layer) {

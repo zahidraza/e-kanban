@@ -2,6 +2,7 @@ package com.example.ics.restcontroller;
 
 import com.example.ics.entity.Supplier;
 import com.example.ics.util.ApiUrls;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Ignore
 public class SupplierIntegrationTest {
 
     @Autowired MockMvc mvc;
