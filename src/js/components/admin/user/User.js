@@ -37,9 +37,8 @@ class User extends Component {
       initializing: false,
       viewing: false,
       users: [],
-      errors: [],
       user: {},
-      roles: [ur.ROLE_ADMIN,ur.ROLE_PURCHASE,ur.ROLE_STORE,ur.ROLE_USER]
+      roles: [ur.ROLE_USER,ur.ROLE_PURCHASE,ur.ROLE_STORE,ur.ROLE_ADMIN]
     };
     this.localeData = localeData();
   }
@@ -83,16 +82,14 @@ class User extends Component {
   }
 
   _onRoleFilter (event) {
-    console.log('_onRoleFilter');
     const user = this.state.user;
     user.role = event.value;
     this.setState({user: user});
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
     const user = this.state.user;
-    user.role = 'Select Role';
+    user.role = ur.ROLE_USER;
     this.setState({ user: user});
     this.props.dispatch({type: u.USER_ADD_FORM_TOGGLE, payload: {adding: true}});
   }
@@ -125,8 +122,8 @@ class User extends Component {
   }
 
   render() {
-    const {adding,editing,users} = this.props.user;
-    let {viewing, user, errors, roles,initializing } = this.state;
+    const {adding,editing,users,errors,busy} = this.props.user;
+    let {viewing, user, roles,initializing } = this.state;
     
     if (initializing) {
       return (
@@ -138,9 +135,7 @@ class User extends Component {
       );
     }
 
-    //const busy = adding ? <Spinning /> : null;
-
-    //const loading = fetching ? (<Spinning />) : null;
+    const busyIcon = busy ? <Spinning /> : null;
     const userItems = users.map((user, index)=>{
       return (
         <TableRow key={index}  >
@@ -160,13 +155,13 @@ class User extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Add New User</Heading></Header>
           <FormFields>
-            <FormField label="User Name" error={errors[0]}>
+            <FormField label="User Name" error={errors.name}>
               <input type="text" name="name" value={user.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField label="Email" error={errors[2]}>
+            <FormField label="Email" error={errors.email}>
               <input type="email" name="email" value={user.email} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField label="Mobile Number" error={errors[3]}>
+            <FormField label="Mobile Number" error={errors.mobile}>
               <input type="text" name="mobile" value={user.mobile} onChange={this._onChangeInput.bind(this)} />
             </FormField>
             <FormField>
@@ -174,7 +169,7 @@ class User extends Component {
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Add" primary={true}  onClick={this._addUser.bind(this)} />
+            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addUser.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -212,13 +207,13 @@ class User extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Update User Details</Heading></Header>
           <FormFields >
-            <FormField label="User Name" error={errors[0]}>
+            <FormField label="User Name" error={errors.name}>
               <input type="text" name="name" value={user.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField label="Email" error={errors[1]}>
+            <FormField label="Email" error={errors.email}>
               <input type="email" name="email" value={user.email} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField label="Mobile Number" error={errors[2]}>
+            <FormField label="Mobile Number" error={errors.mobile}>
               <input type="text" name="mobile" value={user.mobile} onChange={this._onChangeInput.bind(this)} />
             </FormField>
             <FormField>
@@ -226,7 +221,7 @@ class User extends Component {
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Update" primary={true}  onClick={this._updateUser.bind(this)} />
+            <Button icon={busyIcon} label="Update" primary={true}  onClick={this._updateUser.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -250,7 +245,6 @@ class User extends Component {
               </tbody>
             </Table>
           </Box>
-          {/*<Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}}>{loading}</Box>*/}
           <Box size="small" alignSelf="center" pad={{vertical:'large'}}>
             <Button icon={<Add />} label="Add User" primary={true} a11yTitle="Add item" onClick={this._onAddClick.bind(this)}/>
           </Box>

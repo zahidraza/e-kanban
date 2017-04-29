@@ -47,26 +47,10 @@ export function authenticate (username, password) {
 export function changePassword (credential) {
 
 }
- 
-export function getUsers () {
-  console.log("getUsers()");
-  this.setState({fetching: true});
-
-  axios.get(window.serviceHost + '/users', {headers: getHeaders()})
-  .then((response) => {
-    if (response.status == 200 && response.data._embedded) {
-      this.setState({users: response.data._embedded.userDtoList});
-    }
-    this.setState({fetching: false});
-  }).catch( (err) => {
-    console.log(err); 
-    this.setState({fetching: false});
-  });
-}
 
 export function addUser (user) {
-  console.log('addUser');
   return function (dispatch) {
+    dispatch({type: u.USER_ADD_PROGRESS});
     axios.post(window.serviceHost + '/users', JSON.stringify(user), {headers: getHeaders()})
     .then((response) => {
       console.log(response);
@@ -74,31 +58,36 @@ export function addUser (user) {
         dispatch({type: u.USER_ADD_SUCCESS, payload: {user: response.data}});
       }
     }).catch( (err) => {
-      console.log(err);
-      dispatch({type: u.USER_ADD_FAIL});
+      if (err.response.status == 400) {
+        dispatch({type: u.USER_BAD_REQUEST, payload: {errors: err.response.data}});
+      }else {
+        dispatch({type: u.USER_ADD_FAIL});
+      }
     });
   };
   
 }
 
 export function updateUser (user) {
-  console.log('updateUser');
   return function (dispatch) {
+    dispatch({type: u.USER_EDIT_PROGRESS});
     axios.put(window.serviceHost + '/users/' + user.id, JSON.stringify(user), {headers: getHeaders()})
     .then((response) => {
       console.log(response);
       if (response.status == 200) {
         dispatch({type: u.USER_EDIT_SUCCESS, payload: {user: response.data}});
       }
-    }).catch( (err) => {
-      console.log(err);
-      dispatch({type: u.USER_EDIT_FAIL});
+    }).catch( (err) => { 
+      if (err.response.status == 400) {
+        dispatch({type: u.USER_BAD_REQUEST, payload: {errors: err.response.data}});
+      }else {
+        dispatch({type: u.USER_EDIT_FAIL});
+      }
     });
   };
 }
 
 export function removeUser (user) {
-  console.log('removeUser');
   return function (dispatch) {
     axios.delete(window.serviceHost + '/users/' + user.id, {headers: getHeaders()})
     .then((response) => {
@@ -106,7 +95,6 @@ export function removeUser (user) {
         dispatch({type: u.USER_REMOVE_SUCCESS, payload: {user}});
       }
     }).catch( (err) => {
-      console.log(err);
       dispatch({type: u.USER_REMOVE_FAIL});
     });
   };

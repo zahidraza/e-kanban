@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { localeData } from '../reducers/localization';
 import {initialize,navActivate} from '../actions/misc';
 import {authenticate} from '../actions/user';
+import {USER_CONSTANTS as u} from '../utils/constants';
 
 //Components
 import Box from 'grommet/components/Box';
@@ -40,7 +41,7 @@ class Login extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }
-    
+    this.props.dispatch({type: u.USER_AUTH_NOT_PROGRESS});
   }
 
   componentWillReceiveProps (nextProps) {
@@ -48,11 +49,9 @@ class Login extends Component {
     if (nextProps.misc.initialized) {
       this.setState({initializing: false});
     }
-    
-    if (this.props.user.authProgress && !nextProps.user.authProgress && sessionStorage.session == undefined) {
+    if (this.props.user.busy && !nextProps.user.busy && sessionStorage.session == undefined) {
       this.setState({errorMsg: "Incorrect email or password, try again!"});
     }
-
     if (sessionStorage.session == 'true') {
       this.context.router.push('/dashboard');
     }
@@ -60,6 +59,7 @@ class Login extends Component {
 
   _login () {
     const {credential} = this.state;
+    this.setState({errorMsg: ''});
     this.props.dispatch(authenticate(credential.email, credential.password));
   }
 
@@ -106,7 +106,7 @@ class Login extends Component {
 
   render () {
 
-    const { initializing, credential, errors,isForgot, errorMsg } = this.state;
+    const { initializing, credential, isForgot, errorMsg } = this.state;
 
     if (initializing) {
       return (
@@ -117,27 +117,23 @@ class Login extends Component {
         </Box>
       );
     }
-    
-    //const busy = changing ? <Spinning /> : null;
-
-    const authProgress = false;
 
     const layerForgotPassword = isForgot ? this._renderForgotPasswdLayer() : null;
 
-    const logging = authProgress ? <Spinning /> : null;
+    const busyIcon = this.props.user.busy ? <Spinning /> : null;
     return (
       
       <Box pad={{horizontal: 'large', vertical: "large"}} wrap={true}  full="vertical" texture="url(/andon-system/static/img/cover.jpg)" >
         <Box align="end" justify="end" pad={{"horizontal": "large", vertical:"large", between:"large"}}>
           <Box size="auto"  align="center" separator="all" justify="center" colorIndex="light-1" pad={{"horizontal": "medium", vertical:"medium", between:"medium"}} >
             <Heading >{this.localeData.APP_NAME_FULL}</Heading>
-            {logging}
+            {busyIcon}
             <Form>
               <FormFields>
-                <FormField label={this.localeData.login_email} error={errors[0]}>
+                <FormField label={this.localeData.login_email}>
                   <input type="text" name="email" value={credential.email} onChange={this._onChange.bind(this)} />
                 </FormField>
-                <FormField label={this.localeData.login_password} error={errors[1]}>
+                <FormField label={this.localeData.login_password}>
                   <input type="password" name="password" value={credential.password} onChange={this._onChange.bind(this)} />
                 </FormField>
               </FormFields>
