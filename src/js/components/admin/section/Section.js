@@ -96,7 +96,7 @@ class Sections extends Component {
 
   _onEditClick (index) {
     console.log('_onEditClick: index = ' + index);
-    this.setState({section: this.props.section.sections[index]});
+    this.setState({section: {...this.props.section.sections[index]}});
     this.props.dispatch({type: c.SECTION_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
   _onHelpClick () {

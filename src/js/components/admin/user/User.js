@@ -107,7 +107,7 @@ class User extends Component {
   _onEditClick (index) {
     console.log('_onEditClick');
     const users = this.state.users;
-    this.setState({user: users[index]});
+    this.setState({user: {...users[index]}});
     this.props.dispatch({type: u.USER_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
 
