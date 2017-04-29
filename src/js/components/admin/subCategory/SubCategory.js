@@ -36,7 +36,6 @@ class SubCategory extends Component {
     super();
     this.state = {
       initializing: false,
-      errors: [],
       subCategories: [],
       subCategory: {},
       searchText: '',
@@ -48,10 +47,10 @@ class SubCategory extends Component {
     this.localeData = localeData();
     this._loadSubCategory = this._loadSubCategory.bind(this);
     this._subCategorySort = this._subCategorySort.bind(this);
+    this._getSubCategories = this._getSubCategories.bind(this);
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -70,26 +69,32 @@ class SubCategory extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('componentWillReceiveProps');
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({cFilter: nextProps.category.categories[0].name});
       this.setState({initializing: false});
     }
-
     if (this.props.category.toggleStatus != nextProps.category.toggleStatus) {
       const {categories,filter,sort} = nextProps.category;
       this._loadSubCategory(categories,filter,sort);
     }
+
+  }
+
+  _getSubCategories (categories) {
+    let list = [] ;
+    categories.forEach(c => {
+      c.subCategoryList.forEach(sc => {
+        list.push({category:{name: c.name, id: c.id}, subCategory:{name: sc.name, id: sc.id}});
+      });
+    });
+    return list;
   }
 
   _loadSubCategory (categories,filter,sort) {
-    console.log("_loadSubCategory()");
-    let list1 = [] ;
-    categories.forEach(c => {
-      c.subCategoryList.forEach(sc => {
-        list1.push({category:{name: c.name, id: c.id}, subCategory:{name: sc.name, id: sc.id}});
-      });
-    });
+    let list1 = this._getSubCategories(categories);
     if ('category' in filter) {
       const categoryFilter = filter.category;
       let list2 = list1.filter(sc => categoryFilter.includes(sc.category.name));
@@ -129,8 +134,13 @@ class SubCategory extends Component {
     this.props.dispatch(updateSubCategory(category._links.subCategoryList.href + '/' + this.state.subCategory.id ,this.state.subCategory));
   }
 
-  _onSearch () {
+  _onSearch (event) {
     console.log('_onSearch');
+    const value = event.target.value;
+    let subCategories = this._getSubCategories(this.props.category.categories);
+    subCategories = subCategories.filter(sc => sc.subCategory.name.toLowerCase().includes(value.toLowerCase()));
+    console.log(subCategories);
+    this.setState({searchText: value, subCategories});
   }
 
   _onFilter (event) {
@@ -195,8 +205,8 @@ class SubCategory extends Component {
   }
 
   render() {
-    const {fetching, adding, editing,categories} = this.props.category;
-    const { subCategories, subCategory, errors, searchText, filterActive,filteredCount,unfilteredCount, cFilter,initializing  } = this.state;
+    const {addingSubCategory:adding, editingSubCategory: editing,categories, busy, errorSubCategory: errors} = this.props.category;
+    const { subCategories, subCategory, searchText, filterActive,filteredCount,unfilteredCount, cFilter,initializing  } = this.state;
 
     if (initializing) {
       return (
@@ -208,7 +218,7 @@ class SubCategory extends Component {
       );
     }
 
-    const loading = fetching ? (<Spinning />) : null;
+    const busyIcon = busy ? <Spinning /> : null;
 
     const items = subCategories.map((sc, index)=>{
       return (
@@ -235,12 +245,12 @@ class SubCategory extends Component {
             <FormField>
               <Select options={cItems} value={cFilter} onChange={this._onFilter.bind(this)}/>
             </FormField>
-            <FormField label="SubCategory Name" error={errors[0]}>
+            <FormField label="SubCategory Name" error={errors.name}>
               <input type="text" name="name" value={subCategory.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Add" primary={true}  onClick={this._addSubCategory.bind(this)} />
+            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addSubCategory.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -251,12 +261,12 @@ class SubCategory extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Update SubCategory Details</Heading></Header>
           <FormFields >
-            <FormField label="SubCategory Name" error={errors[0]}>
+            <FormField label="SubCategory Name" error={errors.name}>
               <input type="text" name="name" value={subCategory.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Update" primary={true}  onClick={this._updateSubCategory.bind(this)} />
+            <Button icon={busyIcon} label="Update" primary={true}  onClick={this._updateSubCategory.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -280,7 +290,6 @@ class SubCategory extends Component {
         </Header>
 
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
-          <Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}}>{loading}</Box>
           <Box size="large" alignSelf="center" >
             <Table>
               <thead>

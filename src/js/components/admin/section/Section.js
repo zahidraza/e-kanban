@@ -33,8 +33,8 @@ class Sections extends Component {
     super();
     this.state = {
       initializing: false,
-      errors: [],
       section: {},
+      sections: [],
       searchText: ''
     };
     this.localeData = localeData();
@@ -45,12 +45,20 @@ class Sections extends Component {
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
+    }else {
+      this.setState({sections: this.props.section.sections});
     }
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
-      this.setState({initializing: false});
+      this.setState({initializing: false, sections: nextProps.section.sections});
+    }
+    if (nextProps.misc.initialized) {
+      this.setState({sections: nextProps.section.sections});
     }
   }
 
@@ -62,8 +70,11 @@ class Sections extends Component {
     this.props.dispatch(updateSection(this.state.section));
   }
 
-  _onSearch () {
+  _onSearch (event) {
     console.log('_onSearch');
+    const value = event.target.value;
+    const sections = this.props.section.sections.filter(s => s.name.toLowerCase().includes(value.toLowerCase()));
+    this.setState({searchText: value, sections});
   }
 
   _onChangeInput ( event ) {
@@ -79,7 +90,8 @@ class Sections extends Component {
 
   _onRemoveClick (index) {
     console.log('_onRemoveClick: index = ' + index);
-    this.props.dispatch(removeSection(this.props.section.sections[index]));
+    this.props.dispatch(removeSection(this.state.sections[index]));
+    this.setState({searchText: ''});
   }
 
   _onEditClick (index) {
@@ -105,8 +117,8 @@ class Sections extends Component {
   }
 
   render() {
-    const { fetching, adding, editing, sections } = this.props.section;
-    const { section, errors, searchText,initializing } = this.state;
+    const { busy, adding, editing, errors } = this.props.section;
+    const { section, sections, searchText,initializing } = this.state;
 
     if (initializing) {
       return (
@@ -118,13 +130,13 @@ class Sections extends Component {
       );
     }
 
-    const loading = fetching ? (<Spinning />) : null;
-    const count = fetching ? 100 : sections.length;
+    const busyIcon = busy ? (<Spinning />) : null;
+    const count = initializing ? 100 : sections.length;
 
-    let items = sections.map((c,index) => {
+    let items = sections.map((s,index) => {
       return (
         <ListItem key={index} justify="between" pad={{vertical:'none',horizontal:'small'}} >
-          <span> {c.name} </span>
+          <span> {s.name} </span>
             <span className="secondary">
               <Button icon={<Edit />} onClick={this._onEditClick.bind(this, index)} />
               <Button icon={<Trash />} onClick={this._onRemoveClick.bind(this, index)} />
@@ -138,12 +150,12 @@ class Sections extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Add New Section</Heading></Header>
           <FormFields>
-            <FormField label="Section Name" error={errors[0]}>
+            <FormField label="Section Name" error={errors.name}>
               <input type="text" name="name" value={section.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Add" primary={true}  onClick={this._addSection.bind(this)} />
+            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addSection.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -154,12 +166,12 @@ class Sections extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Update Section Details</Heading></Header>
           <FormFields >
-            <FormField label="Section Name" error={errors[0]}>
+            <FormField label="Section Name" error={errors.name}>
               <input type="text" name="name" value={section.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Update" primary={true}  onClick={this._updateSection.bind(this)} />
+            <Button icon={busyIcon} label="Update" primary={true}  onClick={this._updateSection.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -178,7 +190,6 @@ class Sections extends Component {
           <Button icon={<HelpIcon />} onClick={this._onHelpClick.bind(this)}/>
         </Header>
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
-          <Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}} >{loading}</Box>
           <Box size="large" alignSelf="center" >
             <List > {items} </List>
             <ListPlaceholder unfilteredTotal={count} filteredTotal={count} emptyMessage={this.localeData.section_empty_message} />
@@ -190,6 +201,10 @@ class Sections extends Component {
     );
   }
 }
+
+Sections.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 let select = (store) => {
   return { section: store.section, misc: store.misc};

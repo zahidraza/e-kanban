@@ -34,7 +34,7 @@ class Category extends Component {
     super();
     this.state = {
       initializing: false,
-      errors: [],
+      categories: [],
       category: {},
       searchText: ''
     };
@@ -46,15 +46,20 @@ class Category extends Component {
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
+    }else {
+      this.setState({categories: this.props.category.categories});
     }
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
     }
-    if (sessionStorage.session == undefined) {
-      this.context.router.push('/');
+    if (nextProps.misc.initialized) {
+      this.setState({categories: nextProps.category.categories});
     }
   }
 
@@ -66,8 +71,10 @@ class Category extends Component {
     this.props.dispatch(updateCategory(this.state.category));
   }
 
-  _onSearch () {
-    console.log('_onSearch');
+  _onSearch (event) {
+    const value = event.target.value;
+    const categories = this.props.category.categories.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
+    this.setState({searchText: value, categories});
   }
 
   _onChangeInput ( event ) {
@@ -77,17 +84,15 @@ class Category extends Component {
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
     this.props.dispatch({type: c.CATEGORY_ADD_FORM_TOGGLE, payload: {adding: true}});
   }
 
   _onRemoveClick (index) {
-    console.log('_onRemoveClick: index = ' + index);
-    this.props.dispatch(removeCategory(this.props.category.categories[index]));
+    this.props.dispatch(removeCategory(this.state.categories[index]));
+    this.setState({searchText: ''});
   }
 
   _onEditClick (index) {
-    console.log('_onEditClick: index = ' + index);
     this.setState({category: this.props.category.categories[index]});
     this.props.dispatch({type: c.CATEGORY_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
@@ -98,7 +103,6 @@ class Category extends Component {
   }
 
   _onCloseLayer (layer) {
-    console.log('_onCloseLayer');
     if ( layer == 'add') {
       this.props.dispatch({type: c.CATEGORY_ADD_FORM_TOGGLE, payload: {adding: false}});
       this.setState({category: {}});
@@ -110,8 +114,8 @@ class Category extends Component {
   }
 
   render() {
-    const { fetching, adding, editing, categories } = this.props.category;
-    const { category, errors, searchText, initializing } = this.state;
+    const { addingCategory: adding, editingCategory: editing,  errorCategory: errors, busy } = this.props.category;
+    const { category, categories, searchText, initializing } = this.state;
 
     if (initializing) {
       return (
@@ -123,8 +127,8 @@ class Category extends Component {
       );
     }
 
-    const loading = fetching ? (<Spinning />) : null;
-    const count = fetching ? 100 : categories.length;
+    const count = initializing ? 100 : categories.length;
+    const busyIcon = busy ? <Spinning /> : null;
 
     let items = categories.map((c,index) => {
       return (
@@ -143,12 +147,12 @@ class Category extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Add New Category</Heading></Header>
           <FormFields>
-            <FormField label="Category Name" error={errors[0]}>
+            <FormField label="Category Name" error={errors.name}>
               <input type="text" name="name" value={category.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Add" primary={true}  onClick={this._addCategory.bind(this)} />
+            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addCategory.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -159,12 +163,12 @@ class Category extends Component {
         <Form>
           <Header><Heading tag="h3" strong={true}>Update Category Details</Heading></Header>
           <FormFields >
-            <FormField label="Category Name" error={errors[0]}>
+            <FormField label="Category Name" error={errors.name}>
               <input type="text" name="name" value={category.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Update" primary={true}  onClick={this._updateCategory.bind(this)} />
+            <Button icon={busyIcon} label="Update" primary={true}  onClick={this._updateCategory.bind(this)} />
           </Footer>
         </Form>
       </Layer>
@@ -183,7 +187,6 @@ class Category extends Component {
           <Button icon={<HelpIcon />} onClick={this._onHelpClick.bind(this)}/>
         </Header>
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
-          <Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}} >{loading}</Box>
           <Box size="large" alignSelf="center" >
             <List > {items} </List>
             <ListPlaceholder unfilteredTotal={count} filteredTotal={count} emptyMessage={this.localeData.category_empty_message} />
@@ -195,6 +198,10 @@ class Category extends Component {
     );
   }
 }
+
+Category.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 let select = (store) => {
   return { category: store.category, misc: store.misc};

@@ -40,12 +40,11 @@ class InwardScan extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!this.props.misc.initialized && nextProps.misc.initialized) {
-      this.setState({initializing: false});
-    }
-
     if (sessionStorage.session == undefined) {
       this.context.router.push('/');
+    }
+    if (!this.props.misc.initialized && nextProps.misc.initialized) {
+      this.setState({initializing: false});
     }
     if (this.props.inventory.message == '' && nextProps.inventory.message != '') {
       const message = nextProps.inventory.message;

@@ -20,6 +20,9 @@ import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
 import Spinning from 'grommet/components/icons/Spinning';
 import CloseIcon from 'grommet/components/icons/base/Close';
+import Table from 'grommet/components/Table';
+import TableHeader from 'grommet/components/TableHeader';
+import TableRow from 'grommet/components/TableRow';
 
 class ProductUpload extends Component {
   
@@ -27,13 +30,15 @@ class ProductUpload extends Component {
     super();
     this.state = {
       initializing: false,
-      files: []
+      files: [],
+      page: 1
     };
     this.localeData = localeData();
+    this._renderErrors = this._renderErrors.bind(this);
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
+    console.log('componentWillMount upload');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -44,8 +49,11 @@ class ProductUpload extends Component {
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
     }
-    if (this.props.category.uploading && !nextProps.category.uploading) {
+    if (!nextProps.category.uploading) {
       this.context.router.push('/product');
+    }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
     }
   }
 
@@ -56,6 +64,11 @@ class ProductUpload extends Component {
       return;
     }
     this.props.dispatch(uploadProducts(this.state.files[0]));
+  }
+
+  _onMoreErrors () {
+    let page = this.state.page;
+    this.setState({page: (page+1)});
   }
 
   _onDrop (files) {
@@ -71,9 +84,43 @@ class ProductUpload extends Component {
     this.props.dispatch({type: c.PRODUCT_UPLOAD_FORM_TOGGLE, payload: {uploading: false}});
   }
 
+  _renderErrors () {
+    console.log('_renderErrors');
+    let {errorsProduct: errors} = this.props.category;
+    errors = errors.slice(0,15*this.state.page);
+    console.log(errors);
+    if (errors.length > 0) {
+      const items = errors.map((e,i) => {
+        return (
+          <TableRow key={i} >
+            <td>{e.row}</td>
+            <td>{e.column}</td>
+            <td>{e.errorMessage}</td>
+          </TableRow>
+        );
+      });
+      return (
+        <Box size='xxlarge' alignSelf='center'>
+          <Box>
+            <h3 style={{color: 'red'}}>Resolve Following errors and try uploading again.</h3> 
+          </Box>
+          <Box>
+            <Table scrollable={true} onMore={this._onMoreErrors.bind(this)}>
+              <TableHeader labels={['Row','Column','Error']} />
+              <tbody>{items}</tbody>
+            </Table>
+          </Box>
+        </Box>
+      );
+
+    } else {
+      return null;
+    }
+  }
+
   render() {
     const {initializing, files} = this.state;
-    const {uploading} = this.props.category;
+    const {busy: uploading} = this.props.category;
 
     if (initializing) {
       return (
@@ -84,6 +131,8 @@ class ProductUpload extends Component {
         </Box>
       );
     }
+    console.log('calling render errors..');
+    const errors = this._renderErrors();
 
     const busy = uploading ? <Spinning /> : null;
     const content = files.length != 0 ? (<div>{files[0].name}</div>) : (<div>Drop file here or Click to open file browser</div>);
@@ -126,6 +175,18 @@ class ProductUpload extends Component {
               </Footer>
             </Form>
           </Article>
+          {/*<Box size='xlarge' alignSelf='center'>
+            <Box><h3>Resolve Following errors and try uploading again.</h3> </Box>
+            <Box>
+              <Table>
+                <TableHeader labels={['Row number','Column','Error']} />
+                <tbody>
+                  <TableRow><td>Test</td><td>Test</td><td>Test</td></TableRow>
+                </tbody>
+              </Table>
+            </Box>
+          </Box>*/}
+          {errors}
         </Section>
       </Box>
     );

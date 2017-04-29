@@ -77,8 +77,11 @@ class ProductEdit extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!nextProps.category.adding) {
+    if (!nextProps.category.editingProduct) {
       this.context.router.push('/product');
+    }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
     }
   }
 

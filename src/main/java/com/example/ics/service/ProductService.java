@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.ics.util.Constants;
 import com.example.ics.util.CsvUtils;
 import com.example.ics.util.MiscUtil;
 import com.opencsv.CSVReader;
@@ -45,7 +46,6 @@ import javax.sql.DataSource;
 @Transactional(readOnly = true)
 public class ProductService {
     private final Logger logger = LoggerFactory.getLogger(ProductService.class);
-    private final int NO_OF_DAYS_IN_MONTH = 26;
 
     private final ProductRepository productRepository;
     private final SectionRepository sectionRepository;
@@ -57,8 +57,8 @@ public class ProductService {
     private Mapper mapper;
 
     int i = -1;
-    long totalMonthyConsumption = 0L;
-    double commulativePercentage = 0.0;
+    long totalMonthyConsumption;
+    double commulativePercentage;
     Inventory testInventory;
 
     @Autowired
@@ -204,7 +204,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void sync(){
+    public void sync(Boolean firstSync){
         totalMonthyConsumption = 0L;
         commulativePercentage = 0.0;
         List<Product> products = productRepository.findAll();
@@ -229,37 +229,87 @@ public class ProductService {
         //Update product dynamically calculated values
         products.forEach(product -> {
             double cp = sortedConsumptionMap.get(product.getId()).getCommulativePercentage();
-            ClassType classType = (cp <= 60) ? ClassType.CLASS_A : ((cp <= 80) ? ClassType.CLASS_B : ClassType.CLASS_C);
+            ClassType classType = cp <= 60 ? ClassType.CLASS_A : cp <= 80 ? ClassType.CLASS_B : ClassType.CLASS_C;
             product.setClassType(classType);
             /////////////////
-            KanbanType kanbanType = (classType == ClassType.CLASS_A || classType == ClassType.CLASS_B) ? KanbanType.N_BIN : KanbanType.TWO_BIN;
+            KanbanType kanbanType = classType == ClassType.CLASS_A || classType == ClassType.CLASS_B ? KanbanType.N_BIN : KanbanType.TWO_BIN;
             product.setKanbanType(kanbanType);
             ///////////////
             Long maxValue = consumptionRepository.findMaxConsumptionOfLastYear(product.getId());
-            product.setDemand(maxValue/NO_OF_DAYS_IN_MONTH);
+            product.setDemand(maxValue/ Constants.NO_OF_DAYS_IN_MONTH);
             ///////////////////
             long binQty = product.getDemand() > product.getMinOrderQty() ? product.getDemand() : product.getMinOrderQty();
-            binQty = (long)((binQty/product.getPacketSize().doubleValue() + 1)*product.getPacketSize().doubleValue());
+            if (product.getPacketSize().doubleValue() < 1.0){
+                binQty = (long)((binQty/product.getPacketSize().doubleValue() + 1)*product.getPacketSize().doubleValue());
+            }else {
+                binQty = (binQty/product.getPacketSize().longValue() + 1)*product.getPacketSize().longValue();
+            }
+
             product.setBinQty(binQty);
             int noOfBins = 2;
             if (classType != ClassType.CLASS_C) {
                 int tat = product.getTimeOrdering() + product.getTimeProcurement() + product.getTimeTransporation() + product.getTimeBuffer();
-                noOfBins = (int)(((product.getDemand()*tat)/binQty) + 2);
+                noOfBins = (int)(product.getDemand()*tat /binQty + 2);
             }
             product.setNoOfBins(noOfBins);
         });
-
         //Update Inventory
-        products.forEach(product -> {
-            int noOfInventory = product.getInventorySet().size();
-            //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
-            if (noOfInventory < product.getNoOfBins()){
-                for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
-                    product.addInventory(new Inventory(i, BinState.UNAVAILABLE));
-                }
-            }
-        });
+        if (firstSync){
 
+            products.forEach(product -> {
+                int noOfBins = product.getNoOfBins();
+                int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
+
+                if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
+                    for (int i = 0; i < binInStock; i++){
+                        product.addInventory(new Inventory(i+1, BinState.STORE));
+                    }
+                    int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
+                    if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
+                        for (int i = binInStock; i < binInStock + binInOrder; i++){
+                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
+                        }
+                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pensing orders
+                            for (int i = binInStock + binInOrder; i < noOfBins; i++){
+                                product.addInventory(new Inventory(i+1, BinState.PURCHASE));
+                            }
+                        }
+                    }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
+                        for (int i = binInStock; i < noOfBins; i++){
+                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
+                        }
+                    }
+                }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
+                    for (int i = 0; i < noOfBins; i++){
+                        product.addInventory(new Inventory(i+1, BinState.STORE));
+                    }
+                }
+            	
+            });
+
+        }else {
+            products.forEach(product -> {
+                int noOfInventory = product.getInventorySet().size();
+                //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
+                if (noOfInventory < product.getNoOfBins()){
+                    for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
+                        product.addInventory(new Inventory(i, BinState.UNAVAILABLE));
+                    }
+                }
+            });
+        }
+
+
+
+
+    }
+
+    private int getNoOfBins(Long value, Long binQty){
+        int result =(int)(value/binQty);
+        int surplus = (int)(value%binQty);
+        int roundValue = (int)(Constants.STK_ROUND_FRACTION*binQty.doubleValue());
+        result = surplus > roundValue ? result+1 : result;
+        return result;
     }
 
     private void validate(List<ProductCsv> productCsvList) {
@@ -311,6 +361,9 @@ public class ProductService {
                 if (p.getPacketSize() == null) {
                     errors.add(new ProductError("PACKET_SIZE", i, "Product packet size cannot be blank."));
                 }
+                if (p.getItemCode() == null) {
+                    errors.add(new ProductError("ITEM_CODE", i, "Product Item Code cannot be blank."));
+                }
 
                 if (p.getSupplierType() != null && !(p.getSupplierType().equals("LOCAL") || p.getSupplierType().equals("NON_LOCAL"))){
                     errors.add(new ProductError("SUPPLIER_TYPE",i,"Supplier type can have [LOCAL,NON_LOCAL] values"));
@@ -326,7 +379,6 @@ public class ProductService {
         }
     }
 
-
     /**
      * Called by addProductsBatch() method to map from ProductCsv List to Product List
      *
@@ -336,6 +388,8 @@ public class ProductService {
     private List<Product> map(List<ProductCsv> list) {
         List<Product> products = new ArrayList<>();
         List<ProductError> errors = new ArrayList<>();
+
+        Set<String> itemCodeList = new HashSet<>();
 
         Map<String, Integer> mapMonth = MiscUtil.getMapMonth();
         Set<String> months = mapMonth.keySet();
@@ -348,13 +402,21 @@ public class ProductService {
             if (productCsv.getPacketSize().doubleValue() == 0) {
                 errors.add(new ProductError("PACKET_SIZE", i, "Packet Size cannot be zero."));
             }
+            /*check price value if it is zero*/
+            if (productCsv.getPrice().doubleValue() == 0) {
+                errors.add(new ProductError("PRICE", i, "Packet Size cannot be zero."));
+            }
+            if (itemCodeList.contains(productCsv.getItemCode())){
+                errors.add(new ProductError("ITEM_CODE", i, productCsv.getItemCode() + " is duplicate Item Code."));
+            }
+            itemCodeList.add(productCsv.getItemCode());
             Product product = mapper.map(productCsv, Product.class);
             /*////////Mapping SubCategory////////////*/
             SubCategory subCategory = subCategoryRepository.findByName(productCsv.getSubCategory().trim());
 
             //If category of existing subcategory is not equal to category of coming product, report error
             if (subCategory != null && !subCategory.getCategory().getName().trim().equalsIgnoreCase(productCsv.getCategory().trim())) {
-                errors.add(new ProductError("SUB_CATEGORY", i, subCategory.getName() + " is has category " + subCategory.getCategory().getName() + " which conflict with provided category " + productCsv.getCategory()));
+                errors.add(new ProductError("SUB_CATEGORY", i, "Sub Category '"+subCategory.getName() + "' belongs to Category '" + productCsv.getCategory() + "' which  can't belong to Category '" + subCategory.getCategory().getName() + "'."));
             } else {
                 //If SubCategory is null or category of existing subcategory is not equal to category of coming product,add new SubCategory
                 if (subCategory == null) {
@@ -397,12 +459,11 @@ public class ProductService {
                         product.addConsumption(consumption);
                     }
                 }
-                product.setStkOnFloor(0L);
-                product.setOrderedQty(0L);
-
+                /*//////Setting stkOnFloor and orderedQty to zero if value is null*/
+                if (product.getStkOnFloor() == null)    product.setStkOnFloor(0L);
+                if (product.getOrderedQty() == null)    product.setOrderedQty(0L);
                 products.add(product);
             }
-
             i++;
         });
         if (errors.size() > 0) {

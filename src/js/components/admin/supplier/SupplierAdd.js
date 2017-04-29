@@ -55,6 +55,9 @@ class SupplierAdd extends Component {
     if (!nextProps.supplier.adding) {
       this.context.router.push('/supplier');
     }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
   }
 
   _onSubmit (event) {

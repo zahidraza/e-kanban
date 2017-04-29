@@ -61,6 +61,9 @@ class Supplier extends Component {
       this._loadSupplier(suppliers,filter,sort);
       this.setState({initializing: false});
     }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
   }
 
   _loadSupplier (suppliers,filter,sort) {

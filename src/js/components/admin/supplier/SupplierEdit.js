@@ -51,6 +51,9 @@ class SupplierEdit extends Component {
     if (!nextProps.supplier.editing) {
       this.context.router.push('/supplier');
     }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
   }
 
   _onSubmit (event) {

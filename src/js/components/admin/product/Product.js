@@ -35,6 +35,7 @@ class Product extends Component {
     super();
     this.state = {
       initializing: false,
+      searching: false,
       errors: [],
       products: [],
       product: {},
@@ -76,13 +77,22 @@ class Product extends Component {
       const {categories,filter,sort} = nextProps.category;
       this._loadProduct(categories,filter,sort,this.state.page);
     }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
+    if (nextProps.category.uploaded) {
+      console.log('syncFirst');
+      // this.props.dispatch(syncProduct('true'));
+    }
   }
 
   _onMoreProducts () {
-    const {categories,filter,sort} = this.props.category;
-    let page = this.state.page;
-    page = page+1;
-    this._loadProduct(categories,filter,sort,page);
+    let {page,searching} = this.state;
+    if (!searching) {
+      const {categories,filter,sort} = this.props.category;
+      page = page+1;
+      this._loadProduct(categories,filter,sort,page);
+    }
   }
 
   _loadProduct (categories,filter,sort,page) {
@@ -134,8 +144,15 @@ class Product extends Component {
     return result;
   }
 
-  _onSearch () {
+  _onSearch (event) {
     console.log('_onSearch');
+    let value = event.target.value;
+    if (value.length > 1) {
+      let products = this.props.category.products.filter(p => p.name.includes(value) || p.productId.includes(value));
+      this.setState({searchText: value,products, searching: true});
+    }else{
+      this.setState({searchText: value,searching: false});
+    }
   }
 
   _onFilterActivate () {
@@ -159,6 +176,7 @@ class Product extends Component {
 
   _onUploadClick () {
     console.log('_onUploadClick');
+    this.props.dispatch({type: c.PRODUCT_UPLOAD_FORM_TOGGLE,payload: {uploading: true}});
   }
 
   _onRemoveClick (index) {
@@ -180,7 +198,7 @@ class Product extends Component {
     if (!value) {
       return;
     }
-    this.props.dispatch(syncProduct());
+    this.props.dispatch(syncProduct('false'));
   }
 
   _onHelpClick () {
@@ -223,6 +241,7 @@ class Product extends Component {
           <td >{sections.substring(0,sections.length-2).trim()}</td>
           {/*<td >{suppliers.substring(0,suppliers.length-2).trim()}</td>*/}
           <td >{p.noOfBins}</td>
+          <td >{p.binQty}</td>
           <td>{p.price}</td>
           <td>{p.classType}</td>
           <td style={{textAlign: 'right', padding: 0}}>
@@ -258,7 +277,7 @@ class Product extends Component {
 
     let productItem = productNotAvailable ? <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product available</h3></Box>: (
       <Table scrollable={true} onMore={this._onMoreProducts.bind(this)}>
-        <TableHeader labels={['Product Id','ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Price', 'Class Type','ACTION']} />
+        <TableHeader labels={['Product Id','ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
         
         <tbody>{items}</tbody>
       </Table>

@@ -391,6 +391,30 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "id=" + id + ", subCategory=" + subCategory + ", name=" + name + ", description=" + description + ", price=" + price + ", itemCode=" + itemCode + ", timeOrdering=" + timeOrdering + ", timeProcurement=" + timeProcurement + ", timeTransporation=" + timeTransporation + ", timeBuffer=" + timeBuffer + ", uomPurchase=" + uomPurchase + ", uomConsumption=" + uomConsumption + ", conversionFactor=" + conversionFactor + ", minOrderQty=" + minOrderQty + ", packetSize=" + packetSize + ", classType=" + classType + ", kanbanType=" + kanbanType + ", demand=" + demand + ", noOfBins=" + noOfBins + ", binQty=" + binQty + '}';
+        return "Product{" +
+                "id=" + id +
+                ", subCategory=" + subCategory +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", itemCode='" + itemCode + '\'' +
+                ", timeOrdering=" + timeOrdering +
+                ", timeProcurement=" + timeProcurement +
+                ", timeTransporation=" + timeTransporation +
+                ", timeBuffer=" + timeBuffer +
+                ", uomPurchase='" + uomPurchase + '\'' +
+                ", uomConsumption='" + uomConsumption + '\'' +
+                ", conversionFactor=" + conversionFactor +
+                ", minOrderQty=" + minOrderQty +
+                ", packetSize=" + packetSize +
+                ", classType='" + classType + '\'' +
+                ", kanbanType='" + kanbanType + '\'' +
+                ", demand=" + demand +
+                ", noOfBins=" + noOfBins +
+                ", binQty=" + binQty +
+                ", stkOnFloor=" + stkOnFloor +
+                ", orderedQty=" + orderedQty +
+                ", lastUpdated=" + lastUpdated +
+                '}';
     }
 }

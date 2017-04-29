@@ -55,6 +55,9 @@ class User extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
       this.setState({users: nextProps.user.users});

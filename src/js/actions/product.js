@@ -74,19 +74,24 @@ export function uploadProducts (file) {
       console.log(response);
       if (response.status == 201) {
         dispatch({type: c.PRODUCT_UPLOAD_SUCCESS});
-        dispatch({type: m.STORE_INITIALIZED, payload:{ initialized: false}});
+        //dispatch({type: m.STORE_INITIALIZED, payload:{ initialized: false}});
       }
     }).catch( (err) => {
       console.log(err);
-      dispatch({type: c.PRODUCT_UPLAOD_FAIL});
+      if (err.response.status == 400) {
+        dispatch({type: c.PRODUCT_UPLAOD_ERROR, payload: {errors: err.response.data}});
+      }else {
+        dispatch({type: c.PRODUCT_UPLAOD_FAIL});
+      }
+      
     });
   };
 }
 
-export function syncProduct () {
+export function syncProduct (firstSync) {
   return function (dispatch) {
     dispatch({type: c.PRODUCT_SYNC_PROGRESS});
-    axios.post(window.serviceHost + '/products/sync', null, {headers: getHeaders()})
+    axios.post(window.serviceHost + '/products/sync?firstSync=' + firstSync, null, {headers: getHeaders()})
     .then((response) => {
       console.log(response);
       if (response.status == 200) {

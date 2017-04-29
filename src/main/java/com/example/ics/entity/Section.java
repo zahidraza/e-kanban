@@ -6,6 +6,7 @@
 package com.example.ics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Date;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class Section {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull @Size(min = 2,max = 255)
+    @NotEmpty
     @Column(name = "NAME", nullable = false, unique = true)
     private String name;
     

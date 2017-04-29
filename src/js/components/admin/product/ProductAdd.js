@@ -83,8 +83,11 @@ class ProductAdd extends Component {
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
     }
-    if (!nextProps.category.adding) {
+    if (!nextProps.category.addingProduct) {
       this.context.router.push('/product');
+    }
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
     }
   }
 
