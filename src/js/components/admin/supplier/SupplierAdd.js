@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
 import {addSupplier}  from '../../../actions/supplier';
-import {initialize}  from '../../../actions/misc';
 import {SUPPLIER_CONSTANTS as c}  from '../../../utils/constants';
 
 import AppHeader from '../../AppHeader';
@@ -26,13 +25,10 @@ class SupplierAdd extends Component {
 
   constructor () {
     super();
-
     this.state = {
-      initializing: false,
       supplier: {
         address: {}
-      },
-      errors: []
+      }
     };
 
     this.localeData = localeData();
@@ -40,8 +36,7 @@ class SupplierAdd extends Component {
 
   componentWillMount () {
     if (!this.props.misc.initialized) {
-      this.setState({initializing: true});
-      this.props.dispatch(initialize());
+      this.context.router.push('/supplier');
     }
     let {supplier} = this.state;
     supplier.supplierType = 'LOCAL';
@@ -49,14 +44,18 @@ class SupplierAdd extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!this.props.misc.initialized && nextProps.misc.initialized) {
-      this.setState({initializing: false});
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
     }
     if (!nextProps.supplier.adding) {
       this.context.router.push('/supplier');
     }
-    if (sessionStorage.session == undefined) {
-      this.context.router.push('/');
+    if (nextProps.supplier.adding) {
+      let {supplier} = this.state;
+      if (!('address' in supplier)) {
+        supplier.address = {};
+      }
+      this.setState({supplier});
     }
   }
 
@@ -94,16 +93,9 @@ class SupplierAdd extends Component {
 
 
   render () {
-    const {supplier,errors, initializing} = this.state;
-    if (initializing) {
-      return (
-        <Box pad={{vertical: 'large'}}>
-          <Box align='center' alignSelf='center' pad={{vertical: 'large'}}>
-            <Spinning /> Initializing Application ...
-          </Box>
-        </Box>
-      );
-    }
+    const {supplier} = this.state;
+    const {errors, busy} = this.props.supplier;
+    const busyIcon = busy ? <Spinning /> : null;
 
     return (
       <Box>
@@ -120,13 +112,13 @@ class SupplierAdd extends Component {
               <FormFields>
 
                 <fieldset>
-                  <FormField label="Supplier Name" error={errors[0]}>
+                  <FormField label="Supplier Name*" error={errors.name}>
                     <input type="text" name="name" value={supplier.name} onChange={this._onChange.bind(this)} />
                   </FormField>
-                  <FormField label="Contact Person" error={errors[0]}>
+                  <FormField label="Contact Person" error={errors.contactPerson}>
                     <input type="text" name="contactPerson" value={supplier.contactPerson} onChange={this._onChange.bind(this)} />
                   </FormField>
-                  <FormField label="Supplier Type" htmlFor="sType" error={errors[0]}>
+                  <FormField label="Supplier Type" htmlFor="sType" error={errors.supplierType}>
                     <Select id="sType" name="sType" options={['LOCAL','NON_LOCAL']}
                       value={supplier.supplierType}  onChange={this._sTypeFilter.bind(this)} />
                   </FormField>
@@ -136,22 +128,22 @@ class SupplierAdd extends Component {
                   <Box direction="row" justify="between">
                     <Heading tag="h3">Address</Heading>
                   </Box>
-                  <FormField label="Street" error={errors[0]}>
+                  <FormField label="Street*" error={errors['address.street']}>
                     <input type="text" name="street" value={supplier.address.street} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Landmark" error={errors[0]}>
+                  <FormField label="Landmark" error={errors['address.landmark']}>
                     <input type="text" name="landmark" value={supplier.address.landmark} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="City" error={errors[0]}>
+                  <FormField label="City*" error={errors['address.city']}>
                     <input type="text" name="city" value={supplier.address.city} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="State" error={errors[0]}>
+                  <FormField label="State*" error={errors['address.state']}>
                     <input type="text" name="state" value={supplier.address.state} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Country" error={errors[0]}>
+                  <FormField label="Country*" error={errors['address.country']}>
                     <input type="text" name="country" value={supplier.address.country} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Pin" error={errors[0]}>
+                  <FormField label="Pin*" error={errors['address.zip']}>
                     <input type="text" name="zip" value={supplier.address.zip} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
                 </fieldset>
@@ -160,7 +152,7 @@ class SupplierAdd extends Component {
 
               <Footer pad={{vertical: 'medium'}}>
                 <span />
-                <Button type="submit" primary={true} label={this.localeData.supplier_add_btn}
+                <Button icon={busyIcon} type="submit" primary={true} label={this.localeData.supplier_add_btn}
                   onClick={this._onSubmit.bind(this)} />
               </Footer>
             </Form>

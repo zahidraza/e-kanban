@@ -30,7 +30,6 @@ class Supplier extends Component {
     super();
     this.state = {
       initializing: false,
-      errors: [],
       suppliers: [],
       supplier: {},
       searchText: '',
@@ -91,8 +90,18 @@ class Supplier extends Component {
     return result;
   }
 
-  _onSearch () {
+  _onSearch (event) {
     console.log('_onSearch');
+    const value = event.target.value;
+    console.log(value);
+    if (value.length > 0) {
+      let suppliers = this.props.supplier.suppliers.filter(s => s.name.toLowerCase().includes(value.toLowerCase()));
+      this.setState({searchText: value, suppliers});
+    } else {
+      this.setState({searchText: value});
+      const {suppliers,filter,sort} = this.props.supplier;
+      this._loadSupplier(suppliers,filter,sort);
+    }
   }
 
   _onFilterActivate () {
@@ -119,14 +128,14 @@ class Supplier extends Component {
   _onRemoveClick (index) {
     console.log('_onRemoveClick');
     const {suppliers} = this.state;
-
     this.props.dispatch(removeSupplier(suppliers[index]));
   }
 
   _onEditClick (index) {
     console.log('_onEditClick');
     const {suppliers} = this.state;
-    this.props.dispatch({type: c.SUPPLIER_EDIT_FORM_TOGGLE, payload:{editing: true,supplier: suppliers[index]}});
+    const supplier = JSON.parse(JSON.stringify(suppliers[index]));
+    this.props.dispatch({type: c.SUPPLIER_EDIT_FORM_TOGGLE, payload:{editing: true,supplier}});
     this.context.router.push('/supplier/edit');
   }
 
@@ -136,7 +145,6 @@ class Supplier extends Component {
   }
 
   render() {
-    const {fetching} = this.props.supplier;
     const { suppliers, searchText, filterActive,filteredCount,unfilteredCount,initializing } = this.state;
 
     if (initializing) {
@@ -148,9 +156,6 @@ class Supplier extends Component {
         </Box>
       );
     }
-
-    const loading = fetching ? (<Spinning />) : null;
-
     const items = suppliers.map((s, index)=>{
       let addr;
       if (s.address != null) {
@@ -204,7 +209,6 @@ class Supplier extends Component {
         </Header>
 
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
-          <Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}}>{loading}</Box>
           <Box >
             <Table>
               <TableHeader labels={['Supplier','Contact Person','Supplier Type','Address','ACTION']} />

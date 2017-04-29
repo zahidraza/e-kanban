@@ -11,70 +11,49 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export function getSuppliers () {
-  console.log("getSuppliers()");
-
-  return function (dispatch) {
-    dispatch({type:c.SUPPLIER_FETCH_PROGRESS});
-
-    axios.get(window.serviceHost + '/suppliers')
-    .then((response) => {
-      if (response.status == 200 && response.data._embedded) {
-        dispatch({type: c.SUPPLIER_FETCH_SUCCESS, payload: {suppliers: response.data._embedded.supplierList}});
-      }
-    }).catch( (err) => {
-      console.log(err); 
-      dispatch({type: c.SUPPLIER_FETCH_FAIL});
-    });
-  };
-}
-
 export function addSupplier (supplier) {
-  console.log('addSupplier');
-
+  console.log(supplier);
   return function (dispatch) {
-    console.log(supplier);
+    dispatch({type: c.SUPPLIER_ADD_PROGRESS});
     axios.post(window.serviceHost + '/suppliers', JSON.stringify(supplier), {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 201) {
         dispatch({type: c.SUPPLIER_ADD_SUCCESS, payload: {supplier: response.data}});
       }
     }).catch( (err) => {
-      console.log(err);
-      dispatch({type: c.SUPPLIER_ADD_FAIL});
+      if (err.response.status == 400) {
+        dispatch({type: c.SUPPLIER_BAD_REQUEST, payload: {errors: err.response.data}});
+      }else {
+        dispatch({type: c.SUPPLIER_ADD_FAIL});
+      }
     });
   };
 }
 
 export function updateSupplier (supplier) {
-  console.log('updateSupplier');
   return function (dispatch) {
-    console.log(supplier);
-    axios.put(supplier._links.self.href, JSON.stringify(supplier),{headers: getHeaders()})
+    dispatch({type: c.SUPPLIER_EDIT_PROGRESS});
+    axios.put(supplier.links[0].href, JSON.stringify(supplier),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.SUPPLIER_EDIT_SUCCESS, payload: {supplier: response.data}});
       }
     }).catch( (err) => {
-      console.log(err);
-      dispatch({type: c.SUPPLIER_EDIT_FAIL});
+      if (err.response.status == 400) {
+        dispatch({type: c.SUPPLIER_BAD_REQUEST, payload: {errors: err.response.data}});
+      }else {
+        dispatch({type: c.SUPPLIER_EDIT_FAIL});
+      }
     });
   };
 }
 
 export function removeSupplier (supplier) {
-  console.log('removeSupplier');
   return function (dispatch) {
-    console.log(supplier);
-
-    axios.delete(supplier._links.self.href, {headers: getHeaders()})
+    axios.delete(supplier.links[0].href, {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       dispatch({type: c.SUPPLIER_REMOVE_SUCCESS, payload: {supplier: supplier}});
     }).catch( (err) => {
-      console.log(err);
       dispatch({type: c.SUPPLIER_REMOVE_FAIL});
     });
   };

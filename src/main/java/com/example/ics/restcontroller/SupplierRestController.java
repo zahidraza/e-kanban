@@ -5,6 +5,7 @@ import com.example.ics.entity.Supplier;
 import com.example.ics.service.SupplierService;
 import com.example.ics.util.ApiUrls;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +42,18 @@ public class SupplierRestController {
         this.supplierAssembler = supplierAssembler;
     }
     
+//    @GetMapping
+//    public ResponseEntity<?> listAllSuppliers(Pageable pageable, PagedResourcesAssembler assembler) {
+//        logger.debug("listAllSuppliers()");
+//        Page<Supplier> page = supplierService.findAllByPage(pageable);
+//        return new ResponseEntity<>(assembler.toResource(page, supplierAssembler), HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<?> listAllSuppliers(Pageable pageable, PagedResourcesAssembler assembler) {
+    public ResponseEntity<?> listAllSuppliers() {
         logger.debug("listAllSuppliers()");
-        Page<Supplier> page = supplierService.findAllByPage(pageable);
-        return new ResponseEntity<>(assembler.toResource(page, supplierAssembler), HttpStatus.OK);
+        List<Supplier> suppliers = supplierService.findAll();
+        return new ResponseEntity<>(supplierAssembler.toResources(suppliers), HttpStatus.OK);
     }
     
     @GetMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)

@@ -93,7 +93,9 @@ class Category extends Component {
   }
 
   _onEditClick (index) {
-    this.setState({category: this.props.category.categories[index]});
+    const tmp = this.props.category.categories[index];
+    const category = JSON.parse(JSON.stringify({name: tmp.name, _links: tmp._links}));
+    this.setState({category});
     this.props.dispatch({type: c.CATEGORY_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
 

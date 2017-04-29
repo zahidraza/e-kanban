@@ -18,17 +18,15 @@ import Select from 'grommet/components/Select';
 import Button from 'grommet/components/Button';
 import CloseIcon from 'grommet/components/icons/base/Close';
 import Anchor from 'grommet/components/Anchor';
+import Spinning from 'grommet/components/icons/Spinning';
 
 
 class SupplierEdit extends Component {
 
   constructor () {
     super();
-
     this.state = {
-      initializing: false,
-      supplier: null,
-      errors: []
+      supplier: {}
     };
 
     this.localeData = localeData();
@@ -40,19 +38,26 @@ class SupplierEdit extends Component {
       this.context.router.push('/supplier');
     }
     let {supplier} = this.props.supplier;
-    if ( supplier.address == null) {
+    console.log(supplier);
+    if (!('address' in supplier) || supplier.address == null || supplier.address == 'null') {
       supplier.address = {};
     }
-    console.log(supplier);
     this.setState({supplier: supplier});
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!nextProps.supplier.editing) {
       this.context.router.push('/supplier');
     }
-    if (sessionStorage.session == undefined) {
-      this.context.router.push('/');
+    if (nextProps.supplier.editing) {
+      let {supplier} = this.state;
+      if (!('address' in supplier)) {
+        supplier.address = {};
+      }
+      this.setState({supplier});
     }
   }
 
@@ -62,7 +67,6 @@ class SupplierEdit extends Component {
     if (Object.getOwnPropertyNames(supplier.address).length === 0) {
       delete supplier.address;
     }
-    console.log(supplier);
     this.props.dispatch(updateSupplier(supplier));
   }
 
@@ -90,8 +94,10 @@ class SupplierEdit extends Component {
 
 
   render () {
-    const {supplier,errors} = this.state;
+    const {supplier} = this.state;
+    const {errors, busy} = this.props.supplier;
 
+    const busyIcon = busy ? <Spinning /> : null;
     return (
       <Box>
         <AppHeader/>
@@ -107,13 +113,13 @@ class SupplierEdit extends Component {
               <FormFields>
 
                 <fieldset>
-                  <FormField label="Supplier Name" error={errors[0]}>
+                  <FormField label="Supplier Name*" error={errors.name}>
                     <input type="text" name="name" value={supplier.name} onChange={this._onChange.bind(this)} />
                   </FormField>
-                  <FormField label="Contact Person" error={errors[0]}>
+                  <FormField label="Contact Person" error={errors.contactPerson}>
                     <input type="text" name="contactPerson" value={supplier.contactPerson} onChange={this._onChange.bind(this)} />
                   </FormField>
-                  <FormField label="Supplier Type" htmlFor="sType" error={errors[0]}>
+                  <FormField label="Supplier Type" htmlFor="sType" error={errors.supplierType}>
                     <Select id="sType" name="sType" options={['LOCAL','NON_LOCAL']}
                       value={supplier.supplierType}  onChange={this._sTypeFilter.bind(this)} />
                   </FormField>
@@ -123,22 +129,22 @@ class SupplierEdit extends Component {
                   <Box direction="row" justify="between">
                     <Heading tag="h3">Address</Heading>
                   </Box>
-                  <FormField label="Street" error={errors[0]}>
+                  <FormField label="Street*" error={errors['address.street']}>
                     <input type="text" name="street" value={supplier.address.street} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Landmark" error={errors[0]}>
+                  <FormField label="Landmark" error={errors['address.landmark']}>
                     <input type="text" name="landmark" value={supplier.address.landmark} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="City" error={errors[0]}>
+                  <FormField label="City*" error={errors['address.city']}>
                     <input type="text" name="city" value={supplier.address.city} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="State" error={errors[0]}>
+                  <FormField label="State*" error={errors['address.state']}>
                     <input type="text" name="state" value={supplier.address.state} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Country" error={errors[0]}>
+                  <FormField label="Country*" error={errors['address.country']}>
                     <input type="text" name="country" value={supplier.address.country} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
-                  <FormField label="Pin" error={errors[0]}>
+                  <FormField label="Pin*" error={errors['address.zip']}>
                     <input type="text" name="zip" value={supplier.address.zip} onChange={this._onChangeAddress.bind(this)} />
                   </FormField>
                 </fieldset>
@@ -147,7 +153,7 @@ class SupplierEdit extends Component {
 
               <Footer pad={{vertical: 'medium'}}>
                 <span />
-                <Button type="submit" primary={true} label={this.localeData.supplier_edit_btn}
+                <Button icon={busyIcon} type="submit" primary={true} label={this.localeData.supplier_edit_btn}
                   onClick={this._onSubmit.bind(this)} />
               </Footer>
             </Form>
@@ -155,7 +161,6 @@ class SupplierEdit extends Component {
 
         </Section>
       </Box>
-      
     );
   }
 }

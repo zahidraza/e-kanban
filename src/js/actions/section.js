@@ -33,7 +33,7 @@ export function addSection (section) {
 export function updateSection (section) {
   return function (dispatch) {
     dispatch({type: c.SECTION_EDIT_PROGRESS});
-    axios.put(section._links.self.href, JSON.stringify(section),{headers: getHeaders()})
+    axios.put(section.links[0].href, JSON.stringify(section),{headers: getHeaders()})
     .then((response) => {
       console.log(response);
       if (response.status == 200) {
@@ -52,7 +52,7 @@ export function updateSection (section) {
 export function removeSection (section) {
   console.log(section);
   return function (dispatch) {
-    axios.delete(section._links.self.href, {headers: getHeaders()})
+    axios.delete(section.links[0].href, {headers: getHeaders()})
     .then((response) => {
       console.log(response);
       dispatch({type: c.SECTION_REMOVE_SUCCESS, payload: {section: section}});

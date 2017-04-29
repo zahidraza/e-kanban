@@ -5,6 +5,7 @@ import com.example.ics.entity.Section;
 import com.example.ics.service.SectionService;
 import com.example.ics.util.ApiUrls;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +42,18 @@ public class SectionRestController {
         this.sectionAssembler = sectionAssembler;
     }
 
+//    @GetMapping
+//    public ResponseEntity<?> loadAllSections(Pageable pageable, PagedResourcesAssembler assembler){
+//        logger.debug("loadAllSections()");
+//        Page<Section> page = sectionService.findAllByPage(pageable);
+//        return new ResponseEntity<>(assembler.toResource(page,sectionAssembler),HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<?> loadAllSections(Pageable pageable, PagedResourcesAssembler assembler){
+    public ResponseEntity<?> loadAllSections(){
         logger.debug("loadAllSections()");
-        Page<Section> page = sectionService.findAllByPage(pageable);
-        return new ResponseEntity<>(assembler.toResource(page,sectionAssembler),HttpStatus.OK);
+        List<Section> sections = sectionService.findAll();
+        return new ResponseEntity<>(sectionAssembler.toResources(sections),HttpStatus.OK);
     }
 
     @GetMapping(ApiUrls.URL_SECTIONS_SECTION)

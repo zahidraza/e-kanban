@@ -1,12 +1,12 @@
 import {SUPPLIER_CONSTANTS as c} from "../utils/constants";
 
 const initialState = {
-  loaded: false,
-  fetching: false,
+  busy: false,
   adding: false,
   editing: false,
   suppliers:[],
   supplier: {},
+  errors: {},
   filter: {},
   sort: 'name:asc',
   toggleStatus: true
@@ -14,24 +14,30 @@ const initialState = {
 
 const handlers = { 
   [c.INITIALIZE_SUPPLIER]: (_, action) => ({suppliers: action.payload.suppliers, loaded: true, toggleStatus: !_.toggleStatus}),
-  // [c.SUPPLIER_FETCH_PROGRESS]: (_, action) => ({fetching: true}),
-  // [c.SUPPLIER_FETCH_SUCCESS]: (_, action) => ({loaded: true, fetching: false,toggleStatus: !_.toggleStatus, suppliers: action.payload.suppliers}),
-  // [c.SUPPLIER_FETCH_FAIL]: (_, action) => ({fetching: false}),
-  [c.SUPPLIER_ADD_FORM_TOGGLE]: (_, action) => ({adding: action.payload.adding}),
+  [c.SUPPLIER_BAD_REQUEST]: (_, action) => {
+    let errors = {};
+    action.payload.errors.forEach(err => {
+      errors[err.field] = err.message;
+    });
+    return ({errors, busy: false});
+  },
+  [c.SUPPLIER_ADD_FORM_TOGGLE]: (_, action) => ({adding: action.payload.adding, busy: false, errors: {}}),
+  [c.SUPPLIER_ADD_PROGRESS]: (_, action) => ({busy: true, errors: {}}),
   [c.SUPPLIER_ADD_SUCCESS]: (_, action) => {
     let suppliers = _.suppliers;
     suppliers.push(action.payload.supplier);
-    return ({adding: false,toggleStatus: !_.toggleStatus, suppliers: suppliers});
+    return ({adding: false, busy: false,toggleStatus: !_.toggleStatus, suppliers: suppliers});
   },
-  [c.SUPPLIER_ADD_FAIL]: (_, action) => ({adding: false}),
-  [c.SUPPLIER_EDIT_FORM_TOGGLE]: (_, action) => ({editing: action.payload.editing, supplier: action.payload.supplier}),
+  [c.SUPPLIER_ADD_FAIL]: (_, action) => ({adding: false, busy: false}),
+  [c.SUPPLIER_EDIT_FORM_TOGGLE]: (_, action) => ({editing: action.payload.editing, supplier: action.payload.supplier, busy: false, errors: {}}),
+  [c.SUPPLIER_EDIT_PROGRESS]: (_, action) => ({busy: true, errors: {}}),
   [c.SUPPLIER_EDIT_SUCCESS]: (_, action) => {
     let suppliers = _.suppliers;
     let i = suppliers.findIndex(e=> e.id == action.payload.supplier.id);
     suppliers[i] = action.payload.supplier;
-    return ({editing: false,toggleStatus: !_.toggleStatus, suppliers: suppliers});
+    return ({editing: false, busy: false, toggleStatus: !_.toggleStatus, suppliers: suppliers});
   },
-  [c.SUPPLIER_EDIT_FAIL]: (_, action) => ({editing: false}),
+  [c.SUPPLIER_EDIT_FAIL]: (_, action) => ({editing: false, busy: false}),
   [c.SUPPLIER_REMOVE_SUCCESS]: (_, action) => {
     let suppliers = _.suppliers.filter((c)=> c.id != action.payload.supplier.id);
     return ({toggleStatus: !_.toggleStatus,suppliers: suppliers});

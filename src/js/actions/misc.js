@@ -18,12 +18,8 @@ export function initialize () {
       if ('_embedded' in categories.data) {
         dispatch({type: c.INITIALIZE_CATEGORY, payload: { categories: categories.data._embedded.categoryList }});
       }
-      if ('_embedded' in sections.data) {
-        dispatch({type: sec.INITIALIZE_SECTION, payload: {sections:  sections.data._embedded.sectionList }});
-      }
-      if ('_embedded' in suppliers.data) {
-        dispatch({type: sup.INITIALIZE_SUPPLIER, payload: { suppliers: suppliers.data._embedded.supplierList }});
-      }
+      dispatch({type: sec.INITIALIZE_SECTION, payload: {sections:  sections.data}});
+      dispatch({type: sup.INITIALIZE_SUPPLIER, payload: { suppliers: suppliers.data }});
       dispatch({type: u.INITIALIZE_USER, payload: { users: users.data._embedded.userDtoList }});
       dispatch({type: i.INITIALIZE_INVENTORY, payload: { inventory: inventory.data}});
       dispatch({type: m.STORE_INITIALIZED, payload: {initialized: true}});
