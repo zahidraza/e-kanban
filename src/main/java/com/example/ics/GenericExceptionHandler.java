@@ -3,6 +3,8 @@ package com.example.ics;
 import com.example.ics.dto.FieldError;
 import com.example.ics.dto.ProductError;
 import com.example.ics.dto.RestError;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,19 +89,22 @@ public class GenericExceptionHandler {
     @ExceptionHandler
     ResponseEntity<?> handleException(Exception e) {
         logger.debug("handleException: {} \n {}",e , e.getMessage());
-        e.printStackTrace();
-
         if (e.getCause() instanceof CsvDataTypeMismatchException){
+            logger.debug("error converting data type");
             CsvDataTypeMismatchException cause = (CsvDataTypeMismatchException) e.getCause();
+            List<ProductError> errors = new ArrayList<>();
             long i = cause.getLineNumber();
             if (cause.getCause() instanceof ConversionException){
                 ConversionException cause2 = (ConversionException) cause.getCause();
                 String msg = cause2.getMessage();
-                return new ResponseEntity<Object>(new ProductError("",(int)(i+1),msg),HttpStatus.BAD_REQUEST);
+                errors.add(new ProductError("",(int)(i+1),msg));
+                return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<Object>(new ProductError("",(int)(i+1),cause.getMessage()),HttpStatus.BAD_REQUEST);
+            errors.add(new ProductError("",(int)(i+1),cause.getMessage()));
+            return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
 
         }
+        e.printStackTrace();
 
         String msg = e.getMessage();
         String devMsg = "";

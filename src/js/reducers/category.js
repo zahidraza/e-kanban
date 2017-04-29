@@ -119,7 +119,15 @@ const handlers = {
     return ({toggleStatus: !_.toggleStatus,categories: categories});
   },
   //////////////////////////////////////////////// Product /////////////////////////////////////////////////////////
-  [p.PRODUCT_ADD_FORM_TOGGLE]: (_, action) => ({addingProduct: action.payload.adding}),
+  [p.PRODUCT_BAD_REQUEST]: (_, action) => {
+    let errorProduct = {};
+    action.payload.errors.forEach(err => {
+      errorProduct[err.field] = err.message;
+    });
+    return ({errorProduct, busy: false});
+  },
+  [p.PRODUCT_ADD_FORM_TOGGLE]: (_, action) => ({addingProduct: action.payload.adding, busy: false, errorProduct: {}}),
+  [p.PRODUCT_ADD_PROGRESS]: (_, action) => ({busy: true, errorProduct: {}}),
   [p.PRODUCT_ADD_SUCCESS]: (_, action) => {
     let product = action.payload.product;
     product = {...product, productId: getProductId(product.category.id,product.subCategory.id,product.id)};
@@ -131,9 +139,9 @@ const handlers = {
     let subCategory = categories[i].subCategoryList[j];
     subCategory.productList.push(product);
     categories[i].subCategoryList[j] = subCategory;
-    return ({addingProduct: false, toggleStatus: !_.toggleStatus, categories: categories});
+    return ({addingProduct: false, busy: false, toggleStatus: !_.toggleStatus, categories: categories});
   },
-  [p.PRODUCT_ADD_FAIL]: (_, action) => ({addingProduct: false}),
+  [p.PRODUCT_ADD_FAIL]: (_, action) => ({addingProduct: false, busy: false}),
   [p.PRODUCT_SYNC_PROGRESS]: (_, action) => ({refreshing: true}),
   [p.PRODUCT_SYNC_SUCCESS]: (_, action) => ({refreshing: false, uploaded: false}),
   [p.PRODUCT_UPLOAD_FORM_TOGGLE]: (_, action) => ({uploading: action.payload.uploading}),
@@ -141,17 +149,22 @@ const handlers = {
   [p.PRODUCT_UPLOAD_PROGRESS]: (_, action) => ({busy: true, errorsProduct: []}),
   [p.PRODUCT_UPLAOD_ERROR]: (_, action) => ({busy: false, errorsProduct: action.payload.errors}),
   [p.PRODUCT_UPLAOD_FAIL]: (_, action) => ({uploading: false, busy: false}),
-  [p.PRODUCT_EDIT_FORM_TOGGLE]: (_, action) => ({editingProduct: action.payload.editing, product: action.payload.product}),
+  [p.PRODUCT_EDIT_FORM_TOGGLE]: (_, action) => ({editingProduct: action.payload.editing, product: action.payload.product, busy: false, errorProduct: {}}),
+  [p.PRODUCT_EDIT_PROGRESS]: (_, action) => ({busy: true, errorProduct: {}}),
   [p.PRODUCT_EDIT_SUCCESS]: (_, action) => {
     const product = action.payload.product;
     let categories = _.categories;
+    let products = _.products;
+    const x = products.findIndex(p => p.id === product.id);
+    products[x] = product;
     const i = categories.findIndex(c=> c.id === product.category.id);
     const j = categories[i].subCategoryList.findIndex(sc=> sc.id === product.subCategory.id);
     const k = categories[i].subCategoryList[j].productList.findIndex(p=> p.id === product.id);
     categories[i].subCategoryList[j].productList[k] = product;
-    return ({editingProduct: false,toggleStatus: !_.toggleStatus, categories: categories});
+    
+    return ({editingProduct: false, busy: false,toggleStatus: !_.toggleStatus, categories, products});
   },
-  [p.PRODUCT_EDIT_FAIL]: (_, action) => ({editingProduct: false}),
+  [p.PRODUCT_EDIT_FAIL]: (_, action) => ({editingProduct: false, busy: false}),
   [p.PRODUCT_REMOVE_SUCCESS]: (_, action) => {
     const product = action.payload.product;
     let categories = _.categories;

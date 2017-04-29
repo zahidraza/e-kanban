@@ -142,6 +142,8 @@ public class ProductService {
         }
         product.setSectionList(sectionList);
         product.setSupplierList(supplierList);
+        product.setStkOnFloor(0L);
+        product.setOrderedQty(0L);
         product = productRepository.save(product);
         return mapper.map(product, ProductDto.class);
     }
@@ -313,6 +315,7 @@ public class ProductService {
     }
 
     private void validate(List<ProductCsv> productCsvList) {
+        logger.debug("validating {} products ...", productCsvList.size());
         List<ProductCsv> removeList = new ArrayList<>();
         List<ProductError> errors = new ArrayList<>();
         i = 2;

@@ -85,10 +85,8 @@ class ProductUpload extends Component {
   }
 
   _renderErrors () {
-    console.log('_renderErrors');
     let {errorsProduct: errors} = this.props.category;
     errors = errors.slice(0,15*this.state.page);
-    console.log(errors);
     if (errors.length > 0) {
       const items = errors.map((e,i) => {
         return (
@@ -131,7 +129,7 @@ class ProductUpload extends Component {
         </Box>
       );
     }
-    console.log('calling render errors..');
+    
     const errors = this._renderErrors();
 
     const busy = uploading ? <Spinning /> : null;

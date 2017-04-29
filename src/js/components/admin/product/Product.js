@@ -1,10 +1,10 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
-//import {getCategories} from '../../../actions/category';
 import {removeProduct,syncProduct}  from '../../../actions/product';
 import {initialize}  from '../../../actions/misc';
 import {PRODUCT_CONSTANTS as c}  from '../../../utils/constants';
+import {CSVLink} from 'react-csv';
 
 import AppHeader from '../../AppHeader';
 import Add from "grommet/components/icons/base/Add";
@@ -28,6 +28,7 @@ import Title from 'grommet/components/Title';
 //import ProductTile from './ProductTile';
 import UploadIcon from 'grommet/components/icons/base/Upload';
 import SyncIcon from 'grommet/components/icons/base/Sync';
+import DownloadIcon from 'grommet/components/icons/base/Download';
 
 class Product extends Component {
   
@@ -36,8 +37,10 @@ class Product extends Component {
     this.state = {
       initializing: false,
       searching: false,
+      syncing: false,
       errors: [],
       products: [],
+      productsDownload:[],
       product: {},
       searchText: '',
       filterActive: false,
@@ -80,9 +83,10 @@ class Product extends Component {
     if (sessionStorage.session == undefined) {
       this.context.router.push('/');
     }
-    if (nextProps.category.uploaded) {
+    if (!this.state.syncing && nextProps.category.uploaded) {
       console.log('syncFirst');
-      // this.props.dispatch(syncProduct('true'));
+      this.setState({syncing: true});
+      this.props.dispatch(syncProduct('true'));
     }
   }
 
@@ -99,8 +103,6 @@ class Product extends Component {
     console.log("_loadProduct()");
     let products = this.props.category.products;
     const unfilteredCount = products.length;
-    console.log(filter);
-    console.log('unfiltered =' + unfilteredCount);
     if ('class' in filter) {
       const classFilter = filter.class;
       console.log(classFilter);
@@ -127,9 +129,19 @@ class Product extends Component {
     if (filteredCount == 0) {
       productNotAvailable = true;
     }
+    let productsDownload = [
+      ['Product Id','Item Code','Product Name','Category','Sub Category','Sections','Price','Ordering Time','Production Time','Transportation Time',
+        'Buffer Time','Supplier','Contact Person','Supplier Type','Address','UOM Purchase','UOM Consumption','Conversion Factor','MOQ',
+        'Packet Size','Class Type','No of Bins','Bin Size','Kanban Type','Demand']];
+    products.forEach(p => {
+      productsDownload.push([p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,'sections',p.price,p.timeOrdering,p.timeProcurement,
+        p.timeTransporation,p.timeBuffer,'supplier','contactperson','type','address',p.uomPurchase,p.uomConsumption,p.conversionFactor,
+        p.minOrderQty,p.packetSize,p.classType,p.noOfBins,p.binQty,p.kanbanType,p.demand]);
+    });
+
     products = products.slice(0,20*page);
     //products = this._productSort(products,sort);
-    this.setState({products, filteredCount, unfilteredCount, page, productNotAvailable}); 
+    this.setState({products,productsDownload, filteredCount, unfilteredCount, page, productNotAvailable}); 
   }
 
   _productSort (products,sort) {
@@ -189,7 +201,7 @@ class Product extends Component {
   _onEditClick (index) {
     console.log('_onEditClick');
     const {products} = this.state;
-    this.props.dispatch({type: c.PRODUCT_EDIT_FORM_TOGGLE, payload:{editing: true, product: products[index]}});
+    this.props.dispatch({type: c.PRODUCT_EDIT_FORM_TOGGLE, payload:{editing: true, product: {...products[index]}}});
     this.context.router.push('/product/edit');
   }
 
@@ -257,7 +269,7 @@ class Product extends Component {
 
   render() {
     const {refreshing} = this.props.category;
-    const { products, searchText, filterActive, filteredCount, unfilteredCount, initializing, productNotAvailable } = this.state;
+    const { products,productsDownload, searchText, filterActive, filteredCount, unfilteredCount, initializing, productNotAvailable } = this.state;
 
     if (initializing) {
       return (
@@ -292,6 +304,7 @@ class Product extends Component {
     }*/
     let addControl = (<Anchor icon={<Add />} path='/product/add' a11yTitle={`Add Product`} onClick={this._onAddClick.bind(this)}/>);
     let uploadControl = (<Anchor icon={<UploadIcon />} path='/product/upload' a11yTitle={`Upload Product`} onClick={this._onUploadClick.bind(this)}/>);
+    let downloadControl = (<CSVLink data={productsDownload} filename={'Products.csv'}  ><DownloadIcon /></CSVLink>);
     let helpControl = (<Button icon={<HelpIcon />}  onClick={this._onHelpClick.bind(this)}/>);
     let syncControl = (<Button icon={<SyncIcon />}  onClick={this._onSyncClick.bind(this)}/>);
 
@@ -307,6 +320,7 @@ class Product extends Component {
           <Search inline={true} fill={true} size='medium' placeHolder='Search'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           {uploadControl}
+          {downloadControl}
           {addControl}
           {syncControl}
           <FilterControl filteredTotal={filteredCount}

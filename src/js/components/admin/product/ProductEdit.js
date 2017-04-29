@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
 import {updateProduct}  from '../../../actions/product';
-//import {initialize}  from '../../../actions/misc';
 import {PRODUCT_CONSTANTS as c}  from '../../../utils/constants';
 
 import AddIcon from "grommet/components/icons/base/Add";
@@ -24,6 +23,7 @@ import Anchor from 'grommet/components/Anchor';
 import Layer from 'grommet/components/Layer';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
+import Spinning from 'grommet/components/icons/Spinning';
 
 
 class ProductEdit extends Component {
@@ -91,8 +91,8 @@ class ProductEdit extends Component {
 
     let url = window.serviceHost + '/categories/' + product.category.id + '/subCategories/' + product.subCategory.id + '/products/' + product.id;
     
-    product.sections = layer.section.selectedItems.map(s => s._links.self.href);
-    product.suppliers = layer.supplier.selectedItems.map(s => s._links.self.href);
+    product.sections = layer.section.selectedItems.map(s => s.links[0].href);
+    product.suppliers = layer.supplier.selectedItems.map(s => s.links[0].href);
 
     if (Object.getOwnPropertyNames(product.sections).length === 0) {
       delete product.sections;
@@ -259,12 +259,14 @@ class ProductEdit extends Component {
   }
 
   render () {
-    const {product,errors,layer} = this.state;
+    const {product,layer} = this.state;
+    const {errorProduct: errors, busy} = this.props.category;
 
     const layerControl = this._renderLayer(layer.name);
-
     const sectionFields = this._renderFields('section');
     const supplierFields = this._renderFields('supplier');
+
+    const busyIcon = busy ? <Spinning /> : null;
 
     return (
       <Box>
@@ -282,22 +284,22 @@ class ProductEdit extends Component {
 
                 <fieldset>
 
-                  <FormField label="Product Name" error={errors[0]}>
+                  <FormField label="Product Name" error={errors.name}>
                     <input type="text" name="name" value={product.name} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Product Description" error={errors[0]}>
+                  <FormField label="Product Description" error={errors.description}>
                     <input type="text" name="description" value={product.description} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Item Code" error={errors[0]}>
+                  <FormField label="Item Code" error={errors.itemCode}>
                     <input type="text" name="itemCode" value={product.itemCode} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Price" error={errors[0]}>
+                  <FormField label="Price" error={errors.price}>
                     <input type="text" name="price" value={product.price} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Minimum Order Quantity" error={errors[0]}>
+                  <FormField label="Minimum Order Quantity" error={errors.minOrderQty}>
                     <input type="text" name="minOrderQty" value={product.minOrderQty} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Packet Size" error={errors[0]}>
+                  <FormField label="Packet Size" error={errors.packetSize}>
                     <input type="text" name="packetSize" value={product.packetSize} onChange={this._onInputChange.bind(this)} />
                   </FormField>
                   
@@ -307,16 +309,16 @@ class ProductEdit extends Component {
                   <Box direction="row" justify="between">
                     <Heading tag="h3">Lead Times</Heading>
                   </Box>
-                  <FormField label="Ordering time" error={errors[0]}>
+                  <FormField label="Ordering time" error={errors.timeOrdering}>
                     <input type="text" name="timeOrdering" value={product.timeOrdering} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Procurement Time" error={errors[0]}>
+                  <FormField label="Procurement Time" error={errors.timeProcurement}>
                     <input type="text" name="timeProcurement" value={product.timeProcurement} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Transportation Time" error={errors[0]}>
+                  <FormField label="Transportation Time" error={errors.timeTransporation}>
                     <input type="text" name="timeTransporation" value={product.timeTransporation} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Buffer Time" error={errors[0]}>
+                  <FormField label="Buffer Time" error={errors.timeBuffer}>
                     <input type="text" name="timeBuffer" value={product.timeBuffer} onChange={this._onInputChange.bind(this)} />
                   </FormField>
                 </fieldset>
@@ -325,13 +327,13 @@ class ProductEdit extends Component {
                   <Box direction="row" justify="between">
                     <Heading tag="h3">Units of Measurement</Heading>
                   </Box>
-                  <FormField label="Purchase" error={errors[0]}>
+                  <FormField label="Purchase" error={errors.uomPurchase}>
                     <input type="text" name="uomPurchase" value={product.uomPurchase} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Consumption" error={errors[0]}>
+                  <FormField label="Consumption" error={errors.uomConsumption}>
                     <input type="text" name="uomConsumption" value={product.uomConsumption} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Conversion Factor" error={errors[0]}>
+                  <FormField label="Conversion Factor" error={errors.conversionFactor}>
                     <input type="text" name="conversionFactor" value={product.conversionFactor} onChange={this._onInputChange.bind(this)} />
                   </FormField>
                 </fieldset>
@@ -343,7 +345,7 @@ class ProductEdit extends Component {
 
               <Footer pad={{vertical: 'medium'}}>
                 <span />
-                <Button type="submit" primary={true} label={this.localeData.product_edit_btn}
+                <Button icon={busyIcon} type="submit" primary={true} label={this.localeData.product_edit_btn}
                   onClick={this._onSubmit.bind(this)} />
               </Footer>
             </Form>

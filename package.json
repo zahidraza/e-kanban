@@ -15,6 +15,7 @@
     "grommet-templates": "^0.2.0",
     "jsbarcode": "^3.5.9",
     "react": "^15.0.2",
+    "react-csv": "1.0.5",
     "react-dom": "^15.0.2",
     "react-dropzone": "^3.12.3",
     "react-redux": "^4.4.5",
