@@ -113,4 +113,15 @@ public class Inventory implements Serializable{
         result = 31 * result + binNo.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "id=" + id +
+                ", product=" + product +
+                ", binNo=" + binNo +
+                ", binState='" + binState + '\'' +
+                ", lastUpdated=" + lastUpdated +
+                '}';
+    }
 }

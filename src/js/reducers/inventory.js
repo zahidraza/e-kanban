@@ -2,6 +2,7 @@ import {INVENTORY_CONSTANTS as c} from "../utils/constants";
 import {getBinId} from "../utils/miscUtil";
 
 const initialState = {
+  syncing: false,
   inventory:[],
   toggleStatus: true,
   message: ''
@@ -15,7 +16,7 @@ const handlers = {
       return {...inv, binId: getBinId(inv.categoryId, inv.subCategoryId, inv.productId, inv.binNo)};
     });
 
-    return ({inventory, toggleStatus: !_.toggleStatus});
+    return ({inventory, toggleStatus: !_.toggleStatus, syncing: false});
   },
   [c.INVENTORY_EDIT_PROGRESS]: (_, action) => ({message: ''}),
   [c.INVENTORY_EDIT_SUCCESS]: (_, action) => {
@@ -23,11 +24,14 @@ const handlers = {
     let i = inventory.findIndex(inv => inv.id == action.payload.inventory.id);
     let inv = inventory[i];
     inv.binState = action.payload.inventory.binState;
+    inv.lastUpdated = action.payload.inventory.lastUpdated;
     inventory[i] = inv;
     const message = "Bin Scanned Successfully";
     return ({toggleStatus: !_.toggleStatus, inventory, message});
   },
-  [c.INVENTORY_EDIT_FAIL]: (_, action) => ({message: 'Some error occured while scanning Bin.'})
+  [c.INVENTORY_EDIT_FAIL]: (_, action) => ({message: 'Some error occured while scanning Bin.'}),
+  [c.INVENTORY_SYNC_PROGRESS]: (_, action) => ({syncing: true}),
+  [c.INVENTORY_SYNC_FAIL]: (_, action) => ({syncing: false})
 };
 
 export default function inventory (state = initialState, action) {

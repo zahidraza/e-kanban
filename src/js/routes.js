@@ -16,6 +16,7 @@ import User from "./components/admin/user/User";
 import InwardScan from "./components/store/InwardScan";
 import OutwardScan from "./components/store/OutwardScan";
 import BarcodeGenerate from "./components/store/BarcodeGenerate";
+import AwaitingOrder from './components/store/AwaitingOrder';
 
 import Tracking from './components/purchase/Tracking';
 import Order from './components/purchase/Order';
@@ -41,6 +42,7 @@ export default {
     { path: 'inward', component: InwardScan},
     { path: 'outward', component: OutwardScan},
     { path: 'barcode', component: BarcodeGenerate},
+    { path: 'awaiting', component: AwaitingOrder},
     { path: 'tracking', component: Tracking},
     { path: 'order', component: Order},
     { path: 'test', component: Test}

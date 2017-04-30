@@ -67,6 +67,9 @@ class Product extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
       const {categories,filter,sort} = nextProps.category;
@@ -79,9 +82,6 @@ class Product extends Component {
     if (this.props.category.toggleStatus != nextProps.category.toggleStatus) {
       const {categories,filter,sort} = nextProps.category;
       this._loadProduct(categories,filter,sort,this.state.page);
-    }
-    if (sessionStorage.session == undefined) {
-      this.context.router.push('/');
     }
     if (!this.state.syncing && nextProps.category.uploaded) {
       console.log('syncFirst');
@@ -134,7 +134,10 @@ class Product extends Component {
         'Buffer Time','Supplier','Contact Person','Supplier Type','Address','UOM Purchase','UOM Consumption','Conversion Factor','MOQ',
         'Packet Size','Class Type','No of Bins','Bin Size','Kanban Type','Demand']];
     products.forEach(p => {
-      productsDownload.push([p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,'sections',p.price,p.timeOrdering,p.timeProcurement,
+      let sections = '  ';
+      p.sectionList.forEach(s => sections += s.name + ', ');
+      sections = sections.substring(0,sections.length-2).trim();
+      productsDownload.push([p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
         p.timeTransporation,p.timeBuffer,'supplier','contactperson','type','address',p.uomPurchase,p.uomConsumption,p.conversionFactor,
         p.minOrderQty,p.packetSize,p.classType,p.noOfBins,p.binQty,p.kanbanType,p.demand]);
     });

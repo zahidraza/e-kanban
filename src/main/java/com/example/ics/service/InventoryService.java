@@ -47,6 +47,7 @@ public class InventoryService {
     public List<InventoryDto> findAll(){
         logger.debug("findAll");
         List<Inventory> list = inventoryRepository.findAll();
+        System.out.println(list.get(0));
         return list.stream().map(inventory -> mapper.map(inventory,InventoryDto.class)).collect(Collectors.toList());
     }
 

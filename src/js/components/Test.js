@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { localeData } from '../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../actions/misc';
+var Barcode = require('react-barcode');
 
 import AppHeader from './AppHeader';
 import Box from 'grommet/components/Box';
@@ -49,7 +50,8 @@ class Test extends Component {
       <Box>
         <AppHeader page={this.localeData.label_test}/>
         <Section>
-          <h1>Test Navigation page</h1>
+          <h1>Test Navigation page1</h1>
+          <Barcode value="78687" />
         </Section>
       </Box>
     );

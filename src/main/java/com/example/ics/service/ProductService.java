@@ -261,6 +261,7 @@ public class ProductService {
             products.forEach(product -> {
                 int noOfBins = product.getNoOfBins();
                 int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
+                Inventory inv = null;
 
                 if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
                     for (int i = 0; i < binInStock; i++){
@@ -269,7 +270,8 @@ public class ProductService {
                     int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
                     if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
                         for (int i = binInStock; i < binInStock + binInOrder; i++){
-                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
+                            inv = new Inventory(i+1, BinState.ORDERED);
+                            product.addInventory(inv);
                         }
                         if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pensing orders
                             for (int i = binInStock + binInOrder; i < noOfBins; i++){

@@ -5,6 +5,8 @@
  */
 package com.example.ics.entity;
 
+import com.example.ics.enums.OrderState;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -42,13 +44,17 @@ public class Order implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderedAt;
     
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "ORDERED_BY")
-    private User orderedBy;
-    
     @Column(name = "COMPLETED_AT", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "ORDERED_BY")
+    private User orderedBy;
+
+    @JoinColumn(name = "ORDER_STATE")
+    private String orderState;
+
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -104,6 +110,14 @@ public class Order implements Serializable{
 
     public void setCompletedAt(Date completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public OrderState getOrderState() {
+        return OrderState.parse(orderState);
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState.getValue();
     }
 
     public Date getLastUpdated() {

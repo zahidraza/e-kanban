@@ -11,6 +11,21 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+export function sync() {
+  return function (dispatch) {
+    dispatch({type: c.INVENTORY_SYNC_PROGRESS});
+    axios.get(window.serviceHost + '/inventory')
+    .then((response) => {
+      if (response.status == 200) {
+        dispatch({type: c.INITIALIZE_INVENTORY, payload: { inventory: response.data}});
+      }
+    }).catch( (err) => {
+      console.log(err);
+      dispatch({type: c.INVENTORY_SYNC_FAIL});
+    });
+  };
+}
+
 export function updateInventory (inventory) {
   console.log('updateInventory');
   return function (dispatch) {

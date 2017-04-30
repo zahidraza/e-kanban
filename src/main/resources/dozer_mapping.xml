@@ -59,5 +59,10 @@
             <a>product</a>
             <b>productId</b>
         </field>
+
+        <field custom-converter="com.example.ics.dozer.converter.LongDateConverter">
+            <a>lastUpdated</a>
+            <b>lastUpdated</b>
+        </field>
     </mapping>
 </mappings>

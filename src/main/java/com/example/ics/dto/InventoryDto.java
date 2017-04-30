@@ -25,6 +25,8 @@ public class InventoryDto {
     @StringEnum(enumClass = BinState.class)
     private String binState;
 
+    private Long lastUpdated;
+
     public InventoryDto() {
     }
 
@@ -74,5 +76,13 @@ public class InventoryDto {
 
     public void setBinState(String binState) {
         this.binState = binState;
+    }
+
+    public Long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Long lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }

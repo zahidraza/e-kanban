@@ -13,7 +13,7 @@
     "grommet": "1.2.1",
     "grommet-addons": "^0.1.0",
     "grommet-templates": "^0.2.0",
-    "jsbarcode": "^3.5.9",
+    "moment": "^2.18.1",
     "react": "^15.0.2",
     "react-csv": "1.0.5",
     "react-dom": "^15.0.2",
