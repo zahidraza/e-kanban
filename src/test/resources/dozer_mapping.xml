@@ -5,10 +5,10 @@
    http://dozer.sourceforge.net/schema/beanmapping.xsd">
     
     <mapping >
-      <class-a>com.example.ics.dto.UserDto</class-a>
-      <class-b>com.example.ics.entity.User</class-b>
+      <class-a>com.example.ekanban.dto.UserDto</class-a>
+      <class-b>com.example.ekanban.entity.User</class-b>
 
-      <field custom-converter="com.example.ics.dozer.converter.StringRoleConverter">
+      <field custom-converter="com.example.ekanban.dozer.converter.StringRoleConverter">
          <a>role</a>
          <b>role</b>
       </field>
@@ -16,10 +16,10 @@
    </mapping> 
    
    <mapping >
-      <class-a>com.example.ics.dto.ProductDto</class-a>
-      <class-b>com.example.ics.entity.Product</class-b>
+      <class-a>com.example.ekanban.dto.ProductDto</class-a>
+      <class-b>com.example.ekanban.entity.Product</class-b>
 
-      <field custom-converter="com.example.ics.dozer.converter.CategorySubCategoryConverter">
+      <field custom-converter="com.example.ekanban.dozer.converter.CategorySubCategoryConverter">
          <a>category</a>
          <b>subCategory</b>
       </field>

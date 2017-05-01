@@ -14,10 +14,10 @@ INSERT INTO `sub_category` (id,name,category_id) VALUES
 (3,'Test Sub Category 3',1);
 
 INSERT INTO `product` (id,bin_qty,class_type,conversion_factor,demand,description,item_code,kanban_type,min_order_qty,
-name,no_of_bins,packet_size,price,time_buffer,time_ordering,time_procurement,time_transportion,uom_consumption,uom_purchase,sub_category_id) VALUES
-(1,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 1',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1),
-(2,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 2',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1),
-(3,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 3',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1);
+name,no_of_bins,packet_size,price,time_buffer,time_ordering,time_procurement,time_transportion,uom_consumption,uom_purchase,sub_category_id,stk_on_floor,ordered_qty) VALUES
+(1,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 1',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1,0,0),
+(2,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 2',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1,0,0),
+(3,NULL,NULL,1.50,NULL,NULL,NULL,NULL,1000,'Test Product 3',NULL,50,100.00,4,3,1,2,'DOZEN','KG',1,0,0);
 
 
 INSERT INTO `section` (id,name) VALUES

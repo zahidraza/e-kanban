@@ -5,10 +5,10 @@
    http://dozer.sourceforge.net/schema/beanmapping.xsd">
     
     <mapping >
-      <class-a>com.example.ics.dto.UserDto</class-a>
-      <class-b>com.example.ics.entity.User</class-b>
+      <class-a>com.example.ekanban.dto.UserDto</class-a>
+      <class-b>com.example.ekanban.entity.User</class-b>
 
-      <field custom-converter="com.example.ics.dozer.converter.StringRoleConverter">
+      <field custom-converter="com.example.ekanban.dozer.converter.StringRoleConverter">
          <a>role</a>
          <b>role</b>
       </field>
@@ -16,10 +16,10 @@
    </mapping> 
    
    <mapping >
-      <class-a>com.example.ics.dto.ProductDto</class-a>
-      <class-b>com.example.ics.entity.Product</class-b>
+      <class-a>com.example.ekanban.dto.ProductDto</class-a>
+      <class-b>com.example.ekanban.entity.Product</class-b>
 
-      <field custom-converter="com.example.ics.dozer.converter.CategorySubCategoryConverter">
+      <field custom-converter="com.example.ekanban.dozer.converter.CategorySubCategoryConverter">
          <a>category</a>
          <b>subCategory</b>
       </field>
@@ -32,35 +32,35 @@
    </mapping>
 
     <mapping type="one-way">
-        <class-a>com.example.ics.dto.ProductCsv</class-a>
-        <class-b>com.example.ics.entity.Product</class-b>
+        <class-a>com.example.ekanban.dto.ProductCsv</class-a>
+        <class-b>com.example.ekanban.entity.Product</class-b>
 
-        <field custom-converter="com.example.ics.dozer.converter.SectionConverter">
+        <field custom-converter="com.example.ekanban.dozer.converter.SectionConverter">
             <a>sections</a>
             <b>sectionList</b>
         </field>
     </mapping>
 
     <mapping>
-        <class-a>com.example.ics.entity.Inventory</class-a>
-        <class-b>com.example.ics.dto.InventoryDto</class-b>
+        <class-a>com.example.ekanban.entity.Inventory</class-a>
+        <class-b>com.example.ekanban.dto.InventoryDto</class-b>
 
-        <field custom-converter="com.example.ics.dozer.converter.ProductCategoryConverter">
+        <field custom-converter="com.example.ekanban.dozer.converter.ProductCategoryConverter">
             <a>product</a>
             <b>categoryId</b>
         </field>
 
-        <field custom-converter="com.example.ics.dozer.converter.ProductSubCategoryConverter">
+        <field custom-converter="com.example.ekanban.dozer.converter.ProductSubCategoryConverter">
             <a>product</a>
             <b>subCategoryId</b>
         </field>
 
-        <field custom-converter="com.example.ics.dozer.converter.ProductLongConverter">
+        <field custom-converter="com.example.ekanban.dozer.converter.ProductLongConverter">
             <a>product</a>
             <b>productId</b>
         </field>
 
-        <field custom-converter="com.example.ics.dozer.converter.LongDateConverter">
+        <field custom-converter="com.example.ekanban.dozer.converter.LongDateConverter">
             <a>lastUpdated</a>
             <b>lastUpdated</b>
         </field>
