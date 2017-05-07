@@ -11,8 +11,9 @@ import category from "./reducers/category";
 import inventory from "./reducers/inventory";
 import section from "./reducers/section";
 import supplier from "./reducers/supplier";
+import order from './reducers/order';
 
-const reducer = combineReducers({ nav, misc, user, category, section, supplier, inventory});
+const reducer = combineReducers({ nav, misc, user, category, section, supplier, inventory, order});
 
 const middleware = applyMiddleware(promise(), thunk, logger());
 

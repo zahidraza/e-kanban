@@ -78,7 +78,7 @@ public class UserIntegrationTest {
     
     @Test
     public void createAndDeleteUser() throws Exception{
-        UserDto user = new UserDto("Test User", "test@gmail.com", "USER", "8987525008");
+        UserDto user = new UserDto("Test User", "test@gmail.com", "USER", "8987525008",true);
         MvcResult mvcResult = mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -112,7 +112,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$", hasSize(4)));
 
         //Test each fields one by one
-        user = new UserDto("", "test@gmail.com", "ADMIN", "8987525008");
+        user = new UserDto("", "test@gmail.com", "ADMIN", "8987525008",true);
         this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -121,7 +121,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].field", is("name")))
                 .andExpect(jsonPath("$[0].message", containsString("length must be between 5")));
         
-        user = new UserDto("Md Zahid Raza", "test", "ADMIN", "8987525008");
+        user = new UserDto("Md Zahid Raza", "test", "ADMIN", "8987525008",true);
         this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -130,7 +130,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].field", is("email")))
                 .andExpect(jsonPath("$[0].message", containsString("Incorrect email")));
         
-        user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMINISTARTOR", "8987525008");
+        user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMINISTARTOR", "8987525008",true);
         this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -139,7 +139,7 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$[0].field", is("role")))
                 .andExpect(jsonPath("$[0].message", containsString("Accepted values are [STORE,ADMIN,USER,PURCHASE]")));
         
-        user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMIN", "8987525");
+        user = new UserDto("Md Zahid Raza", "test@gmail.com", "ADMIN", "8987525",true);
         this.mvc.perform(post(ApiUrls.ROOT_URL_USERS)
                 .content(user.toJsonString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8))

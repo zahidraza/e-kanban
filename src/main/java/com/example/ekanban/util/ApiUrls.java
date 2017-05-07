@@ -40,11 +40,16 @@ public class ApiUrls {
 
     /*Product Resource*/
     public static final String ROOT_URL_PRODUCTS = "/api/products";
+    public static final String URL_PRODUCTS_PRODUCT = "{productId}";
     public static final String URL_PRODUCTS_SYNC = "/sync";
 
     /*Inventory Resource*/
     public static final String ROOT_URL_INVENTORY = "/api/inventory";
     public static final String URL_INVENTORY_SINGLE = "/{id}";
+
+    /*Section Resource*/
+    public static final String ROOT_URL_ORDERS = "/api/orders";
+    public static final String URL_ORDERS_ORDER = "/{orderId}";
 
     
 }

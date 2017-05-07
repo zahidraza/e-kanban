@@ -4,6 +4,7 @@ import com.example.ekanban.assembler.InventoryAssembler;
 import com.example.ekanban.dto.InventoryDto;
 import com.example.ekanban.service.InventoryService;
 import com.example.ekanban.util.ApiUrls;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by razamd on 4/16/2017.
@@ -33,9 +35,12 @@ public class InventoryRestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllInventory(){
-        List<InventoryDto> list = inventoryService.findAll();
-        return  ResponseEntity.ok(inventoryAssembler.toResources(list));
+    public ResponseEntity<?> getAllInventory(@RequestParam(value = "after", defaultValue = "0") Long after){
+        List<InventoryDto> list = inventoryService.findAllAfter(after);
+        Map<String,Object> resp = new HashedMap();
+        resp.put("invSync", System.currentTimeMillis());
+        resp.put("inventory", inventoryAssembler.toResources(list));
+        return  ResponseEntity.ok(resp);
     }
 
     @PatchMapping(ApiUrls.URL_INVENTORY_SINGLE)
@@ -48,22 +53,4 @@ public class InventoryRestController {
         return ResponseEntity.ok(inventoryAssembler.toResource(inventoryDto));
     }
 
-    @PostMapping(ApiUrls.URL_INVENTORY_SINGLE)
-    public ResponseEntity<org.springframework.core.io.Resource> printBarcode(@PathVariable("id") long id){
-        if (!inventoryService.exists(id)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        org.springframework.core.io.Resource file = inventoryService.printBarcode(id);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline; filename=\"" + file.getFilename() + "\"");
-//        headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
-
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
-                .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
-                .body(file);
-
-    }
 }

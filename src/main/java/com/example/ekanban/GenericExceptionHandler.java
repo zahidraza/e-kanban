@@ -19,6 +19,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,6 +48,12 @@ public class GenericExceptionHandler {
         builder.append(']');
         
         return response(HttpStatus.METHOD_NOT_ALLOWED, 405,"Supported methods are " + builder.toString() , e.getMessage(), "");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleInvalidFormat(HttpMessageNotReadableException e){
+        logger.debug("handleInvalidFormat");
+        return response(HttpStatus.BAD_REQUEST,400,"Invalid format.",e.getMessage(),"");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

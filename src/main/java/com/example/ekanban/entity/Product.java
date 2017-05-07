@@ -77,6 +77,9 @@ public class Product {
     @Column(name = "TIME_BUFFER", nullable = false)
     private Integer timeBuffer;
 
+    @Column(name = "TOTAL_LEAD_TIME")
+    private Integer totalLeadTime;
+
     @Column(name = "UOM_PURCHASE", nullable = false)
     private String uomPurchase; //Unit of Measurment Purchase
 
@@ -107,6 +110,9 @@ public class Product {
     @Column(name = "BIN_QTY", nullable = true)
     private Long binQty;
 
+    @Column(name = "IGNORE_SYNC")
+    private Boolean ignoreSync;
+
     @Column(name = "STK_ON_FLOOR", nullable = false)
     private Long stkOnFloor;
 
@@ -119,6 +125,10 @@ public class Product {
     private Date lastUpdated;
 
     public Product() {
+    }
+
+    public Product(Long id) {
+        this.id = id;
     }
 
     public void addConsumption(Consumption consumption) {
@@ -348,6 +358,22 @@ public class Product {
         this.orderedQty = orderedQty;
     }
 
+    public Integer getTotalLeadTime() {
+        return totalLeadTime;
+    }
+
+    public void setTotalLeadTime(Integer totalLeadTime) {
+        this.totalLeadTime = totalLeadTime;
+    }
+
+    public Boolean getIgnoreSync() {
+        return ignoreSync;
+    }
+
+    public void setIgnoreSync(Boolean ignoreSync) {
+        this.ignoreSync = ignoreSync;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -389,32 +415,14 @@ public class Product {
 //        return builder.toString();
 //    }
 
+
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
-                ", subCategory=" + subCategory +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", itemCode='" + itemCode + '\'' +
-                ", timeOrdering=" + timeOrdering +
-                ", timeProcurement=" + timeProcurement +
-                ", timeTransporation=" + timeTransporation +
-                ", timeBuffer=" + timeBuffer +
-                ", uomPurchase='" + uomPurchase + '\'' +
-                ", uomConsumption='" + uomConsumption + '\'' +
-                ", conversionFactor=" + conversionFactor +
-                ", minOrderQty=" + minOrderQty +
-                ", packetSize=" + packetSize +
-                ", classType='" + classType + '\'' +
-                ", kanbanType='" + kanbanType + '\'' +
-                ", demand=" + demand +
-                ", noOfBins=" + noOfBins +
-                ", binQty=" + binQty +
-                ", stkOnFloor=" + stkOnFloor +
-                ", orderedQty=" + orderedQty +
-                ", lastUpdated=" + lastUpdated +
+                "sectionList=" + sectionList +
+                ", supplierList=" + supplierList +
+                ", consumptions=" + consumptions +
+                ", inventorySet=" + inventorySet +
                 '}';
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,12 +48,19 @@ public class InventoryService {
 
     public InventoryDto findOne(Long id){
         logger.debug("findOne id = {}", id);
-        return mapper.map(inventoryRepository.findOne(id), InventoryDto.class);
+        Inventory inv = inventoryRepository.findOne(id);
+        if (inv == null) return null;
+        return mapper.map(inv, InventoryDto.class);
     }
 
-    public List<InventoryDto> findAll(){
-        logger.debug("findAll");
-        List<Inventory> list = inventoryRepository.findAll();
+    public List<InventoryDto> findAllAfter(Long after){
+        logger.debug("findAllAfter");
+        List<Inventory> list;
+        if (after == 0L){
+            list = inventoryRepository.findAll();
+        }else {
+            list = inventoryRepository.findByLastUpdatedGreaterThan(new Date(after));
+        }
         return list.stream().map(inventory -> mapper.map(inventory,InventoryDto.class)).collect(Collectors.toList());
     }
 
@@ -61,8 +69,4 @@ public class InventoryService {
         return inventoryRepository.exists(id);
     }
 
-    public Resource printBarcode(Long id){
-        Inventory inventory = inventoryRepository.findOne(id);
-        return MiscUtil.createBarcodePdf(inventory.getProduct(),inventory.getBinNo());
-    }
 }

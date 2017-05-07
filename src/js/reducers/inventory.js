@@ -1,22 +1,54 @@
-import {INVENTORY_CONSTANTS as c} from "../utils/constants";
-import {getBinId} from "../utils/miscUtil";
+import {INVENTORY_CONSTANTS as c, BIN_STATE as bs} from "../utils/constants";
+import {getProductId} from "../utils/miscUtil";
 
 const initialState = {
   syncing: false,
   inventory:[],
+  pendingMap: new Map(),
+  stockMap: new Map(),
   toggleStatus: true,
   message: ''
 };
 
 const handlers = { 
   [c.INITIALIZE_INVENTORY]: (_, action) => {
-    let inventory = action.payload.inventory;
+    const resp = action.payload.inventory;
+    let stockMap = _.stockMap;
+    let pendingMap = _.pendingMap;
+    sessionStorage.invSync = resp.invSync;
+    let inventory = resp.inventory;
 
     inventory = inventory.map(inv => {
-      return {...inv, binId: getBinId(inv.categoryId, inv.subCategoryId, inv.productId, inv.binNo)};
+      const productId = getProductId(inv.categoryId, inv.subCategoryId, inv.productId);
+      if (inv.binState === bs.STORE) {
+        let value = stockMap.get(productId);
+        if (value == undefined) {
+          stockMap.set(productId,String(inv.binNo));
+        }else{
+          value = value + "," + String(inv.binNo);
+          stockMap.set(productId,value);
+        }
+      } else if (inv.binState === bs.PURCHASE) {
+        let value = pendingMap.get(productId);
+        if (value == undefined) {
+          pendingMap.set(productId,{bins: String(inv.binNo), createdAt: inv.lastUpdated});
+        }else{
+          let bins = value.bins + "," + String(inv.binNo);
+          let createdAt = value.lastUpdated > inv.lastUpdated ? value.lastUpdated: inv.lastUpdated;
+          pendingMap.set(productId,{bins, createdAt});
+        }
+      }
+      return {...inv, prodId: productId};
     });
-
-    return ({inventory, toggleStatus: !_.toggleStatus, syncing: false});
+    return ({inventory, pendingMap, stockMap, toggleStatus: !_.toggleStatus, syncing: false});
+  },
+  [c.INVENTORY_REFRESH]: (_, action) => {
+    const order = action.payload.order;
+    let pendingMap = _.pendingMap;
+    let value = pendingMap.get(order.prodId);
+    value.bins = value.bins.substring(order.bins.length+1,value.bins.length);
+    pendingMap.set(order.prodId,value);
+    return ({pendingMap,toggleStatus: !_.toggleStatus});
   },
   [c.INVENTORY_EDIT_PROGRESS]: (_, action) => ({message: ''}),
   [c.INVENTORY_EDIT_SUCCESS]: (_, action) => {

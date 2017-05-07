@@ -26,6 +26,7 @@ const handlers = {
     window.sessionStorage.access_token = action.payload.data.access_token;
     window.sessionStorage.refresh_token = action.payload.data.refresh_token;
     window.sessionStorage.role = user.role;
+    window.sessionStorage.userId = user.id;
     window.sessionStorage.session = true;
     return ({busy: false});
   },

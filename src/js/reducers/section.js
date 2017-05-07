@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const handlers = { 
-  [c.INITIALIZE_SECTION]: (_, action) => ({sections: action.payload.sections, loaded: true, toggleStatus: !_.toggleStatus}),
+  [c.INITIALIZE_SECTION]: (_, action) => ({sections: action.payload.sections, toggleStatus: !_.toggleStatus}),
   [c.SECTION_BAD_REQUEST]: (_, action) => {
     let errors = {};
     action.payload.errors.forEach(err => {

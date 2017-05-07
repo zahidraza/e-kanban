@@ -13,6 +13,7 @@ import com.example.ekanban.entity.*;
 import com.example.ekanban.enums.BinState;
 import com.example.ekanban.enums.ClassType;
 import com.example.ekanban.enums.KanbanType;
+import com.example.ekanban.enums.OrderState;
 import com.example.ekanban.exception.ProductDetailsNotValidException;
 import com.example.ekanban.page.converter.ProductConverter;
 import com.example.ekanban.respository.*;
@@ -34,6 +35,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,13 +53,14 @@ public class ProductService {
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private SubCategoryRepository subCategoryRepository;
     @Autowired private ConsumptionRepositoryImpl consumptionRepository;
+    @Autowired private OrderRepository orderRepository;
+    @Autowired private UserRepository userRepository;
     private ProductConverter converter;
     private Mapper mapper;
 
     int i = -1;
     long totalMonthyConsumption;
     double commulativePercentage;
-    Inventory testInventory;
 
     @Autowired
     public ProductService(ProductRepository productRepository, SectionRepository sectionRepository, SupplierRepository supplierRepository) {
@@ -255,7 +258,7 @@ public class ProductService {
         });
         //Update Inventory
         if (firstSync){
-
+            User application = userRepository.findOne(1L);
             products.forEach(product -> {
                 int noOfBins = product.getNoOfBins();
                 int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
@@ -267,18 +270,30 @@ public class ProductService {
                     }
                     int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
                     if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
+                        StringBuilder builder = new StringBuilder();
                         for (int i = binInStock; i < binInStock + binInOrder; i++){
                             inv = new Inventory(i+1, BinState.ORDERED);
                             product.addInventory(inv);
+                            builder.append((i+1)).append(",");
                         }
-                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pensing orders
+                        if (builder.length() >= 2) {
+                            builder.setLength(builder.length()-1);
+                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                        }
+                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
                             for (int i = binInStock + binInOrder; i < noOfBins; i++){
                                 product.addInventory(new Inventory(i+1, BinState.PURCHASE));
                             }
                         }
                     }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
+                        StringBuilder builder = new StringBuilder();
                         for (int i = binInStock; i < noOfBins; i++){
                             product.addInventory(new Inventory(i+1, BinState.ORDERED));
+                            builder.append((i+1)).append(",");
+                        }
+                        if (builder.length() >= 2) {
+                            builder.setLength(builder.length()-1);
+                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
                         }
                     }
                 }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
@@ -286,7 +301,6 @@ public class ProductService {
                         product.addInventory(new Inventory(i+1, BinState.STORE));
                     }
                 }
-            	
             });
 
         }else {
@@ -295,7 +309,7 @@ public class ProductService {
                 //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
                 if (noOfInventory < product.getNoOfBins()){
                     for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
-                        product.addInventory(new Inventory(i, BinState.UNAVAILABLE));
+                        product.addInventory(new Inventory(i, BinState.PURCHASE));
                     }
                 }
             });
@@ -444,7 +458,8 @@ public class ProductService {
                     suppliers.add(supplier);
                     product.setSupplierList(suppliers);
                 }
-
+            /*Set Total Lead Time*/
+            product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProcurement()+product.getTimeTransporation()+product.getTimeBuffer());
 
             /*/////Adding Consumptions//////////*/
                 Consumption consumption;
@@ -530,6 +545,11 @@ public class ProductService {
         if (src.getBinQty() != null) dest.setBinQty(src.getBinQty());
         if (src.getNoOfBins() != null) dest.setNoOfBins(src.getNoOfBins());
         if (src.getDemand() != null) dest.setDemand(src.getDemand());
+    }
+
+    public Resource printBarcode(Long id, String bins){
+        Product product = productRepository.findOne(id);
+        return MiscUtil.generateBarcodePdf(product,bins);
     }
 
 }

@@ -84,6 +84,7 @@ public class UserService {
         logger.debug("save()");
         User user = mapper.map(userDto, User.class);
         user.setPassword(userDto.getMobile());
+        user.setActive(true);
         user = userRepository.save(user);
         return mapper.map(user, UserDto.class);
     }

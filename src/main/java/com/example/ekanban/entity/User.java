@@ -40,12 +40,19 @@ public class User implements Serializable{
     @Column(name = "ROLE", nullable = false)
     private String role;
 
+    @Column(name = "ACTIVE", nullable = false)
+    private Boolean active;
+
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED")
     private Date lastUpdated;
 
     public User() {
+    }
+
+    public User(Long id) {
+        this.id = id;
     }
 
     public User(String name, String email, String password, String role, String mobile) {
@@ -103,6 +110,14 @@ public class User implements Serializable{
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Date getLastUpdated() {

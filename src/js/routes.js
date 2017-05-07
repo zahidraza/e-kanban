@@ -13,6 +13,7 @@ import SupplierAdd from "./components/admin/supplier/SupplierAdd";
 import SupplierEdit from "./components/admin/supplier/SupplierEdit";
 import User from "./components/admin/user/User";
 
+import Stock from './components/store/Stock';
 import InwardScan from "./components/store/InwardScan";
 import OutwardScan from "./components/store/OutwardScan";
 import BarcodeGenerate from "./components/store/BarcodeGenerate";
@@ -39,6 +40,7 @@ export default {
     { path: 'supplier/add', component: SupplierAdd},
     { path: 'supplier/edit', component: SupplierEdit},
     { path: 'user', component: User},
+    { path: 'stock', component: Stock},
     { path: 'inward', component: InwardScan},
     { path: 'outward', component: OutwardScan},
     { path: 'barcode', component: BarcodeGenerate},

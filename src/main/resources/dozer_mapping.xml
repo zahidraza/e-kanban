@@ -65,4 +65,34 @@
             <b>lastUpdated</b>
         </field>
     </mapping>
+
+    <mapping>
+        <class-a>com.example.ekanban.entity.Order</class-a>
+        <class-b>com.example.ekanban.dto.OrderDto</class-b>
+
+        <field type="one-way" custom-converter="com.example.ekanban.dozer.converter.ProductLongConverter">
+            <a>product</a>
+            <b>productId</b>
+        </field>
+
+        <field custom-converter="com.example.ekanban.dozer.converter.LongDateConverter">
+            <a>orderedAt</a>
+            <b>orderedAt</b>
+        </field>
+
+        <field custom-converter="com.example.ekanban.dozer.converter.LongDateConverter">
+            <a>completedAt</a>
+            <b>completedAt</b>
+        </field>
+
+        <field type="one-way" custom-converter="com.example.ekanban.dozer.converter.UserLongConverter">
+            <a>orderedBy</a>
+            <b>orderedBy</b>
+        </field>
+
+        <field custom-converter="com.example.ekanban.dozer.converter.LongDateConverter">
+            <a>lastUpdated</a>
+            <b>lastUpdated</b>
+        </field>
+    </mapping>
 </mappings>

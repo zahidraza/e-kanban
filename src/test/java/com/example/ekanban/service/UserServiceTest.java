@@ -28,7 +28,7 @@ public class UserServiceTest {
         this.mapper = Mockito.mock(Mapper.class);
         this.userService = new UserService(userRepository, mapper);
         userList.add(new User("Md Zahid Raza", "zahid7292@gmail.com", "admin", Role.ADMIN.getValue(), "8987525008"));
-        userDtoList.add(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", Role.ADMIN.name(), "8987525008"));
+        userDtoList.add(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", Role.ADMIN.name(), "8987525008",true));
     }
     
     @Test

@@ -1,6 +1,8 @@
 package com.example.ekanban.util;
 
 import com.example.ekanban.entity.Product;
+import com.example.ekanban.enums.ClassType;
+import com.example.ekanban.enums.KanbanType;
 import com.example.ekanban.storage.BarcodeService;
 import com.example.ekanban.storage.StorageProperties;
 import com.itextpdf.text.*;
@@ -9,6 +11,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.springframework.core.io.Resource;
 
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Year;
@@ -21,6 +24,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class MiscUtil {
     private static Map<String,Integer> mapMonth = new HashedMap();
+    private static final Font fontHeader;
+    private static final Font fontMedium;
+    private static final Font fontSmall;
 
     static {
         mapMonth.put("JAN",1);
@@ -35,6 +41,15 @@ public class MiscUtil {
         mapMonth.put("OCT",10);
         mapMonth.put("NOV",11);
         mapMonth.put("DEC",12);
+
+        fontHeader = new Font();
+        fontHeader.setSize(10f);
+        fontHeader.setStyle(Font.BOLD);
+        fontMedium = new Font();
+        fontMedium.setSize(6f);
+        fontMedium.setStyle(Font.BOLD);
+        fontSmall = new Font();
+        fontSmall.setSize(6f);
     }
 
     public static Map<String,Integer> getMapMonth(){
@@ -50,10 +65,10 @@ public class MiscUtil {
     public static List<String> findInvalidResources(List<String> resources, Class<?> controllerClazz){
         if(resources == null) return null;
         String base = linkTo(controllerClazz).withSelfRel().getHref();
-        
+
         List<String> invalidResources = new ArrayList<>();
         if(resources == null) return invalidResources;
-        
+
         resources.forEach(resource -> {
             if(!resource.contains(base)){
                 invalidResources.add(resource);
@@ -63,7 +78,7 @@ public class MiscUtil {
         });
         return invalidResources;
     }
-    
+
     public static Long extractIdFromUri(String uri){
         int idx = uri.lastIndexOf('/');
         String id = uri.substring(idx+1).trim();
@@ -72,13 +87,13 @@ public class MiscUtil {
         }
         return null;
     }
-    
+
     public static String toStringList(List<String> list){
         StringBuilder builder = new StringBuilder();
         builder.append("[");
         if(list != null){
             list.forEach(s->builder.append(s + ", "));
-            builder.setLength(builder.length()-2);  
+            builder.setLength(builder.length()-2);
         }
         builder.append("]");
         return builder.toString();
@@ -116,88 +131,123 @@ public class MiscUtil {
                 ));
     }
 
-    public static Resource createBarcodePdf(Product product, int binNo){
-        String binId = getBinId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId(),binNo);
-        System.out.println("Bin Id = " + binId);
-        Document document = new Document(PageSize.A5);
-
+    public static Resource generateBarcodePdf(Product product, String bins){
+        String productId = getProductId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId());
+        Document document = new Document(PageSize.A4);
         StorageProperties properties = ApplicationContextUtil.getApplicationContext().getBean(StorageProperties.class);
         BarcodeService barcodeService = ApplicationContextUtil.getApplicationContext().getBean(BarcodeService.class);
-
         Path root = Paths.get(properties.getLocation());
-        System.out.println(root.getFileName());
         try {
-
-            PdfWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(root.resolve(binId + ".pdf").toFile()));
-
+            PdfWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(root.resolve(productId + ".pdf").toFile()));
             document.open();
+            PdfPTable mainTable = new PdfPTable(2);
+            mainTable.setWidthPercentage(100f);
 
-            PdfPTable table1 = new PdfPTable(3);
-
-            table1.setWidthPercentage(75);
-            float[] columnWidth = {2f, 2f, 2f};
-            table1.setWidths(columnWidth);
-
-            Barcode128 code128 = new Barcode128();
-            code128.setCode(binId.trim());
-            PdfContentByte cb = docWriter.getDirectContent();
-
-            code128.setCodeType(Barcode128.CODE128);
-            Image code128Image = code128.createImageWithBarcode(cb, null, null);
-            code128Image.setAbsolutePosition(10, 700);
-            code128Image.scalePercent(125);
             PdfPCell cell = null;
-            cell = new PdfPCell(new Phrase(product.getName()));
+            String[] binArray = bins.trim().split(",");
+            for (int i = 0; i < binArray.length; i++){
+                String bin = binArray[i];
+                if (bin.trim().length() != 0){
+                    cell = new PdfPCell();
+                    cell.addElement(getTable(docWriter,product,Integer.parseInt(bin)));
+                    cell.setBorder(PdfPCell.NO_BORDER);
+                    cell.setPadding(15f);
+                    cell.setPaddingBottom(40f);
+                    mainTable.addCell(cell);
+                }
 
-            //cell.setImage(code128Image);
-            cell.setColspan(3);
-            table1.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(product.getSubCategory().getCategory().getName()));
-            table1.addCell(cell);
-            cell = new PdfPCell(new Phrase(product.getSubCategory().getName()));
-            table1.addCell(cell);
-            cell = new PdfPCell(new Phrase(""));
-            table1.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(""));
-            table1.addCell(cell);
-            cell = new PdfPCell(new Phrase(""));
-            table1.addCell(cell);
-            cell = new PdfPCell(new Phrase(""));
-            table1.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(""));
-            table1.addCell(cell);
-            cell = new PdfPCell();
-            cell.setColspan(2);
-            cell.setPadding(10);
-            cell.setPaddingLeft(30);
-            cell.setPaddingRight(30);
-            cell.setImage(code128Image);
-            table1.addCell(cell);
-
-
-            for (int i = 1; i <= 6; i++) {
-                PdfPCell cell1 = new PdfPCell();
-
-                cell.setImage(code128Image);
-
-                table1.addCell(cell1);
             }
-
-            Paragraph paragraph = new Paragraph("Heading of Page\n\n");
-            paragraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(paragraph);
-            document.add(table1);
-            document.add(new Paragraph("\n\n"));
-            //document.add(table2);
+            if (binArray.length%2 == 1){
+                cell = new PdfPCell();
+                cell.setBorder(PdfPCell.NO_BORDER);
+                mainTable.addCell(cell);
+            }
+            document.add(mainTable);
             document.close();
         }catch (Exception e){
             e.printStackTrace();
         }
+        return barcodeService.loadAsResource(productId + ".pdf");
+    }
 
-        return barcodeService.loadAsResource(binId + ".pdf");
+    private static PdfPTable getTable(PdfWriter docWriter, Product product, int binNo) throws DocumentException {
+        String binId = getBinId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId(),binNo);
+
+        PdfPTable table = new PdfPTable(4);
+        table.setWidths(new float[]{1f,1.5f,.7f,.8f});
+        table.setWidthPercentage(100);
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+        Barcode128 code128 = new Barcode128();
+        code128.setCode(binId.trim());
+        PdfContentByte cb = docWriter.getDirectContent();
+
+        code128.setCodeType(Barcode128.CODE128);
+        Image code128Image = code128.createImageWithBarcode(cb, null, null);
+        code128Image.scalePercent(300f,100f);
+
+        PdfPCell cell = null;
+            /*Row 1*/
+        cell = new PdfPCell(new Phrase("e-Kanban",fontHeader));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPadding(5f);
+        cell.setColspan(2);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(product.getKanbanType().equals(KanbanType.N_BIN) ? "N-bin": "2-bin",fontHeader));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPadding(5f);
+        cell.setColspan(2);
+        table.addCell(cell);
+
+            /*Row 2*/
+        table.addCell(getCellContent("CATEGORY",product.getSubCategory().getCategory().getName(),Element.ALIGN_LEFT));
+        cell = new PdfPCell(getCellContent("PRODUCT NAME",product.getName(),Element.ALIGN_CENTER));
+        cell.setRowspan(2);
+        table.addCell(cell);
+        String classType = product.getClassType().equals(ClassType.CLASS_A) ? "A" : (product.getClassType().equals(ClassType.CLASS_B) ? "B" : "C");
+        table.addCell(getCellContent("ITEM CLASS", classType,Element.ALIGN_CENTER));
+        table.addCell(getCellContent("ITEM CODE",product.getItemCode(),Element.ALIGN_CENTER));
+
+            /*Row 3*/
+        table.addCell(getCellContent("SUB CATEGORY",product.getSubCategory().getName(),Element.ALIGN_LEFT));
+        table.addCell(getCellContent("UOM",product.getUomPurchase(),Element.ALIGN_CENTER));
+        String pktSize = product.getPacketSize().doubleValue() > 1.0 ? String.valueOf(product.getPacketSize().intValue()) : String.valueOf(product.getPacketSize());
+        table.addCell(getCellContent("PACKET SIZE",pktSize,Element.ALIGN_CENTER));
+
+            /*Row last*/
+        cell = getCellContent("CARD",""+binNo+"/"+product.getNoOfBins(),Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.addCell(cell);
+
+        cell = new PdfPCell();
+        cell.setImage(code128Image);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setFixedHeight(25f);
+        table.addCell(cell);
+
+        cell = getCellContent("LEAD TIME",String.valueOf(product.getTotalLeadTime()),Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.addCell(cell);
+        cell = getCellContent("BIN SIZE",String.valueOf(product.getBinQty()),Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.addCell(cell);
+        return table;
+    }
+
+    private static PdfPCell getCellContent(String heading,String content,int alignment){
+        PdfPCell cell = null;
+        Paragraph paragraph = new Paragraph();
+        paragraph.add(new Phrase(heading,fontMedium));
+        paragraph.add(new Phrase("\n"+content,fontSmall));
+        cell = new PdfPCell(paragraph);
+        cell.setHorizontalAlignment(alignment);
+        cell.setPadding(2f);
+        cell.setFixedHeight(25f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
     }
 
     public static String getBinId(Long categoryId,Long subCategoryId, Long productId,int binNo) {
@@ -230,6 +280,33 @@ public class MiscUtil {
 
         String result = 'B' + cIdStr + scIdStr + pIdStr + binStr;
 
+        return result;
+    }
+
+    public static String getProductId(Long categoryId,Long subCategoryId, Long productId) {
+        String cIdStr = String.valueOf(categoryId);
+        String scIdStr = String.valueOf(subCategoryId);
+        String pIdStr = String.valueOf(productId);
+
+        if (cIdStr.length() == 1) {
+            cIdStr = "0" + cIdStr;
+        }
+
+        if (scIdStr.length() == 1) {
+            scIdStr = "00" + scIdStr;
+        }else if (scIdStr.length() == 2) {
+            scIdStr = "0" + scIdStr;
+        }
+
+        int l = pIdStr.length();
+        l = 5 - l;
+        String prefix = "";
+        for (int i = 0; i < l ; i++) {
+            prefix = prefix + '0';
+        }
+        pIdStr = prefix + pIdStr;
+
+        String result = 'P' + cIdStr + scIdStr + pIdStr;
         return result;
     }
 }

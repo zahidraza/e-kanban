@@ -33,6 +33,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                     .antMatchers(HttpMethod.GET,"/api/suppliers").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/users").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/inventory").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/orders").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/products/**").permitAll()
                     .antMatchers("/api/**").authenticated()
                     .antMatchers("/**").permitAll()
 

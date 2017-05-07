@@ -11,10 +11,7 @@ import com.example.ekanban.enums.StringEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -25,7 +22,8 @@ public class ProductDto {
     private Category category;
     
     private SubCategory subCategory;
-    
+
+    @Digits(integer = 5,fraction = 0)
     private Long id;
     
     @NotNull @Size(min = 3,max = 255)
@@ -40,17 +38,24 @@ public class ProductDto {
     @Size(max = 255)
     private String itemCode;
     
-    @NotNull 
+    @NotNull
+    @Digits(integer = 3,fraction = 0)
     private Integer timeOrdering;
     
     @NotNull
+    @Digits(integer = 3,fraction = 0)
     private Integer timeProcurement;
     
     @NotNull
+    @Digits(integer = 3,fraction = 0)
     private Integer timeTransporation;
     
     @NotNull
+    @Digits(integer = 3,fraction = 0)
     private Integer timeBuffer;
+
+    @Digits(integer = 3,fraction = 0)
+    private Integer totalLeadTime;
     
     @NotEmpty
     private String uomPurchase; //Unit of Measurment Purchase
@@ -63,9 +68,11 @@ public class ProductDto {
     private BigDecimal conversionFactor;
     
     @NotNull
+    @Digits(integer = 6,fraction = 0)
     private Long minOrderQty;
     
     @NotNull
+    @Digits(integer = 5,fraction = 0)
     private Integer packetSize;
     
     @StringEnum(enumClass = ClassType.class)
@@ -76,8 +83,8 @@ public class ProductDto {
     
     @Digits(integer = 10,fraction = 0)
     private Long demand;
-    
-    @Max(value = 1000)
+
+    @Digits(integer = 3,fraction = 0)
     private Integer noOfBins;
     
     @Digits(integer = 10,fraction = 0)
@@ -95,6 +102,8 @@ public class ProductDto {
     
     private List<Supplier> supplierList;
 
+    private Boolean ignoreSync;
+
     public Category getCategory() {
         return category;
     }
@@ -110,7 +119,6 @@ public class ProductDto {
     public void setSubCategory(SubCategory subCategory) {
         this.subCategory = subCategory;
     }
-
 
     public Long getId() {
         return id;
@@ -304,9 +312,53 @@ public class ProductDto {
         this.lastUpdated = lastUpdated;
     }
 
-    @Override
-    public String toString() {
-        return "ProductDto{" + "category=" + category + ", subCategory=" + subCategory + ", id=" + id + ", name=" + name + ", description=" + description + ", price=" + price + ", itemCode=" + itemCode + ", timeOrdering=" + timeOrdering + ", timeProcurement=" + timeProcurement + ", timeTransporation=" + timeTransporation + ", timeBuffer=" + timeBuffer + ", uomPurchase=" + uomPurchase + ", uomConsumption=" + uomConsumption + ", conversionFactor=" + conversionFactor + ", minOrderQty=" + minOrderQty + ", packetSize=" + packetSize + ", classType=" + classType + ", kanbanType=" + kanbanType + ", demand=" + demand + ", noOfBins=" + noOfBins + ", binQty=" + binQty + '}';
+    public Integer getTotalLeadTime() {
+        return totalLeadTime;
     }
 
+    public void setTotalLeadTime(Integer totalLeadTime) {
+        this.totalLeadTime = totalLeadTime;
+    }
+
+    public Boolean getIgnoreSync() {
+        return ignoreSync;
+    }
+
+    public void setIgnoreSync(Boolean ignoreSync) {
+        this.ignoreSync = ignoreSync;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "category=" + category +
+                ", subCategory=" + subCategory +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", itemCode='" + itemCode + '\'' +
+                ", timeOrdering=" + timeOrdering +
+                ", timeProcurement=" + timeProcurement +
+                ", timeTransporation=" + timeTransporation +
+                ", timeBuffer=" + timeBuffer +
+                ", totalLeadTime=" + totalLeadTime +
+                ", uomPurchase='" + uomPurchase + '\'' +
+                ", uomConsumption='" + uomConsumption + '\'' +
+                ", conversionFactor=" + conversionFactor +
+                ", minOrderQty=" + minOrderQty +
+                ", packetSize=" + packetSize +
+                ", classType='" + classType + '\'' +
+                ", kanbanType='" + kanbanType + '\'' +
+                ", demand=" + demand +
+                ", noOfBins=" + noOfBins +
+                ", binQty=" + binQty +
+                ", lastUpdated=" + lastUpdated +
+                ", sections=" + sections +
+                ", suppliers=" + suppliers +
+                ", sectionList=" + sectionList +
+                ", supplierList=" + supplierList +
+                ", ignoreSync=" + ignoreSync +
+                '}';
+    }
 }

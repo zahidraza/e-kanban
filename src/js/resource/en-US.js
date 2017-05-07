@@ -11,6 +11,7 @@ module.exports = {
   "label_section": "Section",
   "label_supplier": "Supplier",
   "label_tracking": "Order Tracking",
+  "label_stock": "Stock",
   "label_awitingOrder": "Awaiting Order",
   "label_test": "Test Page",
 

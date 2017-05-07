@@ -6,6 +6,7 @@
 package com.example.ekanban.entity;
 
 import com.example.ekanban.enums.OrderState;
+import com.example.ekanban.enums.StringEnum;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,14 +33,13 @@ public class Order implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "INVENTORY_ID")
-    private Inventory inventory;
-    
-    @Column(name = "CREATED_AT", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
+
+    @Column(name = "BINS", nullable = false)
+    private String bins;
+
     @Column(name = "ORDERED_AT", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderedAt;
@@ -55,7 +55,6 @@ public class Order implements Serializable{
     @JoinColumn(name = "ORDER_STATE")
     private String orderState;
 
-
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED")
@@ -64,28 +63,20 @@ public class Order implements Serializable{
     public Order() {
     }
 
+    public Order(Product product, String bins, Date orderedAt, User orderedBy, String orderState) {
+        this.product = product;
+        this.bins = bins;
+        this.orderedAt = orderedAt;
+        this.orderedBy = orderedBy;
+        this.orderState = orderState;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Date getOrderedAt() {
@@ -128,6 +119,22 @@ public class Order implements Serializable{
         this.lastUpdated = lastUpdated;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public String getBins() {
+        return bins;
+    }
+
+    public void setBins(String bins) {
+        this.bins = bins;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -152,6 +159,5 @@ public class Order implements Serializable{
         }
         return true;
     }
-    
-    
+
 }

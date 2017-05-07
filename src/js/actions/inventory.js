@@ -11,7 +11,7 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export function sync() {
+export function syncInventory() {
   return function (dispatch) {
     dispatch({type: c.INVENTORY_SYNC_PROGRESS});
     axios.get(window.serviceHost + '/inventory')

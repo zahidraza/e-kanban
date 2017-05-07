@@ -60,3 +60,7 @@ export function getBinId (cId,scId,pId,binNo) {
   return result;
 
 }
+
+export function getNoOfBins(bins) {
+  return Math.ceil(bins.length/2);
+}

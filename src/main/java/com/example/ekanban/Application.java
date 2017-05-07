@@ -49,7 +49,8 @@ public class Application extends SpringBootServletInitializer {
         return (args) -> {
             barcodeService.init();
             if (userService.count() == 0) {
-                userService.save(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", "ADMIN", "8987525008"));
+                userService.save(new UserDto("Application", "app@gmail.com", "USER", "8987525008",true));
+                userService.save(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", "ADMIN", "8987525008",true));
             }
         };
     }
