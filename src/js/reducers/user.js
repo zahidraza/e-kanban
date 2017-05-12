@@ -6,11 +6,13 @@ const initialState = {
   editing: false,
   users:[],
   errors: [],
-  toggleStatus: true
+  toggleStatus: true,
+  message: ''
 };
 
 const handlers = { 
   [c.INITIALIZE_USER]: (_, action) => ({users: action.payload.users, loaded: true, toggleStatus: !_.toggleStatus}),
+  [c.USER_BUSY]: (_, action) => ({busy: action.payload.busy}),
   [c.USER_AUTH_NOT_PROGRESS]: (_, action) => ({busy: false}),
   [c.USER_AUTH_PROGRESS]: (_, action) => ({busy: true}),
   [c.USER_AUTH_SUCCESS]: (_, action) => {
@@ -58,7 +60,8 @@ const handlers = {
   [c.USER_REMOVE_SUCCESS]: (_, action) => {
     let users = _.users.filter(s => s.id != action.payload.user.id);
     return ({toggleStatus: !_.toggleStatus,users: users});
-  }
+  },
+  [c.USER_CHANGE_PASSWD]: (_, action) => ({busy: false})
 };
 
 export default function user (state = initialState, action) {

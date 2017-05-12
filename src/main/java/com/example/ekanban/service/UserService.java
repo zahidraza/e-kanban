@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.ekanban.respository.UserRepository;
@@ -98,6 +100,17 @@ public class UserService {
         if(userDto.getMobile() != null)   user.setMobile(userDto.getMobile());
         if(userDto.getRole() != null)   user.setRole(Role.parse("ROLE_" + userDto.getRole()));
         return mapper.map(user, UserDto.class);
+    }
+
+    @Transactional
+    public boolean changePassword(String email,String oldPassword,String newPassword){
+        User user = userRepository.findByEmail(email);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(newPassword);
+            return true;
+        }
+        return false;
     }
     
     @Transactional

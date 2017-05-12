@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { localeData } from '../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../actions/misc';
-var Barcode = require('react-barcode');
+import moment from 'moment';
 
 import AppHeader from './AppHeader';
 import Box from 'grommet/components/Box';
@@ -51,7 +51,7 @@ class Test extends Component {
         <AppHeader page={this.localeData.label_test}/>
         <Section>
           <h1>Test Navigation page1</h1>
-          <Barcode value="78687" />
+          {moment(new Date(inv.createdAt)).utcOffset('+05:30').format('DD/MM/YYYY, hh:mm A')}
         </Section>
       </Box>
     );

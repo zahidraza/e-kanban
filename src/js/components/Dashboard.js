@@ -36,6 +36,8 @@ class Dashboard extends Component {
   render () {
     const {initializing} = this.state;
 
+
+
     if (initializing) {
       return (
         <Box pad={{vertical: 'large'}}>
@@ -51,7 +53,7 @@ class Dashboard extends Component {
         <AppHeader />
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
           <h1>Welcome to Inventory Control System Application</h1>
-
+          
         </Section>
       </Box>
     );
@@ -63,7 +65,7 @@ Dashboard.contextTypes = {
 };
 
 let select = (store) => {
-  return { nav: store.nav, misc: store.misc};
+  return { nav: store.nav, misc: store.misc, inventory: store.inventory};
 };
 
 export default connect(select)(Dashboard);

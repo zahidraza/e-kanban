@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
  */
 public class InventoryDto {
 
-    @Pattern(regexp = "\\d+", message = "Invalid value. Value must be number")
+    @Digits(integer = 5,fraction = 0)
     private Long id;
 
     @Digits(integer = 2,fraction = 0)

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { localeData } from '../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../actions/misc';
-//import {changePassword} from '../actions/user';
-import {USER_CONSTANTS as c}  from '../utils/constants';
+import {changePassword} from '../actions/user';
+//import {USER_CONSTANTS as c}  from '../utils/constants';
 
 import AppHeader from './AppHeader';
 import Box from 'grommet/components/Box';
@@ -41,24 +41,19 @@ class Profile extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     } else {
-      const {users} = this.props.user;
-      let i = users.findIndex(u => u.email == sessionStorage.email);
-      const user = users[i];
+      const user = this.props.user.users.find(u => u.email == sessionStorage.email);
       this.setState({user});
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (!this.props.misc.initialized && nextProps.misc.initialized) {
-      this.setState({initializing: false});
-      const {users} = this.props.user;
-      let i = users.findIndex(u => u.email == sessionStorage.email);
-      const user = users[i];
-      this.setState({user});
+    if (sessionStorage.session == undefined) {
+      sessionStorage.sessionExpired = true;
+      this.context.router.push('/');
     }
-    if (nextProps.user.message != '') {
-      alert(nextProps.user.message);
-      this.props.dispatch({type: c.USER_CHANGE_PASSWD, payload: {message: ''}});
+    if (!this.props.misc.initialized && nextProps.misc.initialized) {
+      const user = nextProps.user.users.find(u => u.email == sessionStorage.email);
+      this.setState({user, initializing: false});
     }
   }
 
@@ -83,9 +78,9 @@ class Profile extends Component {
       return;
     }
 
-    credential.userId = user.id;
-    //this.props.dispatch(changePassword(credential));
-    //this.setState({changingPassword: false, credential: {}});
+    credential.email = user.email;
+    this.props.dispatch(changePassword(credential));
+    this.setState({changingPassword: false, credential: {}});
   }
 
   _onClick () {
@@ -115,8 +110,9 @@ class Profile extends Component {
     if (! changingPassword) {
       return null;
     }
-
     const {credential,errors} = this.state;
+    const {busy} = this.props.user;
+    const busyIcon = busy ? <Spinning /> : null;
 
     return (
       <Layer onClose={this._onCloseLayer.bind(this)}  closer={true} align="center">
@@ -135,7 +131,7 @@ class Profile extends Component {
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
-            <Button label="Save" primary={true}  onClick={this._changePassword.bind(this)} />
+            <Button icon={busyIcon} label="Save" primary={true}  onClick={this._changePassword.bind(this)} />
           </Footer>
         </Form>
       </Layer>

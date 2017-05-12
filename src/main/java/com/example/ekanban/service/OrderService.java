@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -109,11 +110,40 @@ public class OrderService {
             logger.error("No Order found matching orderId = {}", order.getId());
             return null;
         }
-        //if (order.getOrderedAt() != null)   order2.setOrderedAt(order.getOrderedAt());
-        //if (order.getCompletedAt() != null) order2.setCompletedAt(order.getCompletedAt());
-        order2.setCompletedAt(new Date());
-        order2.setOrderState(OrderState.COMPLETED);
-        //if (order.getOrderState() != null) order2.setOrderState(order.getOrderState());
+        String[] bins = order.getBins().split(",");
+        List<Integer> binList = new ArrayList<>();
+        for (String bin: bins) {
+            if (bin.trim().length() != 0){
+                binList.add(Integer.parseInt(bin.trim()));
+            }
+        }
+
+        List<Inventory> inventoryList = inventoryRepository.findByProduct(order2.getProduct());
+        inventoryList.forEach(inventory -> {
+            if (binList.contains(inventory.getBinNo())) {
+                inventory.setBinState(BinState.STORE);
+            }
+        });
+
+        String[] bins2 = order2.getBins().split(",");
+        List<Integer> binList2 = new ArrayList<>();
+        for (String bin: bins2) {
+            if (bin.trim().length() != 0){
+                binList2.add(Integer.parseInt(bin.trim()));
+            }
+        }
+
+        boolean isOrderComplete = true;
+        for (Inventory inv: inventoryList){
+            if (binList2.contains(inv.getBinNo()) && inv.getBinState() != BinState.STORE){
+                isOrderComplete = false;
+            }
+        }
+
+        if (isOrderComplete) {
+            order2.setCompletedAt(new Date());
+            order2.setOrderState(OrderState.COMPLETED);
+        }
         return mapper.map(order2,OrderDto.class);
     }
 

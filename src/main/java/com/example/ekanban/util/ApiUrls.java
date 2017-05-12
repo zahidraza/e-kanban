@@ -51,5 +51,10 @@ public class ApiUrls {
     public static final String ROOT_URL_ORDERS = "/api/orders";
     public static final String URL_ORDERS_ORDER = "/{orderId}";
 
+    /*Miscellaneous Resource*/
+    public static final String ROOT_URL_MISCELLANEOUS = "/api/misc";
+    public static final String URL_MISC_CHANGE_PASSWORD = "/change_password";
+    public static final String URL_MISC_CURRENT_TIME = "/current_time";
+
     
 }

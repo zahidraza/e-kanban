@@ -3,7 +3,7 @@ import { localeData } from '../../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../../actions/misc';
 import {generateOrder,syncOrder} from '../../actions/order';
-//import {updateInventory,syncInventory} from '../../actions/inventory';
+import {syncInventory} from '../../actions/inventory';
 import {getNoOfBins} from '../../utils/miscUtil';
 import {ORDER_CONSTANTS as c} from '../../utils/constants';
 import moment from 'moment';

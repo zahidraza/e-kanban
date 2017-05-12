@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import { localeData } from '../../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../../actions/misc';
-import {syncOrder} from '../../actions/order';
 import {syncInventory} from '../../actions/inventory';
-//import {getHeaders} from '../../utils/restUtil';
+import {getNoOfBins} from '../../utils/miscUtil';
 //import moment from 'moment';
-
 
 import AppHeader from '../AppHeader';
 import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
 import Section from 'grommet/components/Section';
 import Spinning from 'grommet/components/icons/Spinning';
-//import Tab from 'grommet/components/Tab';
-//import Tabs from 'grommet/components/Tabs';
 import Table from 'grommet/components/Table';
 import TableHeader from 'grommet/components/TableHeader';
 import TableRow from 'grommet/components/TableRow';
@@ -24,14 +20,8 @@ import HelpIcon from 'grommet/components/icons/base/Help';
 import Search from 'grommet/components/Search';
 import Title from 'grommet/components/Title';
 import SyncIcon from 'grommet/components/icons/base/Sync';
-import PrintIcon from 'grommet/components/icons/base/Print';
-//import Layer from 'grommet/components/Layer';
-//import Form from 'grommet/components/Form';
-//import FormField from 'grommet/components/FormField';
-//import FormFields from 'grommet/components/FormFields';
-//import Footer from 'grommet/components/Footer';
 
-class AwaitingOrder extends Component {
+class Stock extends Component {
   
   constructor () {
     super();
@@ -39,13 +29,13 @@ class AwaitingOrder extends Component {
       initializing: false,
       searching: false,
       searchText: '',
-      page: 1, //Page Pending
-      awaitingInv: []
+      page: 1,
+      stockInv: []
     };
     this.localeData = localeData();
     this._loadInventory = this._loadInventory.bind(this);
-    this._renderAwaiting = this._renderAwaiting.bind(this);
-    this._getAwaitingInv = this._getAwaitingInv.bind(this);
+    this._renderStock = this._renderStock.bind(this);
+    this._getStockInv = this._getStockInv.bind(this);
   }
 
   componentWillMount () {
@@ -69,24 +59,22 @@ class AwaitingOrder extends Component {
     this._loadInventory(this.state.page);
   }
 
-  _getAwaitingInv () {
-    const {category: {products}, order: {orders}} = this.props;
-    let awaitingInv = [];
-    let awaitingOrders = orders.filter(o => o.orderState == 'ORDERED');
-    awaitingOrders.forEach(o => {
-      const p = products.find(prod => prod.id == o.productId);
+  _getStockInv () {
+    const {inventory: {stockMap}, category: {products}} = this.props;
+    let stockInv = [];
+    for (var [key, value] of stockMap) {
+      const p = products.find(prod => prod.productId == key);
       if (p != undefined) {
-        awaitingInv.push({productId: p.productId,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,
-          createdAt: o.createdAt, tat: p.timeOrdering + p.timeProcurement + p.timeTransportation + p.timeBuffer});
+        stockInv.push({productId: key,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: value, noOfBins: getNoOfBins(value)});
       }
-    });
-    return awaitingInv;
+    }
+    return stockInv;
   }
 
   _loadInventory (page) {
-    let awaitingInv = this._getAwaitingInv();
-    awaitingInv = awaitingInv.slice(0, 15*page);
-    this.setState({awaitingInv, page});
+    let stockInv = this._getStockInv();
+    stockInv = stockInv.slice(0, 15*page);
+    this.setState({stockInv, page});
   }
 
   _onMoreOrders () {
@@ -96,39 +84,13 @@ class AwaitingOrder extends Component {
     }
   }
 
-  _onPrint (index) {
-    const {awaitingInv} = this.state;
-    let inv = awaitingInv[index];
-    //const options = { method: 'post', headers: getHeaders()};
-
-    window.open(window.serviceHost + "/products/" + inv.prodId + "?bins=" + inv.bins,"_blank","fullscreen=yes");
-
-    // fetch(window.serviceHost + "/products/" + inv.prodId + "?bins=" + inv.bins, options)
-    // .then(function(response) {
-    //   console.log(response);
-    //   return response.blob();
-    // })
-    // .then(function(myBlob) {
-    //   var downloadUrl = URL.createObjectURL(myBlob);
-
-    //   var a = document.createElement("a");
-    //   a.href = downloadUrl;
-    //   // document.body.appendChild(a);
-    //   // a.click();
-    //   window.open(a.href);
-    // })
-    // .catch((error)=>{
-    //   console.log(error);
-    // });
-  }
-
   _onSearch (event) {
     console.log('_onSearch');
     let value = event.target.value;
     if (value.length > 0) {
-      let awaitingInv = this._getAwaitingInv();
-      awaitingInv = awaitingInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
-      this.setState({awaitingInv, searchText: value, searching: true});
+      let stockInv = this._getStockInv();
+      stockInv = stockInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
+      this.setState({stockInv, searchText: value, searching: true});
     }else {
       this.setState({searchText: value, searching: false});
       this._loadInventory(1);
@@ -137,32 +99,31 @@ class AwaitingOrder extends Component {
 
   _onSyncClick () {
     this.props.dispatch(syncInventory());
-    this.props.dispatch(syncOrder());
   }
 
   _onHelpClick () {
     console.log('_onHelpClick');
   }
 
-  _renderAwaiting () {
-    let {awaitingInv} = this.state;
-    
-    if (awaitingInv.length > 0) {
-      let items = awaitingInv.map((inv,i) => {
+  _renderStock () {
+    let {stockInv} = this.state;
+ 
+    if (stockInv.length > 0) {
+      let items = stockInv.map((inv,i) => {
         return (
           <TableRow key={i}  >
             <td>{inv.productId}</td>
             <td>{inv.productName}</td>
             <td>{inv.binSize}</td>
             <td>{inv.bins}</td>
-            <td style={{textAlign: 'right', padding: 0}}><Button icon={<PrintIcon />} onClick={this._onPrint.bind(this,i)} /></td>
+            <td>{inv.noOfBins}</td>
           </TableRow>
         );
       });
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Cards','']} />
+            <TableHeader labels={['Product Id','Product','Bin Size','Cards','No of Bins']} />
 
             <tbody>{items}</tbody>
           </Table>       
@@ -171,7 +132,7 @@ class AwaitingOrder extends Component {
     } else {
       return (
         <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}>
-          <h3>No Awaiting Orders available</h3>
+          <h3>No Products available in Stock</h3>
         </Box>
       );
     } 
@@ -190,16 +151,16 @@ class AwaitingOrder extends Component {
       );
     }
 
-    const syncingIcon = this.props.order.syncing ? <Spinning /> : null;
+    const syncingIcon = this.props.inventory.syncing ? <Spinning /> : null;
 
-    const awating = this._renderAwaiting();
+    const stock = this._renderStock();
 
     return (
       <Box>
         <AppHeader/>
         <Header size='large' pad={{ horizontal: 'medium' }}>
           <Title responsive={false}>
-            <span>{this.localeData.label_tracking}</span>
+            <span>{this.localeData.label_stock}</span>
           </Title>
           <Search inline={true} fill={true} size='medium' placeHolder='Search'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
@@ -209,8 +170,7 @@ class AwaitingOrder extends Component {
         <Section>
           <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
             <Box size="small" alignSelf="center">{syncingIcon}</Box>
-
-            {awating}
+            {stock}
           </Box>
         </Section>
       </Box>
@@ -218,12 +178,12 @@ class AwaitingOrder extends Component {
   }
 }
 
-AwaitingOrder.contextTypes = {
+Stock.contextTypes = {
   router: React.PropTypes.object
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, awaitingInv: store.awaitingInv, order: store.order, user: store.user};
+  return {misc: store.misc, category: store.category, inventory: store.inventory, order: store.order, user: store.user};
 };
 
-export default connect(select)(AwaitingOrder);
+export default connect(select)(Stock);

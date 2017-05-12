@@ -35,7 +35,6 @@ export function authenticate (username, password) {
       }else{
         console.log(response);
       }
-
     }).catch( (err) => {
       console.log(err);
       dispatch({type: u.USER_AUTH_FAIL});
@@ -45,7 +44,29 @@ export function authenticate (username, password) {
 }
 
 export function changePassword (credential) {
-
+  return function (dispatch) {
+    dispatch({type: u.USER_BUSY, payload: {busy: true}});
+    axios.put(window.serviceHost + '/misc/change_password?email=' +  credential.email + "&oldPassword=" + credential.oldPassword + "&newPassword=" + credential.newPassword, null, {headers: getHeaders()})
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+        if (response.data.status == "SUCCESS") {
+          //dispatch({type: u.USER_CHANGE_PASSWD, payload: {message: 'Password changed successfully.'}});
+          alert('Password changed successfully.');
+        }else{
+          //dispatch({type: u.USER_CHANGE_PASSWD, payload: {message: 'Incorrect credential. try again!'}});
+          alert('Incorrect credential. try again!');
+        }
+        dispatch({type: u.USER_BUSY, payload: {busy: false}});
+      }
+    }).catch( (err) => {
+      if (err.response.status != 401) {
+        //dispatch({type: u.USER_CHANGE_PASSWD, payload: {message: 'Some error occured changing password. Try again Later.'}});
+        alert('Some error occured changing password. Try again Later.');
+      }
+      dispatch({type: u.USER_BUSY, payload: {busy: false}});
+    });
+  };
 }
 
 export function addUser (user) {
@@ -65,7 +86,6 @@ export function addUser (user) {
       }
     });
   };
-  
 }
 
 export function updateUser (user) {

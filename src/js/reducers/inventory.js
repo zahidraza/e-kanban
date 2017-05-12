@@ -1,5 +1,5 @@
 import {INVENTORY_CONSTANTS as c, BIN_STATE as bs} from "../utils/constants";
-import {getProductId} from "../utils/miscUtil";
+import {getProductId, getBinId} from "../utils/miscUtil";
 
 const initialState = {
   syncing: false,
@@ -15,11 +15,14 @@ const handlers = {
     const resp = action.payload.inventory;
     let stockMap = _.stockMap;
     let pendingMap = _.pendingMap;
+    stockMap.clear();
+    pendingMap.clear();
     sessionStorage.invSync = resp.invSync;
     let inventory = resp.inventory;
 
     inventory = inventory.map(inv => {
       const productId = getProductId(inv.categoryId, inv.subCategoryId, inv.productId);
+      const binId = getBinId(inv.categoryId, inv.subCategoryId, inv.productId, inv.binNo);
       if (inv.binState === bs.STORE) {
         let value = stockMap.get(productId);
         if (value == undefined) {
@@ -38,7 +41,7 @@ const handlers = {
           pendingMap.set(productId,{bins, createdAt});
         }
       }
-      return {...inv, prodId: productId};
+      return {...inv, prodId: productId, binId};
     });
     return ({inventory, pendingMap, stockMap, toggleStatus: !_.toggleStatus, syncing: false});
   },
@@ -47,19 +50,52 @@ const handlers = {
     let pendingMap = _.pendingMap;
     let value = pendingMap.get(order.prodId);
     value.bins = value.bins.substring(order.bins.length+1,value.bins.length);
-    pendingMap.set(order.prodId,value);
+    if (value.bins.length == 0) {
+      pendingMap.delete(order.prodId);
+    }else {
+      pendingMap.set(order.prodId,value);
+    }
     return ({pendingMap,toggleStatus: !_.toggleStatus});
   },
   [c.INVENTORY_EDIT_PROGRESS]: (_, action) => ({message: ''}),
   [c.INVENTORY_EDIT_SUCCESS]: (_, action) => {
     let inventory = _.inventory;
+    let stockMap = _.stockMap;
+    let pendingMap = _.pendingMap;
+
     let i = inventory.findIndex(inv => inv.id == action.payload.inventory.id);
     let inv = inventory[i];
     inv.binState = action.payload.inventory.binState;
     inv.lastUpdated = action.payload.inventory.lastUpdated;
     inventory[i] = inv;
-    const message = "Bin Scanned Successfully";
-    return ({toggleStatus: !_.toggleStatus, inventory, message});
+
+    const productId = inv.prodId;
+    stockMap.delete(productId);
+    pendingMap.delete(productId);
+    const binsOfProduct = inventory.filter(b => b.prodId == productId);
+    binsOfProduct.forEach(b => {
+      if (b.binState === bs.STORE) {
+        let value = stockMap.get(productId);
+        if (value == undefined) {
+          stockMap.set(productId,String(b.binNo));
+        }else{
+          value = value + "," + String(b.binNo);
+          stockMap.set(productId,value);
+        }
+      } else if (b.binState === bs.PURCHASE) {
+        let value = pendingMap.get(productId);
+        if (value == undefined) {
+          pendingMap.set(productId,{bins: String(b.binNo), createdAt: b.lastUpdated});
+        }else{
+          let bins = value.bins + "," + String(b.binNo);
+          let createdAt = value.lastUpdated > b.lastUpdated ? value.lastUpdated: b.lastUpdated;
+          pendingMap.set(productId,{bins, createdAt});
+        }
+      }
+    });
+    // const message = "Bin Scanned Successfully";
+    alert('Bin Outward Scan done successfully.');
+    return ({toggleStatus: !_.toggleStatus, inventory,stockMap,pendingMap});
   },
   [c.INVENTORY_EDIT_FAIL]: (_, action) => ({message: 'Some error occured while scanning Bin.'}),
   [c.INVENTORY_SYNC_PROGRESS]: (_, action) => ({syncing: true}),

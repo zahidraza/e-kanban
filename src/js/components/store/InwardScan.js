@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { localeData } from '../../reducers/localization';
 import { connect } from 'react-redux';
 import {initialize} from '../../actions/misc';
-import {updateInventory} from '../../actions/inventory';
+import {updateOrder} from '../../actions/order';
+import {BIN_STATE as bs} from '../../utils/constants';
 
 import AppHeader from '../AppHeader';
 import Box from 'grommet/components/Box';
@@ -73,11 +74,17 @@ class InwardScan extends Component {
         notFound = true;
       }else {
         const inv = inventory[i];
-
+        //Find Product to update info
         const products = this.props.category.products;
         const j = products.findIndex(p => p.id === inv.productId);
         const product = products[j];
-        bin = {...inv, ...product};
+        //Find all bins of this product
+        const allBins = inventory.filter(i => i.prodId == inv.prodId);
+        const inStock = allBins.filter(b => b.binState == bs.STORE).length;
+        const inPurchase = allBins.filter(b => b.binState == bs.PURCHASE).length;
+        const inOrder = allBins.filter(b => b.binState == bs.ORDERED).length;
+
+        bin = {...product, ...inv, inStock, inPurchase, inOrder};
         available = true;
         binId = '';
       }
@@ -95,8 +102,23 @@ class InwardScan extends Component {
   _scan () {
     console.log("_scan()");
     const bin = this.state.bin;
-    const inv = {url: bin.links[0].href, binState: 'STORE'};
-    this.props.dispatch(updateInventory(inv));
+
+    const orders = this.props.order.orders.filter(o => o.productId == bin.productId);
+    console.log(orders);
+    let x = -2,i,order;
+    for (i = 0; i < orders.length; i++) {
+      order = orders[i];
+      let bins = order.bins.split(',');
+      x = bins.findIndex( b => b == String(bin.binNo));
+      if (x != -1) break;
+    }
+    console.log(order);
+    
+    if (x >= 0) {
+      const inv = {orderId: order.id, bins: String(bin.binNo)};
+      this.props.dispatch(updateOrder(inv));
+    }
+    this.setState({available: false});
     document.getElementById("barCodeInput").focus();
   }
 
@@ -122,7 +144,7 @@ class InwardScan extends Component {
 
     let scanBtn;
     if (available) {
-      scanBtn = bin.binState == 'STORE' ? <h3>Bin is already in Store.</h3> : <Button label="Scan" onClick={this._scan.bind(this)} />;
+      scanBtn = (bin.binState == bs.STORE) ? <h3>Bin is already in Store.</h3> : (bin.binState == bs.PURCHASE ? <h3>Bin not ordered yet, It is in Purchase.</h3> : <Button label="Scan" onClick={this._scan.bind(this)} />);
     }
 
     const binNotFound = notFound ? <Box size='small' alignSelf='center'  pad={{vertical: 'large', horizontal:'small'}}> <h3>Bin Not Found</h3> </Box> : null;
@@ -136,10 +158,6 @@ class InwardScan extends Component {
             <span className="secondary">{bin.name}</span>
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
-            <span> Product Id </span>
-            <span className="secondary">{bin.productId}</span>
-          </ListItem>
-          <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
             <span> Bin Id </span>
             <span className="secondary">{bin.binId}</span>
           </ListItem>
@@ -148,12 +166,20 @@ class InwardScan extends Component {
             <span className="secondary">{bin.itemCode}</span>
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
-            <span> Number of Bins </span>
-            <span className="secondary">{bin.noOfBins}</span>
+            <span> Bins in Stock </span>
+            <span className="secondary">{bin.inStock}</span>
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
-            <span> Bin Number </span>
-            <span className="secondary">{bin.binNo}</span>
+            <span> Bins in Purchase </span>
+            <span className="secondary">{bin.inPurchase}</span>
+          </ListItem>
+          <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+            <span> Bins in Order </span>
+            <span className="secondary">{bin.inOrder}</span>
+          </ListItem>
+          <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+            <span> Card </span>
+            <span className="secondary">{bin.binNo + '/' + bin.noOfBins}</span>
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
             <span> Category </span>
@@ -205,7 +231,7 @@ InwardScan.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, inventory: store.inventory};
+  return {misc: store.misc, category: store.category, inventory: store.inventory, order: store.order};
 };
 
 export default connect(select)(InwardScan);

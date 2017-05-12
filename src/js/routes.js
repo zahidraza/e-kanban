@@ -1,7 +1,9 @@
-import Category from "./components/admin/category/Category";
 import Dashboard from "./components/Dashboard";
 import Main from "./components/Main";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
+
+import Category from "./components/admin/category/Category";
 import Product from "./components/admin/product/Product";
 import ProductAdd from "./components/admin/product/ProductAdd";
 import ProductUpload from "./components/admin/product/ProductUpload";
@@ -29,6 +31,8 @@ export default {
   indexRoute: {component: Login},
   childRoutes: [
     { path: 'dashboard', component: Dashboard},
+    { path: 'profile', component: Profile},
+
     { path: 'category', component: Category},
     { path: 'product', component: Product},
     { path: 'product/add', component: ProductAdd},
@@ -40,11 +44,13 @@ export default {
     { path: 'supplier/add', component: SupplierAdd},
     { path: 'supplier/edit', component: SupplierEdit},
     { path: 'user', component: User},
+
     { path: 'stock', component: Stock},
     { path: 'inward', component: InwardScan},
     { path: 'outward', component: OutwardScan},
     { path: 'barcode', component: BarcodeGenerate},
     { path: 'awaiting', component: AwaitingOrder},
+    
     { path: 'tracking', component: Tracking},
     { path: 'order', component: Order},
     { path: 'test', component: Test}
