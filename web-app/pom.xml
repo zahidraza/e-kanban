@@ -5,6 +5,7 @@
     <artifactId>e-kanban</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <name>e-kanban</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -104,18 +105,6 @@
             <artifactId>xmlworker</artifactId>
             <version>5.5.9</version>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        
-        <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-devtools</artifactId>
-	        <optional>true</optional>
-	    </dependency>-->
 
     </dependencies>
 
@@ -171,7 +160,7 @@
                 <version>2.4</version>
                 <executions>
                     <execution>
-                        <id>make-assembly-ics</id>
+                        <id>make-assembly-ekanban</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>single</goal>
@@ -197,7 +186,7 @@
                         <configuration>
                             <tasks>
                                 <echo message="unzipping file" />
-                                <unzip src="${basedir}/target/ics.zip" dest="src/main/webapp/static" />
+                                <unzip src="${basedir}/target/e-kanban.zip" dest="src/main/webapp/static" />
                             </tasks>
                         </configuration>
                         <goals>
@@ -215,5 +204,5 @@
 
         </plugins>
     </build>
-    <name>ics</name>
+
 </project>
