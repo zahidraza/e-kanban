@@ -1,7 +1,0 @@
-/nb-configuration.xml
-target/
-.idea/
-*.iml
-node/
-node_modules/
-dist/
