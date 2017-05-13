@@ -25,6 +25,7 @@ class Test extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }
+    console.log(moment.duration(2, 'days'));
   }
 
   componentWillReceiveProps (nextProps) {
@@ -51,7 +52,7 @@ class Test extends Component {
         <AppHeader page={this.localeData.label_test}/>
         <Section>
           <h1>Test Navigation page1</h1>
-          {moment(new Date(inv.createdAt)).utcOffset('+05:30').format('DD/MM/YYYY, hh:mm A')}
+          {moment(new Date()).add(3,'days').utcOffset('+05:30').format('DD MMM, YY')}
         </Section>
       </Box>
     );

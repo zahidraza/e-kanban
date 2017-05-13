@@ -66,10 +66,13 @@ class Category extends Component {
 
   _addCategory () {
     this.props.dispatch(addCategory(this.state.category));
+    this.setState({category: {}});
   }
 
   _updateCategory () {
     this.props.dispatch(updateCategory(this.state.category));
+    this.setState({category: {}});
+    console.log(this.state.category);
   }
 
   _onSearch (event) {
@@ -107,11 +110,13 @@ class Category extends Component {
 
   _onCloseLayer (layer) {
     if ( layer == 'add') {
+      this.setState({category: {}});
       this.props.dispatch({type: c.CATEGORY_ADD_FORM_TOGGLE, payload: {adding: false}});
-      this.setState({category: {}});
+      
     } else if (layer == 'edit') {
-      this.props.dispatch({type: c.CATEGORY_EDIT_FORM_TOGGLE, payload: {editing: false}});
       this.setState({category: {}});
+      this.props.dispatch({type: c.CATEGORY_EDIT_FORM_TOGGLE, payload: {editing: false}});
+      
     }
       
   }

@@ -21,6 +21,9 @@ export function addSection (section) {
         dispatch({type: c.SECTION_ADD_SUCCESS, payload: {section: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SECTION_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -40,6 +43,9 @@ export function updateSection (section) {
         dispatch({type: c.SECTION_EDIT_SUCCESS, payload: {section: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SECTION_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -57,7 +63,9 @@ export function removeSection (section) {
       console.log(response);
       dispatch({type: c.SECTION_REMOVE_SUCCESS, payload: {section: section}});
     }).catch( (err) => {
-      console.log(err);
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: c.SECTION_REMOVE_FAIL});
     });
   };

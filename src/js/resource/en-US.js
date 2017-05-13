@@ -1,6 +1,8 @@
 module.exports = {
-  "APP_NAME_SHORT": "ICS",
-  "APP_NAME_FULL": "Inventory Control System",
+  "app_name_short": "e-Kanban",
+  "app_name_full": "e-Kanban",
+  "app_version": "0.1",
+  "company_name": "Raza Enterprises",
 
   /*/////////////////// Label /////////////////////*/
   "label_home": "Home",

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {initialize} from '../../actions/misc';
 import {generateOrder,syncOrder} from '../../actions/order';
 import {syncInventory} from '../../actions/inventory';
-import {getNoOfBins} from '../../utils/miscUtil';
+import {getNoOfBins, getAgeing} from '../../utils/miscUtil';
 import {ORDER_CONSTANTS as c} from '../../utils/constants';
 import moment from 'moment';
 
@@ -98,7 +98,7 @@ class Tracking extends Component {
 
       if (p != undefined) {
         orderedInv.push({productId: p.productId, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,orderedBy,
-          createdAt: o.createdAt, tat: p.timeOrdering + p.timeProcurement + p.timeTransportation + p.timeBuffer});
+          tat: p.timeProcurement + p.timeTransporation});
       }
     });
     return orderedInv;
@@ -140,7 +140,6 @@ class Tracking extends Component {
       order.bins = orderProduct.bins;
     }else {
       let bins = orderProduct.bins.substr(0,2*noOfBins);
-      console.log(bins);
       bins = bins.substr(0,2*noOfBins-1);
       order.bins = bins;
     }
@@ -209,7 +208,6 @@ class Tracking extends Component {
 
   _renderPending () {
     let {pendingInv} = this.state;
- 
     if (pendingInv.length > 0) {
       let items = pendingInv.map((inv,i) => {
         return (
@@ -220,6 +218,7 @@ class Tracking extends Component {
             <td>{inv.bins}</td>
             <td>{inv.noOfBins}</td>
             <td>{moment(new Date(inv.createdAt)).utcOffset('+05:30').format('DD/MM/YYYY, hh:mm A')}</td>
+            <td>{getAgeing(inv.createdAt)}</td>
             <td><Button label='Order' onClick={this._onOrderClick.bind(this,i)} /></td>
           </TableRow>
         );
@@ -227,7 +226,7 @@ class Tracking extends Component {
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Bin Numbers','No Of Bins','Created At','ACTION']} />
+            <TableHeader labels={['Product Id','Product','Bin Size','Cards','No Of Bins','Created At','Ageing','ACTION']} />
 
             <tbody>{items}</tbody>
           </Table>       
@@ -254,15 +253,16 @@ class Tracking extends Component {
             <td>{inv.productName}</td>
             <td>{inv.binSize}</td>
             <td>{inv.bins}</td>
-            <td>{moment(new Date(inv.orderedAt)).utcOffset('+05:30').format('DD/MM/YYYY, hh:mm A')}</td>
             <td>{inv.orderedBy}</td>
+            <td>{moment(new Date(inv.orderedAt)).utcOffset('+05:30').format('DD MMM, YY hh:mm A')}</td>           
+            <td>{moment(new Date(inv.orderedAt)).add(inv.tat,'days').utcOffset('+05:30').format('DD MMM, YY')}</td>
           </TableRow>
         );
       });
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Bin Numbers','Ordered At','Ordered By']} />
+            <TableHeader labels={['Product Id','Product','Bin Size','Cards','Ordered By','Ordered At','Exp. Arrival']} />
 
             <tbody>{items}</tbody>
           </Table>       

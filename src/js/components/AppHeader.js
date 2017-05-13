@@ -50,11 +50,11 @@ class AppHeader extends Component {
       title = (
         <Title>
           <Button icon={<MenuIcon />} onClick={this._openMenu} />
-          {this.state.localeData.APP_NAME_FULL}
+          {this.state.localeData.app_name_full}
         </Title>
       );
     }else{
-      title = (<Title>{this.state.localeData.APP_NAME_FULL}</Title>);
+      title = (<Title>{this.state.localeData.app_name_full}</Title>);
     }
 
     let login;

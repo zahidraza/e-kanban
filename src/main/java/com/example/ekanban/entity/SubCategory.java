@@ -37,7 +37,7 @@ public class SubCategory implements Serializable{
     private Long id;
     
     @NotEmpty
-    @Column(name = "NAME",nullable = false)
+    @Column(name = "NAME",nullable = false, unique = true)
     private String name;
     
     @JsonIgnore

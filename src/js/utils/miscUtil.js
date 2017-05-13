@@ -64,3 +64,15 @@ export function getBinId (cId,scId,pId,binNo) {
 export function getNoOfBins(bins) {
   return Math.ceil(bins.length/2);
 }
+
+export function getAgeing (createdAt) {
+  const today = new Date().getTime();
+  const durationHours = Math.ceil((today - createdAt)/(60*60*1000));
+  console.log(durationHours);
+  const daySuffix = (durationHours < 36) ? ' day' : ' days';
+  let durationDays = Math.floor(durationHours/24);
+  if (durationHours%24 > 12) {
+    durationDays++;
+  }
+  return String(durationDays) + daySuffix;
+}

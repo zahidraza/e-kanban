@@ -21,6 +21,9 @@ export function addSupplier (supplier) {
         dispatch({type: c.SUPPLIER_ADD_SUCCESS, payload: {supplier: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SUPPLIER_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -39,6 +42,9 @@ export function updateSupplier (supplier) {
         dispatch({type: c.SUPPLIER_EDIT_SUCCESS, payload: {supplier: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SUPPLIER_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -54,6 +60,9 @@ export function removeSupplier (supplier) {
     .then((response) => {
       dispatch({type: c.SUPPLIER_REMOVE_SUCCESS, payload: {supplier: supplier}});
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: c.SUPPLIER_REMOVE_FAIL});
     });
   };

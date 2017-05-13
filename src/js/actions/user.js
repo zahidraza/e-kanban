@@ -79,9 +79,12 @@ export function addUser (user) {
         dispatch({type: u.USER_ADD_SUCCESS, payload: {user: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: u.USER_BAD_REQUEST, payload: {errors: err.response.data}});
-      }else {
+      } else {
         dispatch({type: u.USER_ADD_FAIL});
       }
     });
@@ -96,11 +99,15 @@ export function updateUser (user) {
       console.log(response);
       if (response.status == 200) {
         dispatch({type: u.USER_EDIT_SUCCESS, payload: {user: response.data}});
+        alert('User details updated successfully.');
       }
     }).catch( (err) => { 
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: u.USER_BAD_REQUEST, payload: {errors: err.response.data}});
-      }else {
+      } else {
         dispatch({type: u.USER_EDIT_FAIL});
       }
     });
@@ -115,15 +122,10 @@ export function removeUser (user) {
         dispatch({type: u.USER_REMOVE_SUCCESS, payload: {user}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: u.USER_REMOVE_FAIL});
     });
   };
-}
-
-export function test (msg) {
-  console.log('test()');
-  //console.log('is Mounted: '+this.isMounted());
-  console.log(msg);
-  console.log(this.state.msg);
-  this.setState({msg:msg});
 }

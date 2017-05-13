@@ -126,7 +126,8 @@ class Login extends Component {
       <Box pad={{horizontal: 'large', vertical: "large"}} wrap={true}  full="vertical" texture="url(/andon-system/static/img/cover.jpg)" >
         <Box align="end" justify="end" pad={{"horizontal": "large", vertical:"large", between:"large"}}>
           <Box size="auto"  align="center" separator="all" justify="center" colorIndex="light-1" pad={{"horizontal": "medium", vertical:"medium", between:"medium"}} >
-            <Heading >{this.localeData.APP_NAME_FULL}</Heading>
+            
+            <Heading tag="h1">{this.localeData.app_name_full} {this.localeData.app_version}</Heading>
             {busyIcon}
             <Form>
               <FormFields>
@@ -140,9 +141,10 @@ class Login extends Component {
               <a style={{color:'blue'}} onClick={this._forgotPasswordClick.bind(this)}>Forgot password?</a>
               <p style={{color:'red'}} >{errorMsg}</p>
               <Footer pad={{"vertical": "small"}}>
-                <Button label="Login" fill={true} primary={true}  onClick={this._login.bind(this)} />
+                <Button label="Login" fill={true} primary={true}  onClick={this._login.bind(this)} /> <br/>
               </Footer>
             </Form>
+            <Box> (c) 2017 {this.localeData.company_name}</Box>
           </Box>
         </Box>
         {layerForgotPassword}

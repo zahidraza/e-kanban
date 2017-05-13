@@ -21,6 +21,9 @@ export function addSubCategory (url,subCategory) {
         dispatch({type: c.SUB_CATEGORY_ADD_SUCCESS, payload: {subCategory: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SUB_CATEGORY_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -40,6 +43,9 @@ export function updateSubCategory (url,subCategory) {
         dispatch({type: c.SUB_CATEGORY_EDIT_SUCCESS, payload: {subCategory: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.SUB_CATEGORY_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -56,7 +62,9 @@ export function removeSubCategory (subCategory) {
       console.log(response);
       dispatch({type: c.SUB_CATEGORY_REMOVE_SUCCESS, payload: {subCategory: subCategory}});
     }).catch( (err) => {
-      console.log(err);
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: c.SUB_CATEGORY_REMOVE_FAIL});
     });
   };

@@ -69,10 +69,12 @@ class User extends Component {
 
   _addUser () {
     this.props.dispatch(addUser(this.state.user));
+    this.setState({user:{}});
   }
 
   _updateUser () {
     this.props.dispatch(updateUser(this.state.user));
+    this.setState({user:{}});
   }
 
   _onChangeInput ( event ) {
@@ -164,7 +166,7 @@ class User extends Component {
             <FormField label="Mobile Number" error={errors.mobile}>
               <input type="text" name="mobile" value={user.mobile} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField>
+            <FormField error={errors.role}>
               <Select options={roles} value={user.role} onChange={this._onRoleFilter.bind(this)}/>
             </FormField>
           </FormFields>
@@ -216,7 +218,7 @@ class User extends Component {
             <FormField label="Mobile Number" error={errors.mobile}>
               <input type="text" name="mobile" value={user.mobile} onChange={this._onChangeInput.bind(this)} />
             </FormField>
-            <FormField>
+            <FormField error={errors.role}>
               <Select options={roles} name="role" value={user.role} onChange={this._onRoleFilter.bind(this)}/>
             </FormField>
           </FormFields>

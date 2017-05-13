@@ -10,6 +10,7 @@ import Button from "grommet/components/Button";
 import Menu from "grommet/components/Menu";
 import Close from "grommet/components/icons/base/Close";
 import Anchor from 'grommet/components/Anchor';
+import Footer from "grommet/components/Footer";
 
 import { navActivate } from '../actions/misc';
 
@@ -18,6 +19,7 @@ class NavSidebar extends Component {
   constructor () {
     super();
     this._onClose = this._onClose.bind(this);
+    this.localeData = localeData();
   }
 
   componentWillMount () {
@@ -51,12 +53,15 @@ class NavSidebar extends Component {
     return (
       <Sidebar colorIndex="neutral-1" size="small">
         <Header pad="medium" justify="between" >
-          <Title>{this.state.localeData.APP_NAME_SHORT}</Title>
+          <Title>{this.localeData.app_name_short}</Title>
           <Button icon={<Close />} onClick={this._onClose} />
         </Header>
         <Menu fill={true} primary={true}>
           {links}
         </Menu>
+        <Footer pad={{horizontal: 'medium', vertical: 'small'}}>
+          <h5> (c)2017 {this.localeData.company_name}</h5>
+        </Footer>
       </Sidebar>
     );
   }

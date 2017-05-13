@@ -20,9 +20,12 @@ export function addCategory (category) {
         dispatch({type: c.CATEGORY_ADD_SUCCESS, payload: {category: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.CATEGORY_BAD_REQUEST, payload: {errors: err.response.data}});
-      }else {
+      } else {
         dispatch({type: c.CATEGORY_ADD_FAIL});
       }
     });
@@ -38,9 +41,12 @@ export function updateCategory (category) {
         dispatch({type: c.CATEGORY_EDIT_SUCCESS, payload: {category: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.CATEGORY_BAD_REQUEST, payload: {errors: err.response.data}});
-      }else {
+      } else {
         dispatch({type: c.CATEGORY_EDIT_FAIL});
       }
     });
@@ -53,6 +59,9 @@ export function removeCategory (category) {
     .then((response) => {
       dispatch({type: c.CATEGORY_REMOVE_SUCCESS, payload: {category: category}});
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      } 
       dispatch({type: c.CATEGORY_REMOVE_FAIL});
     });
   };

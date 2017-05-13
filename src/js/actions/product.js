@@ -20,6 +20,9 @@ export function addProduct (url,product) {
         dispatch({type: c.PRODUCT_ADD_SUCCESS, payload: {product: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.PRODUCT_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -39,6 +42,9 @@ export function updateProduct (url,product) {
         dispatch({type: c.PRODUCT_EDIT_SUCCESS, payload: {product: response.data}});
       }
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       if (err.response.status == 400) {
         dispatch({type: c.PRODUCT_BAD_REQUEST, payload: {errors: err.response.data}});
       }else {
@@ -55,6 +61,9 @@ export function removeProduct (product) {
     .then((response) => {
       dispatch({type: c.PRODUCT_REMOVE_SUCCESS, payload: {product: product}});
     }).catch( (err) => {
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: c.PRODUCT_REMOVE_FAIL});
     });
   };
@@ -78,7 +87,6 @@ export function uploadProducts (file) {
       }else {
         dispatch({type: c.PRODUCT_UPLAOD_FAIL});
       }
-      
     });
   };
 }
