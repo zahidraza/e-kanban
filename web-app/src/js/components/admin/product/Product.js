@@ -23,15 +23,13 @@ import Table from 'grommet/components/Table';
 import TableHeader from 'grommet/components/TableHeader';
 import TableRow from 'grommet/components/TableRow';
 import Trash from "grommet/components/icons/base/Trash";
-//import Tiles from 'grommet/components/Tiles';
 import Title from 'grommet/components/Title';
-//import ProductTile from './ProductTile';
 import UploadIcon from 'grommet/components/icons/base/Upload';
 import SyncIcon from 'grommet/components/icons/base/Sync';
 import DownloadIcon from 'grommet/components/icons/base/Download';
 
 class Product extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -106,12 +104,12 @@ class Product extends Component {
     if ('class' in filter) {
       const classFilter = filter.class;
       console.log(classFilter);
-      products = products.filter(p => classFilter.includes(p.classType));  
+      products = products.filter(p => classFilter.includes(p.classType));
     }
 
     if ('category' in filter) {
       const categoryFilter = filter.category;
-      products = products.filter(p => categoryFilter.includes(p.category.name));  
+      products = products.filter(p => categoryFilter.includes(p.category.name));
     }
 
     // const subCategoryFilter = filter.subCategory;
@@ -131,20 +129,20 @@ class Product extends Component {
     }
     let productsDownload = [
       ['Product Id','Item Code','Product Name','Category','Sub Category','Sections','Price','Ordering Time','Production Time','Transportation Time',
-        'Buffer Time','Supplier','Contact Person','Supplier Type','Address','UOM Purchase','UOM Consumption','Conversion Factor','MOQ',
+        'Buffer Time','UOM Purchase','UOM Consumption','Conversion Factor','MOQ',
         'Packet Size','Class Type','No of Bins','Bin Size','Kanban Type','Demand']];
     products.forEach(p => {
       let sections = '  ';
       p.sectionList.forEach(s => sections += s.name + ', ');
       sections = sections.substring(0,sections.length-2).trim();
       productsDownload.push([p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
-        p.timeTransporation,p.timeBuffer,'supplier','contactperson','type','address',p.uomPurchase,p.uomConsumption,p.conversionFactor,
+        p.timeTransporation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
         p.minOrderQty,p.packetSize,p.classType,p.noOfBins,p.binQty,p.kanbanType,p.demand]);
     });
 
     products = products.slice(0,20*page);
     //products = this._productSort(products,sort);
-    this.setState({products,productsDownload, filteredCount, unfilteredCount, page, productNotAvailable}); 
+    this.setState({products,productsDownload, filteredCount, unfilteredCount, page, productNotAvailable});
   }
 
   _productSort (products,sort) {
@@ -163,7 +161,7 @@ class Product extends Component {
     console.log('_onSearch');
     let value = event.target.value;
     if (value.length > 1) {
-      let products = this.props.category.products.filter(p => p.name.includes(value) || p.productId.includes(value));
+      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.productId.toLowerCase().includes(value.toLowerCase()));
       this.setState({searchText: value,products, searching: true});
     }else{
       this.setState({searchText: value,searching: false});
@@ -221,31 +219,10 @@ class Product extends Component {
     window.open(helpUrl);
   }
 
-  /*_renderProducts (products) {
-    const items = products.map((p, index)=>{
-      let sections = '  ';
-      p.sectionList.forEach(s => sections += s.name + ', ');
-      let suppliers = '  ';
-      p.supplierList.forEach(s => suppliers += s.name + ', ');
-      return (
-        <ProductTile key={index} name={p.name} desc={p.description} category={p.category.name} subCategory={p.subCategory.name} 
-          sections={sections.substring(0,sections.length-2).trim()} suppliers={suppliers.substring(0,suppliers.length-2).trim()} 
-          id={p.id} itemCode={p.itemCode} price={p.price} classType={p.classType} 
-          demand={p.demand} t1={p.timeOrdering} t2={p.timeProcurement} t3={p.timeTransporation} t4={p.timeBuffer} 
-          uomP={p.uomPurchase} uomC={p.uomConsumption} cFactor={p.conversionFactor} kanbanType={p.kanbanType} 
-          noOfBin={p.noOfBins} binQty={p.binQty} pktSize={p.packetSize} />
-
-      );
-    });
-    return items;
-  }*/
-
   _renderProducts (products) {
     const items = products.map((p, index)=>{
       let sections = '  ';
       p.sectionList.forEach(s => sections += s.name + ', ');
-      // let suppliers = '  ';
-      // p.supplierList.forEach(s => suppliers += s.name + ', ');
       return (
         <TableRow key={index}  >
           <td >{p.productId}</td>
@@ -254,7 +231,6 @@ class Product extends Component {
           <td >{p.category.name}</td>
           <td >{p.subCategory.name}</td>
           <td >{sections.substring(0,sections.length-2).trim()}</td>
-          {/*<td >{suppliers.substring(0,suppliers.length-2).trim()}</td>*/}
           <td >{p.noOfBins}</td>
           <td >{p.binQty}</td>
           <td>{p.price}</td>
@@ -293,7 +269,7 @@ class Product extends Component {
     let productItem = productNotAvailable ? <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product available</h3></Box>: (
       <Table scrollable={true} onMore={this._onMoreProducts.bind(this)}>
         <TableHeader labels={['Product Id','ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
-        
+
         <tbody>{items}</tbody>
       </Table>
     );
@@ -335,9 +311,6 @@ class Product extends Component {
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
           <Box size="xsmall" alignSelf="center" pad={{horizontal:'medium'}}>{loading}</Box>
           <Box full="horizontal" wrap={true} size='full'>
-            {/*<Tiles fill={true} flush={true}>
-              {items}
-            </Tiles>*/}
             {productItem}
           </Box>
         </Section>

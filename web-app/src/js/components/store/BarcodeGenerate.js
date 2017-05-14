@@ -5,17 +5,31 @@ import {initialize} from '../../actions/misc';
 
 import AppHeader from '../AppHeader';
 import Box from 'grommet/components/Box';
+import Button from 'grommet/components/Button';
 import Section from 'grommet/components/Section';
 import Spinning from 'grommet/components/icons/Spinning';
+import Header from 'grommet/components/Header';
+import Title from 'grommet/components/Title';
+import HelpIcon from 'grommet/components/icons/base/Help';
+import Search from 'grommet/components/Search';
+import Table from 'grommet/components/Table';
+import TableHeader from 'grommet/components/TableHeader';
+import TableRow from 'grommet/components/TableRow';
+import PrintIcon from 'grommet/components/icons/base/Print';
 
 class BarcodeGenerate extends Component {
-  
+
   constructor () {
     super();
     this.state = {
-      initializing: false
+      initializing: false,
+      searching: false,
+      available: false,
+      searchText: '',
+      products: []
     };
     this.localeData = localeData();
+    this._renderProducts = this._renderProducts.bind(this);
   }
 
   componentWillMount () {
@@ -27,13 +41,78 @@ class BarcodeGenerate extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (sessionStorage.session == undefined) {
+      this.context.router.push('/');
+    }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
     }
   }
 
+  _onSearch (event) {
+    console.log('_onSearch');
+    let value = event.target.value;
+    if (value.length > 1) {
+      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.productId.toLowerCase().includes(value.toLowerCase()));
+      let available = products.length > 0 ? true : false;
+      this.setState({searchText: value,products, searching: true, available});
+    }else{
+      this.setState({searchText: value,searching: false});
+    }
+  }
+
+  _onHelpClick () {
+
+  }
+
+  _onPrint (productId) {
+    console.log(productId);
+    window.open(window.serviceHost + "/products/" + productId ,"_blank","fullscreen=yes");
+  }
+
+  _renderProducts () {
+    const {searching,available,searchText,products} = this.state;
+    console.log(available);
+    console.log(products.length);
+
+    if (searching) {
+      if (available) {
+        const items = products.map((p, index)=>{
+          return (
+            <TableRow key={index}  >
+              <td >{p.productId}</td>
+              <td >{p.name}</td>
+              <td >{p.category.name}</td>
+              <td >{p.subCategory.name}</td>
+              <td >{p.noOfBins}</td>
+              <td >{p.binQty}</td>
+              <td style={{textAlign: 'right', padding: 0}}>
+                <Button icon={<PrintIcon />} onClick={this._onPrint.bind(this,p.id)} />
+              </td>
+            </TableRow>
+          );
+        });
+        return (
+          <Table scrollable={true}>
+            <TableHeader labels={['Product Id','Product Name','Category','Sub Category','No. of Bins', 'Bin Size','ACTION']} />
+
+            <tbody>{items}</tbody>
+          </Table>
+        );
+      } else {
+        return (
+          <Box size="large" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product matching '{searchText}' found.</h3></Box>
+        );
+      }
+    } else {
+      return (
+        <Box size="large" alignSelf="center" pad={{horizontal:'medium'}}><h3>Search products to generate Kanban Card. </h3></Box>
+      );
+    }
+  }
+
   render() {
-    const {initializing} = this.state;
+    const {initializing,searchText} = this.state;
 
     if (initializing) {
       return (
@@ -45,11 +124,21 @@ class BarcodeGenerate extends Component {
       );
     }
 
+    const products = this._renderProducts();
+
     return (
       <Box>
-        <AppHeader page={this.localeData.label_test}/>
-        <Section>
-          <h1>BarcodeGenerate Navigation page</h1>
+        <AppHeader/>
+        <Header size='large' pad={{ horizontal: 'medium' }}>
+          <Title responsive={false}>
+            <span>{this.localeData.label_generate_barcode}</span>
+          </Title>
+          <Search inline={true} fill={true} size='medium' placeHolder='Search Products [Enter minimum of 2 characters]'
+            value={searchText} onDOMChange={this._onSearch.bind(this)} />
+          <Button icon={<HelpIcon />} onClick={this._onHelpClick.bind(this)}/>
+        </Header>
+        <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
+          <Box>{products}</Box>
         </Section>
       </Box>
     );
@@ -61,7 +150,7 @@ BarcodeGenerate.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc};
+  return {misc: store.misc, category: store.category};
 };
 
 export default connect(select)(BarcodeGenerate);

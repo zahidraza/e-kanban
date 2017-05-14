@@ -552,4 +552,9 @@ public class ProductService {
         return MiscUtil.generateBarcodePdf(product,bins);
     }
 
+    public Resource printBarcode(Long id){
+        Product product = productRepository.findOne(id);
+        return MiscUtil.generateBarcodePdf(product);
+    }
+
 }

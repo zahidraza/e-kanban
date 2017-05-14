@@ -21,6 +21,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("*//**").permitAll();*/
 
         http
+                .cors()
+            .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .requestMatchers().antMatchers("/**","/api/**")

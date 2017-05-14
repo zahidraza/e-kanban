@@ -32,7 +32,7 @@ import PrintIcon from 'grommet/components/icons/base/Print';
 //import Footer from 'grommet/components/Footer';
 
 class AwaitingOrder extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -99,27 +99,7 @@ class AwaitingOrder extends Component {
   _onPrint (index) {
     const {awaitingInv} = this.state;
     let inv = awaitingInv[index];
-    //const options = { method: 'post', headers: getHeaders()};
-
     window.open(window.serviceHost + "/products/" + inv.prodId + "?bins=" + inv.bins,"_blank","fullscreen=yes");
-
-    // fetch(window.serviceHost + "/products/" + inv.prodId + "?bins=" + inv.bins, options)
-    // .then(function(response) {
-    //   console.log(response);
-    //   return response.blob();
-    // })
-    // .then(function(myBlob) {
-    //   var downloadUrl = URL.createObjectURL(myBlob);
-
-    //   var a = document.createElement("a");
-    //   a.href = downloadUrl;
-    //   // document.body.appendChild(a);
-    //   // a.click();
-    //   window.open(a.href);
-    // })
-    // .catch((error)=>{
-    //   console.log(error);
-    // });
   }
 
   _onSearch (event) {
@@ -146,7 +126,7 @@ class AwaitingOrder extends Component {
 
   _renderAwaiting () {
     let {awaitingInv} = this.state;
-    
+
     if (awaitingInv.length > 0) {
       let items = awaitingInv.map((inv,i) => {
         return (
@@ -165,8 +145,8 @@ class AwaitingOrder extends Component {
             <TableHeader labels={['Product Id','Product','Bin Size','Cards','']} />
 
             <tbody>{items}</tbody>
-          </Table>       
-        </Box>  
+          </Table>
+        </Box>
       );
     } else {
       return (
@@ -174,7 +154,7 @@ class AwaitingOrder extends Component {
           <h3>No Awaiting Orders available</h3>
         </Box>
       );
-    } 
+    }
   }
 
   render() {

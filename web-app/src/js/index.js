@@ -9,12 +9,12 @@ import routes from "./routes";
 import store from "./store";
 
 (function () {
-  const baseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-  window.baseUrl = baseUrl + '/e-kanban';
-  window.serviceHost = baseUrl + "/e-kanban/api";
+  // const baseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+  // window.baseUrl = baseUrl + '/e-kanban';
+  // window.serviceHost = baseUrl + "/e-kanban/api";
 
-//  window.baseUrl = 'http://localhost:8000';
-//  window.serviceHost = "http://localhost:8000/api";
+  window.baseUrl = 'http://localhost:8000';
+  window.serviceHost = "http://localhost:8000/api";
 
 })();
 

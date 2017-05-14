@@ -21,11 +21,18 @@ public class ProductRestController {
     }
 
     @GetMapping(ApiUrls.URL_PRODUCTS_PRODUCT)
-    public ResponseEntity<org.springframework.core.io.Resource> printBarcode(@PathVariable("productId") long productId, @RequestParam("bins") String bins){
+    public ResponseEntity<org.springframework.core.io.Resource> printBarcode(@PathVariable("productId") long productId, @RequestParam(value = "bins", defaultValue = "all") String bins){
         if (!productService.exists(productId)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        org.springframework.core.io.Resource file = productService.printBarcode(productId,bins);
+
+        org.springframework.core.io.Resource file =  null;
+        if (bins.equals("all")) {
+            file = productService.printBarcode(productId);
+        } else {
+            file = productService.printBarcode(productId,bins);
+        }
+
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
@@ -33,4 +40,6 @@ public class ProductRestController {
                 .body(file);
 
     }
+
+
 }

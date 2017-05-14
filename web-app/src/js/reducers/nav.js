@@ -9,8 +9,7 @@ const initialState = {
     { path: '/subCategory', label: 'Sub Category'},
     { path: '/section', label: 'Section'},
     { path: '/supplier', label: 'Supplier'},
-    { path: '/product', label: 'Product'},
-    { path: '/test', label: 'Test Page'}
+    { path: '/product', label: 'Product'}
   ],
   itemsStore:[
      { path: '/dashboard', label: 'Dashboard'},
@@ -19,19 +18,18 @@ const initialState = {
      { path: '/outward', label: 'Outward Scan'},
      { path: '/barcode', label: 'Generate Barcode'},
      { path: '/awaiting', label: 'Awaiting Order'}
-     
+
   ],
   itemsPurchase:[
      { path: '/dashboard', label: 'Dashboard'},
-     { path: '/tracking', label: 'Tracking'},
-     { path: '/order', label: 'Order'}
+     { path: '/tracking', label: 'Tracking'}
   ],
   itemsUser:[
      { path: '/dashboard', label: 'Dashboard'}
   ]
 };
 
-const handlers = { 
+const handlers = {
   [NAV_ACTIVATE]: (_, action) => ({active: action.payload.active})
 
 };

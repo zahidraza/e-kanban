@@ -131,6 +131,43 @@ public class MiscUtil {
                 ));
     }
 
+
+    public static Resource generateBarcodePdf(Product product){
+        String productId = getProductId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId());
+        Document document = new Document(PageSize.A4);
+        StorageProperties properties = ApplicationContextUtil.getApplicationContext().getBean(StorageProperties.class);
+        BarcodeService barcodeService = ApplicationContextUtil.getApplicationContext().getBean(BarcodeService.class);
+        Path root = Paths.get(properties.getLocation());
+        try {
+            PdfWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(root.resolve(productId + ".pdf").toFile()));
+            document.open();
+            PdfPTable mainTable = new PdfPTable(2);
+            mainTable.setWidthPercentage(100f);
+
+            PdfPCell cell = null;
+            for (int i = 0; i < product.getNoOfBins(); i++){
+                cell = new PdfPCell();
+                cell.addElement(getTable(docWriter,product,i));
+                cell.setBorder(PdfPCell.NO_BORDER);
+                cell.setPadding(15f);
+                cell.setPaddingBottom(40f);
+                mainTable.addCell(cell);
+
+            }
+            if (product.getNoOfBins()%2 == 1){
+                cell = new PdfPCell();
+                cell.setBorder(PdfPCell.NO_BORDER);
+                mainTable.addCell(cell);
+            }
+            document.add(mainTable);
+            document.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return barcodeService.loadAsResource(productId + ".pdf");
+    }
+
+
     public static Resource generateBarcodePdf(Product product, String bins){
         String productId = getProductId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId());
         Document document = new Document(PageSize.A4);

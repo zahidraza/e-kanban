@@ -15,6 +15,9 @@ module.exports = {
   "label_tracking": "Order Tracking",
   "label_stock": "Stock",
   "label_awitingOrder": "Awaiting Order",
+  "label_generate_barcode": "Generate Barcode",
+  "label_inward_scan": "Inward Scan",
+  "label_outward_scan": "Outward Scan",
   "label_test": "Test Page",
 
 
