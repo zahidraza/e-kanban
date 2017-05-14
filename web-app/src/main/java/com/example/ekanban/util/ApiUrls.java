@@ -55,6 +55,6 @@ public class ApiUrls {
     public static final String ROOT_URL_MISCELLANEOUS = "/api/misc";
     public static final String URL_MISC_CHANGE_PASSWORD = "/change_password";
     public static final String URL_MISC_CURRENT_TIME = "/current_time";
+    public static final String URL_MISC_FORGOT_PASSWORD = "/forgot_password";
 
-    
 }

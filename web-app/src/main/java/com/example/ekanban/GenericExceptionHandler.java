@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.ekanban.exception.MailException;
 import com.example.ekanban.exception.ProductDetailsNotValidException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.apache.commons.beanutils.ConversionException;
@@ -93,6 +94,13 @@ public class GenericExceptionHandler {
     	}
         return response(HttpStatus.CONFLICT, 40900, "Operation cannot be performed. Integrity Constraint violated.", e.getRootCause().getMessage(), "");
     }
+
+    @ExceptionHandler
+    ResponseEntity<?> handleMailException(MailException e){
+        logger.debug("handleMailException: {} \n {}",e , e.getMessage());
+        return response(HttpStatus.INTERNAL_SERVER_ERROR, 500, e.getMessage(), e.getMessage(), "");
+    }
+
     @ExceptionHandler
     ResponseEntity<?> handleException(Exception e) {
         logger.debug("handleException: {} \n {}",e , e.getMessage());

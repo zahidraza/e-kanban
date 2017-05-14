@@ -3,9 +3,9 @@ package com.example.ekanban.restcontroller;
 import com.example.ekanban.dto.RestError;
 import com.example.ekanban.service.UserService;
 import com.example.ekanban.util.ApiUrls;
-import com.example.ekanban.util.Constants;
-import com.example.ekanban.util.MiscUtil;
 import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(ApiUrls.ROOT_URL_MISCELLANEOUS)
 public class MiscRestController {
+    private final Logger logger = LoggerFactory.getLogger(MiscRestController.class);
 
     @Autowired
     UserService userService;
@@ -47,17 +48,17 @@ public class MiscRestController {
         return ResponseEntity.ok(response);
     }
 //
-//    @PutMapping(ApiV2Urls.URL_FORGOT_PASSWORD_SEND_OTP)
-//    public ResponseEntity<?> forgotPasswordSendOTP(@RequestParam("email") String email){
-//
-//        if (userService.findByEmailIgnoreCase(email) == null){
-//            return new ResponseEntity<Object>(new RestError(404,404,"User with email id = " + email + " not found.", "", ""), HttpStatus.NOT_FOUND);
-//        }
-//        Map<String, Object> response = new HashedMap();
-//        userService.sendOTP(email);
-//        response.put("status", "SUCCESS");
-//        return ResponseEntity.ok(response);
-//    }
+    @PutMapping(ApiUrls.URL_MISC_FORGOT_PASSWORD)
+    public ResponseEntity<?> resetPassword(@RequestParam("email") String email){
+        logger.debug("resetPassword: email = {}",email);
+        if (userService.findByEmail(email) == null){
+            return new ResponseEntity<Object>(new RestError(404,404,"User with email id = " + email + " not found.", "", ""), HttpStatus.NOT_FOUND);
+        }
+        Map<String, Object> response = new HashedMap();
+        userService.resetPassword(email);
+        response.put("status", "SUCCESS");
+        return ResponseEntity.ok(response);
+    }
 //
 //    @PutMapping(ApiV2Urls.URL_FORGOT_PASSWORD_VERIFY_OTP)
 //    public ResponseEntity<?> forgotPasswordVerifyOTP(@RequestParam("email") String email,

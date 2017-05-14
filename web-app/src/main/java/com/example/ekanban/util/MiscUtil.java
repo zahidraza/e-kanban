@@ -3,13 +3,20 @@ package com.example.ekanban.util;
 import com.example.ekanban.entity.Product;
 import com.example.ekanban.enums.ClassType;
 import com.example.ekanban.enums.KanbanType;
+import com.example.ekanban.exception.MailException;
 import com.example.ekanban.storage.BarcodeService;
 import com.example.ekanban.storage.StorageProperties;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.sun.mail.util.MailConnectException;
 import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.nio.file.Path;
@@ -23,12 +30,26 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class MiscUtil {
+    private static final Logger logger = LoggerFactory.getLogger(MiscUtil.class);
+
     private static Map<String,Integer> mapMonth = new HashedMap();
     private static final Font fontHeader;
     private static final Font fontMedium;
     private static final Font fontSmall;
 
+    private static final char[] symbols;
+    private static final Random random = new Random();
+
     static {
+        StringBuilder tmp = new StringBuilder();
+        for (char ch = '0'; ch <= '9'; ++ch)
+            tmp.append(ch);
+        for (char ch = 'a'; ch <= 'z'; ch++)
+            tmp.append(ch);
+        for (char ch = 'A'; ch <= 'Z'; ch++)
+            tmp.append(ch);
+        symbols = tmp.toString().toCharArray();
+
         mapMonth.put("JAN",1);
         mapMonth.put("FEB",2);
         mapMonth.put("MAR",3);
@@ -131,7 +152,6 @@ public class MiscUtil {
                 ));
     }
 
-
     public static Resource generateBarcodePdf(Product product){
         String productId = getProductId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId());
         Document document = new Document(PageSize.A4);
@@ -166,7 +186,6 @@ public class MiscUtil {
         }
         return barcodeService.loadAsResource(productId + ".pdf");
     }
-
 
     public static Resource generateBarcodePdf(Product product, String bins){
         String productId = getProductId(product.getSubCategory().getCategory().getId(),product.getSubCategory().getId(),product.getId());
@@ -205,6 +224,129 @@ public class MiscUtil {
             e.printStackTrace();
         }
         return barcodeService.loadAsResource(productId + ".pdf");
+    }
+
+    /**
+     * Send Email.
+     * @param to
+     * @param sub
+     * @param msg
+     * @return
+     */
+    public static Boolean sendMail(String to,String sub,String msg){
+        Properties props = ConfigUtil.getConfigProperties();
+        String host = props.getProperty(Constants.MAIL_HOST);
+        String user = props.getProperty(Constants.MAIL_USER);
+        String password = props.getProperty(Constants.MAIL_PASSWORD);
+        //logger.debug("mail.host = {}, mail.user = {}, mail.password = {}", host,user,password);
+
+        Boolean status = false;
+
+        Properties prop = new Properties();
+
+        prop.put("mail.smtp.host", host);
+        prop.put("mail.smtp.auth",true);
+
+        Session session = Session.getInstance(prop,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(user,password);
+                    }
+                });
+
+        //Compose the message
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(user));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject(sub);
+            message.setText(msg);
+
+            //send the message
+            Transport.send(message);
+
+            status = true;
+        } catch (MailConnectException e1) {
+            e1.printStackTrace();
+            throw new MailException("Unable to send mail. Check your internet connection or try again later.");
+        } catch (MessagingException e2) {
+            e2.printStackTrace();
+            throw new MailException(e2.getMessage());
+        }
+
+        return status;
+    }
+
+    /**
+     * Get random string consisting of alphabets and numbers.
+     * @param length length of random string
+     * @return
+     */
+    public static String getRandomString(int length) {
+        char[] buf = new char[length];
+        for (int idx = 0; idx < buf.length; ++idx)
+            buf[idx] = symbols[random.nextInt(symbols.length)];
+        return new String(buf);
+    }
+
+    private static String getBinId(Long categoryId,Long subCategoryId, Long productId,int binNo) {
+        String cIdStr = String.valueOf(categoryId);
+        String scIdStr = String.valueOf(subCategoryId);
+        String pIdStr = String.valueOf(productId);
+        String binStr = String.valueOf(binNo);
+
+        if (cIdStr.length() == 1) {
+            cIdStr = "0" + cIdStr;
+        }
+
+        if (scIdStr.length() == 1) {
+            scIdStr = "00" + scIdStr;
+        }else if (scIdStr.length() == 2) {
+            scIdStr = "0" + scIdStr;
+        }
+
+        int l = pIdStr.length();
+        l = 5 - l;
+        String prefix = "";
+        for (int i = 0; i < l ; i++) {
+            prefix = prefix + '0';
+        }
+        pIdStr = prefix + pIdStr;
+
+        if (binStr.length() == 1) {
+            binStr = "0" + binStr;
+        }
+
+        String result = 'B' + cIdStr + scIdStr + pIdStr + binStr;
+
+        return result;
+    }
+
+    private static String getProductId(Long categoryId,Long subCategoryId, Long productId) {
+        String cIdStr = String.valueOf(categoryId);
+        String scIdStr = String.valueOf(subCategoryId);
+        String pIdStr = String.valueOf(productId);
+
+        if (cIdStr.length() == 1) {
+            cIdStr = "0" + cIdStr;
+        }
+
+        if (scIdStr.length() == 1) {
+            scIdStr = "00" + scIdStr;
+        }else if (scIdStr.length() == 2) {
+            scIdStr = "0" + scIdStr;
+        }
+
+        int l = pIdStr.length();
+        l = 5 - l;
+        String prefix = "";
+        for (int i = 0; i < l ; i++) {
+            prefix = prefix + '0';
+        }
+        pIdStr = prefix + pIdStr;
+
+        String result = 'P' + cIdStr + scIdStr + pIdStr;
+        return result;
     }
 
     private static PdfPTable getTable(PdfWriter docWriter, Product product, int binNo) throws DocumentException {
@@ -287,63 +429,4 @@ public class MiscUtil {
         return cell;
     }
 
-    public static String getBinId(Long categoryId,Long subCategoryId, Long productId,int binNo) {
-        String cIdStr = String.valueOf(categoryId);
-        String scIdStr = String.valueOf(subCategoryId);
-        String pIdStr = String.valueOf(productId);
-        String binStr = String.valueOf(binNo);
-
-        if (cIdStr.length() == 1) {
-            cIdStr = "0" + cIdStr;
-        }
-
-        if (scIdStr.length() == 1) {
-            scIdStr = "00" + scIdStr;
-        }else if (scIdStr.length() == 2) {
-            scIdStr = "0" + scIdStr;
-        }
-
-        int l = pIdStr.length();
-        l = 5 - l;
-        String prefix = "";
-        for (int i = 0; i < l ; i++) {
-            prefix = prefix + '0';
-        }
-        pIdStr = prefix + pIdStr;
-
-        if (binStr.length() == 1) {
-            binStr = "0" + binStr;
-        }
-
-        String result = 'B' + cIdStr + scIdStr + pIdStr + binStr;
-
-        return result;
-    }
-
-    public static String getProductId(Long categoryId,Long subCategoryId, Long productId) {
-        String cIdStr = String.valueOf(categoryId);
-        String scIdStr = String.valueOf(subCategoryId);
-        String pIdStr = String.valueOf(productId);
-
-        if (cIdStr.length() == 1) {
-            cIdStr = "0" + cIdStr;
-        }
-
-        if (scIdStr.length() == 1) {
-            scIdStr = "00" + scIdStr;
-        }else if (scIdStr.length() == 2) {
-            scIdStr = "0" + scIdStr;
-        }
-
-        int l = pIdStr.length();
-        l = 5 - l;
-        String prefix = "";
-        for (int i = 0; i < l ; i++) {
-            prefix = prefix + '0';
-        }
-        pIdStr = prefix + pIdStr;
-
-        String result = 'P' + cIdStr + scIdStr + pIdStr;
-        return result;
-    }
 }

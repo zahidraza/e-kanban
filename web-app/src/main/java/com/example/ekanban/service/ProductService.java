@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.ekanban.util.ConfigUtil;
 import com.example.ekanban.util.Constants;
 import com.example.ekanban.util.CsvUtils;
 import com.example.ekanban.util.MiscUtil;
@@ -329,17 +330,18 @@ public class ProductService {
 
         /*////For setting ordered by in case bin is ordered by app for first time */
         User application = userRepository.findOne(1L);
+        double stkRoundFraction = Double.parseDouble(ConfigUtil.getConfigProperty(Constants.STK_ROUND_FRACTION,"0.05"));
 
         if (product.getNew()) {
             int noOfBins = product.getNoOfBins();
-            int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
+            int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty(),stkRoundFraction);
             Inventory inv = null;
 
             if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
                 for (int i = 0; i < binInStock; i++){
                     product.addInventory(new Inventory(i+1, BinState.STORE));
                 }
-                int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
+                int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty(),stkRoundFraction);
                 if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
                     StringBuilder builder = new StringBuilder();
                     for (int i = binInStock; i < binInStock + binInOrder; i++){
@@ -384,10 +386,10 @@ public class ProductService {
         }
     }
 
-    private int getNoOfBins(Long value, Long binQty){
+    private int getNoOfBins(Long value, Long binQty, double stkRoundFraction){
         int result =(int)(value/binQty);
         int surplus = (int)(value%binQty);
-        int roundValue = (int)(Constants.STK_ROUND_FRACTION*binQty.doubleValue());
+        int roundValue = (int)(stkRoundFraction*binQty.doubleValue());
         result = surplus > roundValue ? result+1 : result;
         return result;
     }

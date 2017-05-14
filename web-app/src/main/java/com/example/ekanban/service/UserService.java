@@ -6,6 +6,8 @@ import com.example.ekanban.enums.Role;
 import com.example.ekanban.page.converter.UserConverter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.ekanban.util.MiscUtil;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,5 +120,14 @@ public class UserService {
         logger.debug("delete(): id = {}",id);
         userRepository.delete(id);
     }
-    
+
+    @Transactional
+    public void resetPassword(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email);
+        String newPassword = MiscUtil.getRandomString(10);
+        String subject = "e-Kanban App: Password Reset";
+        String message = "You accessed Password Reset Service of e-Kanban Application.\n\n New password is: " + newPassword;
+        MiscUtil.sendMail(user.getEmail(),subject,message);
+        user.setPassword(newPassword);
+    }
 }

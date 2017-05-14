@@ -5,8 +5,11 @@ import com.example.ekanban.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.example.ekanban.storage.BarcodeService;
+import com.example.ekanban.util.ConfigUtil;
+import com.example.ekanban.util.Constants;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -42,8 +45,6 @@ public class Application extends SpringBootServletInitializer {
         return application.sources(Application.class);
     }
 
-
-
     @Bean
     @Profile(value = { "production", "default" })
     CommandLineRunner init(
@@ -53,8 +54,19 @@ public class Application extends SpringBootServletInitializer {
         return (args) -> {
             barcodeService.init();
             if (userService.count() == 0) {
-                userService.save(new UserDto("Application", "app@gmail.com", "USER", "8987525008",true));
-                userService.save(new UserDto("Md Zahid Raza", "zahid7292@gmail.com", "ADMIN", "8987525008",true));
+                Properties props = ConfigUtil.getConfigProperties();
+                String user = props.getProperty(Constants.ADMIN_USER_NAME);
+                String email = props.getProperty(Constants.ADMIN_USER_EMAIL);
+                String mobile = props.getProperty(Constants.ADMIN_USER_MOBILE);
+                String appUser = props.getProperty(Constants.APP_USER_NAME);
+                String appEmail = props.getProperty(Constants.APP_USER_EMAIL);
+                String appMobile = props.getProperty(Constants.APP_USER_MOBILE);
+
+                logger.info("Initializing root user: username = {}, email = {} , mobile = {}, role = {}",user,email,mobile, "ADMIN");
+                logger.info("Initializing app user: username = {}, email = {} , mobile = {}, role = {}",appUser,appEmail,appMobile,"PURCHASE");
+
+                userService.save(new UserDto(appUser, appEmail, "PURCHASE", appMobile,true));
+                userService.save(new UserDto(user, email, "ADMIN", mobile,true));
             }
         };
     }
@@ -76,19 +88,5 @@ public class Application extends SpringBootServletInitializer {
         logger.debug("home page");
         return "index";
     }
-
-//    @Bean
-//    public FilterRegistrationBean corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//        source.registerCorsConfiguration("/**", config);
-//        FilterRegistrationBean bean = new FilterRegistrationBean(new MyConfig(source));
-//        bean.setOrder(0);
-//        return bean;
-//    }
 
 }
