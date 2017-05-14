@@ -111,8 +111,8 @@ public class ProductService {
 
 
     public ProductDto findByName(String name) {
-        logger.debug("findByName(): name = ", name);
-        return mapper.map(productRepository.findByName(name), ProductDto.class);
+        logger.debug("findByNameIgnoreCase(): name = ", name);
+        return mapper.map(productRepository.findByNameIgnoreCase(name), ProductDto.class);
     }
 
     public Boolean exists(Long id) {
@@ -206,8 +206,11 @@ public class ProductService {
         productRepository.save(products);
     }
 
+    /**
+     * Calculate dynamically calculated fields for product.
+     */
     @Transactional
-    public void sync(Boolean firstSync){
+    public void sync(){
         totalMonthyConsumption = 0L;
         commulativePercentage = 0.0;
         List<Product> products = productRepository.findAll();
@@ -256,68 +259,129 @@ public class ProductService {
             }
             product.setNoOfBins(noOfBins);
         });
-        //Update Inventory
-        if (firstSync){
-            User application = userRepository.findOne(1L);
-            products.forEach(product -> {
-                int noOfBins = product.getNoOfBins();
-                int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
-                Inventory inv = null;
+        //Update Inventory state
+        products.forEach(product -> {
+            updateInventory(product);
+        });
+//
+//        if (firstSync){
+//            User application = userRepository.findOne(1L);
+//            products.forEach(product -> {
+//                int noOfBins = product.getNoOfBins();
+//                int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
+//                Inventory inv = null;
+//
+//                if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
+//                    for (int i = 0; i < binInStock; i++){
+//                        product.addInventory(new Inventory(i+1, BinState.STORE));
+//                    }
+//                    int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
+//                    if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
+//                        StringBuilder builder = new StringBuilder();
+//                        for (int i = binInStock; i < binInStock + binInOrder; i++){
+//                            inv = new Inventory(i+1, BinState.ORDERED);
+//                            product.addInventory(inv);
+//                            builder.append((i+1)).append(",");
+//                        }
+//                        if (builder.length() >= 2) {
+//                            builder.setLength(builder.length()-1);
+//                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+//                        }
+//                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
+//                            for (int i = binInStock + binInOrder; i < noOfBins; i++){
+//                                product.addInventory(new Inventory(i+1, BinState.PURCHASE));
+//                            }
+//                        }
+//                    }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
+//                        StringBuilder builder = new StringBuilder();
+//                        for (int i = binInStock; i < noOfBins; i++){
+//                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
+//                            builder.append((i+1)).append(",");
+//                        }
+//                        if (builder.length() >= 2) {
+//                            builder.setLength(builder.length()-1);
+//                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+//                        }
+//                    }
+//                }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
+//                    for (int i = 0; i < noOfBins; i++){
+//                        product.addInventory(new Inventory(i+1, BinState.STORE));
+//                    }
+//                }
+//            });
+//
+//        }else { //There may either be decrease or increase in noOfBins. No action required for decrease
+//            products.forEach(product -> {
+//                int noOfInventory = product.getInventorySet().size();
+//                //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
+//                if (noOfInventory < product.getNoOfBins()){
+//                    for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
+//                        product.addInventory(new Inventory(i, BinState.PURCHASE));
+//                    }
+//                }
+//            });
+//        }
+    }
 
-                if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
-                    for (int i = 0; i < binInStock; i++){
-                        product.addInventory(new Inventory(i+1, BinState.STORE));
+    private void updateInventory(Product product) {
+
+        if (product.getIgnoreSync()) return;
+
+        /*////For setting ordered by in case bin is ordered by app for first time */
+        User application = userRepository.findOne(1L);
+
+        if (product.getNew()) {
+            int noOfBins = product.getNoOfBins();
+            int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
+            Inventory inv = null;
+
+            if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
+                for (int i = 0; i < binInStock; i++){
+                    product.addInventory(new Inventory(i+1, BinState.STORE));
+                }
+                int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
+                if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = binInStock; i < binInStock + binInOrder; i++){
+                        inv = new Inventory(i+1, BinState.ORDERED);
+                        product.addInventory(inv);
+                        builder.append((i+1)).append(",");
                     }
-                    int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
-                    if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
-                        StringBuilder builder = new StringBuilder();
-                        for (int i = binInStock; i < binInStock + binInOrder; i++){
-                            inv = new Inventory(i+1, BinState.ORDERED);
-                            product.addInventory(inv);
-                            builder.append((i+1)).append(",");
-                        }
-                        if (builder.length() >= 2) {
-                            builder.setLength(builder.length()-1);
-                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
-                        }
-                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
-                            for (int i = binInStock + binInOrder; i < noOfBins; i++){
-                                product.addInventory(new Inventory(i+1, BinState.PURCHASE));
-                            }
-                        }
-                    }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
-                        StringBuilder builder = new StringBuilder();
-                        for (int i = binInStock; i < noOfBins; i++){
-                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
-                            builder.append((i+1)).append(",");
-                        }
-                        if (builder.length() >= 2) {
-                            builder.setLength(builder.length()-1);
-                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                    if (builder.length() >= 2) {
+                        builder.setLength(builder.length()-1);
+                        orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                    }
+                    if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
+                        for (int i = binInStock + binInOrder; i < noOfBins; i++){
+                            product.addInventory(new Inventory(i+1, BinState.PURCHASE));
                         }
                     }
-                }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
-                    for (int i = 0; i < noOfBins; i++){
-                        product.addInventory(new Inventory(i+1, BinState.STORE));
+                }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = binInStock; i < noOfBins; i++){
+                        product.addInventory(new Inventory(i+1, BinState.ORDERED));
+                        builder.append((i+1)).append(",");
+                    }
+                    if (builder.length() >= 2) {
+                        builder.setLength(builder.length()-1);
+                        orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
                     }
                 }
-            });
-
-        }else {
-            products.forEach(product -> {
-                int noOfInventory = product.getInventorySet().size();
-                //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
-                if (noOfInventory < product.getNoOfBins()){
-                    for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
-                        product.addInventory(new Inventory(i, BinState.PURCHASE));
-                    }
+            }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
+                for (int i = 0; i < noOfBins; i++){
+                    product.addInventory(new Inventory(i+1, BinState.STORE));
                 }
-            });
+            }
+            product.setNew(false);
+        } else {
+            int noOfInventory = product.getInventorySet().size();
+            //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
+            if (noOfInventory < product.getNoOfBins()){
+                for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
+                    product.addInventory(new Inventory(i, BinState.PURCHASE));
+                }
+            }
         }
-
-
-
-
     }
 
     private int getNoOfBins(Long value, Long binQty){
@@ -328,6 +392,10 @@ public class ProductService {
         return result;
     }
 
+    /**
+     * Validate ProductCsv for null values.
+     * @param productCsvList
+     */
     private void validate(List<ProductCsv> productCsvList) {
         logger.debug("validating {} products ...", productCsvList.size());
         List<ProductCsv> removeList = new ArrayList<>();
@@ -397,8 +465,8 @@ public class ProductService {
     }
 
     /**
-     * Called by addProductsBatch() method to map from ProductCsv List to Product List
-     *
+     * Called by addProductsBatch() method to map from ProductCsv List to Product List.
+     * Also validates product against database.
      * @param list List of ProductCsv
      * @return List of Product
      */
@@ -423,13 +491,18 @@ public class ProductService {
             if (productCsv.getPrice().doubleValue() == 0) {
                 errors.add(new ProductError("PRICE", i, "Packet Size cannot be zero."));
             }
+            /*check for duplicate itemCode*/
             if (itemCodeList.contains(productCsv.getItemCode())){
                 errors.add(new ProductError("ITEM_CODE", i, productCsv.getItemCode() + " is duplicate Item Code."));
+            }
+            /*Check for Duplicate product*/
+            if (productRepository.findByNameIgnoreCase(productCsv.getName()) != null) {
+                errors.add(new ProductError("PRODUCT_NAME", i, productCsv.getName() + " already exist in database."));
             }
             itemCodeList.add(productCsv.getItemCode());
             Product product = mapper.map(productCsv, Product.class);
             /*////////Mapping SubCategory////////////*/
-            SubCategory subCategory = subCategoryRepository.findByName(productCsv.getSubCategory().trim());
+            SubCategory subCategory = subCategoryRepository.findByNameIgnoreCase(productCsv.getSubCategory().trim());
 
             //If category of existing subcategory is not equal to category of coming product, report error
             if (subCategory != null && !subCategory.getCategory().getName().trim().equalsIgnoreCase(productCsv.getCategory().trim())) {
@@ -437,7 +510,7 @@ public class ProductService {
             } else {
                 //If SubCategory is null or category of existing subcategory is not equal to category of coming product,add new SubCategory
                 if (subCategory == null) {
-                    Category category = categoryRepository.findByName(productCsv.getCategory().trim());
+                    Category category = categoryRepository.findByNameIgnoreCase(productCsv.getCategory().trim());
                     if (category == null) {
                         category = categoryRepository.save(new Category(productCsv.getCategory().trim()));
                     }
@@ -448,9 +521,9 @@ public class ProductService {
 
                 product.setSubCategory(subCategory);
 
-            /*////////Mapping Suuplier////////////*/
+                /*////////Mapping Suuplier////////////*/
                 if (productCsv.getSupplier() != null) {
-                    Supplier supplier = supplierRepository.findByName(productCsv.getSupplier().trim());
+                    Supplier supplier = supplierRepository.findByNameIgnoreCase(productCsv.getSupplier().trim());
                     if (supplier == null) {
                         supplier = supplierRepository.save(new Supplier(productCsv.getSupplier().trim(), productCsv.getContactPerson(), productCsv.getSupplierType()));
                     }
@@ -458,10 +531,10 @@ public class ProductService {
                     suppliers.add(supplier);
                     product.setSupplierList(suppliers);
                 }
-            /*Set Total Lead Time*/
-            product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProcurement()+product.getTimeTransporation()+product.getTimeBuffer());
+                /*Set Total Lead Time*/
+                product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProcurement()+product.getTimeTransporation()+product.getTimeBuffer());
 
-            /*/////Adding Consumptions//////////*/
+                /*/////Adding Consumptions//////////*/
                 Consumption consumption;
                 int mnth;
                 Long value;
@@ -480,6 +553,9 @@ public class ProductService {
                 /*//////Setting stkOnFloor and orderedQty to zero if value is null*/
                 if (product.getStkOnFloor() == null)    product.setStkOnFloor(0L);
                 if (product.getOrderedQty() == null)    product.setOrderedQty(0L);
+                /*//////Setting ignoreSync and isNew Value///////////////////////*/
+                product.setIgnoreSync(false);
+                product.setNew(true);
                 products.add(product);
             }
             i++;
@@ -490,6 +566,12 @@ public class ProductService {
         return products;
     }
 
+    /**
+     * Get consumption value as long from productCsv Bean for specific month
+     * @param productCsv
+     * @param month
+     * @return Long consumption value if exists in csv bean, else null
+     */
     private Long getConsumptionForMonth(ProductCsv productCsv, String month) {
         switch (month) {
             case "JAN":
@@ -547,11 +629,22 @@ public class ProductService {
         if (src.getDemand() != null) dest.setDemand(src.getDemand());
     }
 
+    /**
+     * Print barcode for specific Bin.
+     * @param id Product id
+     * @param bins comma separated bin numbers
+     * @return pdf containing cards as Resource
+     */
     public Resource printBarcode(Long id, String bins){
         Product product = productRepository.findOne(id);
         return MiscUtil.generateBarcodePdf(product,bins);
     }
 
+    /**
+     * Print barcode for all Bins.
+     * @param id Product id
+     * @return pdf containing cards as Resource
+     */
     public Resource printBarcode(Long id){
         Product product = productRepository.findOne(id);
         return MiscUtil.generateBarcodePdf(product);

@@ -91,10 +91,10 @@ export function uploadProducts (file) {
   };
 }
 
-export function syncProduct (firstSync) {
+export function syncProduct () {
   return function (dispatch) {
     dispatch({type: c.PRODUCT_SYNC_PROGRESS});
-    axios.post(window.serviceHost + '/products/sync?firstSync=' + firstSync, null, {headers: getHeaders()})
+    axios.post(window.serviceHost + '/products/sync', null, {headers: getHeaders()})
     .then((response) => {
       console.log(response);
       if (response.status == 200) {
@@ -107,4 +107,3 @@ export function syncProduct (firstSync) {
     });
   };
 }
-

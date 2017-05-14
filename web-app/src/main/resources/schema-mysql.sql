@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `demand` bigint(20) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `ignore_sync` bit(1) DEFAULT NULL,
+  `is_new` bit(1) DEFAULT NULL,
   `item_code` varchar(255) DEFAULT NULL,
   `kanban_type` varchar(255) DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,

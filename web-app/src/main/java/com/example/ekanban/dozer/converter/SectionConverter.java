@@ -28,7 +28,7 @@ public class SectionConverter extends DozerConverter {
             SectionRepository sectionRepository = ApplicationContextUtil.getApplicationContext().getBean(SectionRepository.class);
             Section section;
             for (String str: secArray){
-                section =sectionRepository.findByName(str.trim());
+                section =sectionRepository.findByNameIgnoreCase(str.trim());
                 if (section != null) {
                     sections.add(section);
                 }else {

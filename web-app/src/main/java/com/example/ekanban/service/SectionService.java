@@ -40,8 +40,8 @@ public class SectionService {
     }
     
     public Section findByName(String name) {
-        logger.debug("findByName(): name = " , name);
-        return sectionRepository.findByName(name);
+        logger.debug("findByNameIgnoreCase(): name = " , name);
+        return sectionRepository.findByNameIgnoreCase(name);
     }
 
     public Boolean exists(Long id) {

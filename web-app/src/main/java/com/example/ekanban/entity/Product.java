@@ -110,14 +110,17 @@ public class Product {
     @Column(name = "BIN_QTY", nullable = true)
     private Long binQty;
 
-    @Column(name = "IGNORE_SYNC")
-    private Boolean ignoreSync;
-
     @Column(name = "STK_ON_FLOOR", nullable = false)
     private Long stkOnFloor;
 
     @Column(name = "ORDERED_QTY", nullable = false)
     private Long orderedQty;
+
+    @Column(name = "IGNORE_SYNC")
+    private Boolean ignoreSync;
+
+    @Column(name = "IS_NEW")
+    private Boolean isNew;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
@@ -372,6 +375,14 @@ public class Product {
 
     public void setIgnoreSync(Boolean ignoreSync) {
         this.ignoreSync = ignoreSync;
+    }
+
+    public Boolean getNew() {
+        return isNew;
+    }
+
+    public void setNew(Boolean aNew) {
+        isNew = aNew;
     }
 
     @Override

@@ -58,15 +58,15 @@ public class UserService {
     }
 
     public UserDto findByEmail(String email) {
-        logger.debug("findByEmail(): email = {}",email);
-        User user = userRepository.findByEmail(email);
+        logger.debug("findByEmailIgnoreCase(): email = {}",email);
+        User user = userRepository.findByEmailIgnoreCase(email);
         if(user == null) return null;
         return mapper.map(user, UserDto.class);
     }
     
     public UserDto findByUsername(String username) {
         logger.debug("findByUsername(): name = " , username);
-        User user = userRepository.findByName(username);
+        User user = userRepository.findByNameIgnoreCase(username);
         if(user == null) return null;
         return mapper.map(user, UserDto.class);
     }
@@ -104,7 +104,7 @@ public class UserService {
 
     @Transactional
     public boolean changePassword(String email,String oldPassword,String newPassword){
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmailIgnoreCase(email);
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(newPassword);

@@ -15,8 +15,8 @@ public class ProductRestController {
     @Autowired ProductService productService;
 
     @PostMapping(ApiUrls.URL_PRODUCTS_SYNC)
-    public ResponseEntity<?> syncProducts(@RequestParam(value = "firstSync", defaultValue = "false") Boolean fistSync){
-        productService.sync(fistSync);
+    public ResponseEntity<?> syncProducts(){
+        productService.sync();
         return  ResponseEntity.ok("SYNC SUCCESS");
     }
 

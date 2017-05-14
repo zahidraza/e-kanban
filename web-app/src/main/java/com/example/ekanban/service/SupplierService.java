@@ -41,8 +41,8 @@ public class SupplierService {
     }
     
     public Supplier findByName(String name) {
-        logger.debug("findByName(): name = " , name);
-        return supplierRepository.findByName(name);
+        logger.debug("findByNameIgnoreCase(): name = " , name);
+        return supplierRepository.findByNameIgnoreCase(name);
     }
 
     public Boolean exists(Long id) {

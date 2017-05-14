@@ -20,6 +20,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long>{
 
     Inventory findByProductAndBinNo(Product product,Integer binNo);
 
+    List<Inventory> findByProductAndBinState(Product product,String binState);
+
     List<Inventory> findByProduct(Product product);
 
     List<Inventory> findByLastUpdatedGreaterThan(Date date);

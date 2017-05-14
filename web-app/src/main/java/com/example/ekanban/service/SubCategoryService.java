@@ -46,8 +46,8 @@ public class SubCategoryService {
 
     
     public SubCategory findByName(String name) {
-        logger.debug("findByName(): name = " , name);
-        return subCategoryRepository.findByName(name);
+        logger.debug("findByNameIgnoreCase(): name = " , name);
+        return subCategoryRepository.findByNameIgnoreCase(name);
     }
 
     public Boolean exists(Long id) {

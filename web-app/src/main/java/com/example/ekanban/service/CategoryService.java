@@ -52,8 +52,8 @@ public class CategoryService {
 
     
     public Category findByName(String name) {
-        logger.debug("findByName(): name = " , name);
-        return categoryRepository.findByName(name);
+        logger.debug("findByNameIgnoreCase(): name = " , name);
+        return categoryRepository.findByNameIgnoreCase(name);
     }
 
     public Boolean exists(Long id) {

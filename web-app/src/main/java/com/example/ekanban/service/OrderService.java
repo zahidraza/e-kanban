@@ -110,6 +110,8 @@ public class OrderService {
             logger.error("No Order found matching orderId = {}", order.getId());
             return null;
         }
+        Product product = productRepository.findOne(order2.getProduct().getId());
+        //create a list of incoming bins to be updated
         String[] bins = order.getBins().split(",");
         List<Integer> binList = new ArrayList<>();
         for (String bin: bins) {
@@ -117,14 +119,15 @@ public class OrderService {
                 binList.add(Integer.parseInt(bin.trim()));
             }
         }
-
+        //find all inventory for this product and update the inevntory matching incoming bins
         List<Inventory> inventoryList = inventoryRepository.findByProduct(order2.getProduct());
         inventoryList.forEach(inventory -> {
             if (binList.contains(inventory.getBinNo())) {
                 inventory.setBinState(BinState.STORE);
+                product.setStkOnFloor(product.getStkOnFloor()+product.getBinQty());
             }
         });
-
+        //create a list of bins in this order
         String[] bins2 = order2.getBins().split(",");
         List<Integer> binList2 = new ArrayList<>();
         for (String bin: bins2) {
@@ -132,14 +135,13 @@ public class OrderService {
                 binList2.add(Integer.parseInt(bin.trim()));
             }
         }
-
+        //Check whether all bins of this order are in store
         boolean isOrderComplete = true;
         for (Inventory inv: inventoryList){
             if (binList2.contains(inv.getBinNo()) && inv.getBinState() != BinState.STORE){
                 isOrderComplete = false;
             }
         }
-
         if (isOrderComplete) {
             order2.setCompletedAt(new Date());
             order2.setOrderState(OrderState.COMPLETED);

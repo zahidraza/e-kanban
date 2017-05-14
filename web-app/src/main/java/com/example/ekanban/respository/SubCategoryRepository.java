@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface SubCategoryRepository extends JpaRepository<SubCategory, Long>{
     
-    public SubCategory findByName(String name);
+    public SubCategory findByNameIgnoreCase(String name);
     
     public Page<SubCategory> findByCategory(Category category, Pageable pageable);
 }

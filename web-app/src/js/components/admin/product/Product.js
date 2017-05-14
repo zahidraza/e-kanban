@@ -84,7 +84,7 @@ class Product extends Component {
     if (!this.state.syncing && nextProps.category.uploaded) {
       console.log('syncFirst');
       this.setState({syncing: true});
-      this.props.dispatch(syncProduct('true'));
+      this.props.dispatch(syncProduct());
     }
   }
 
@@ -211,7 +211,7 @@ class Product extends Component {
     if (!value) {
       return;
     }
-    this.props.dispatch(syncProduct('false'));
+    this.props.dispatch(syncProduct());
   }
 
   _onHelpClick () {

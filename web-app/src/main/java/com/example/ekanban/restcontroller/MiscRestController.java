@@ -50,7 +50,7 @@ public class MiscRestController {
 //    @PutMapping(ApiV2Urls.URL_FORGOT_PASSWORD_SEND_OTP)
 //    public ResponseEntity<?> forgotPasswordSendOTP(@RequestParam("email") String email){
 //
-//        if (userService.findByEmail(email) == null){
+//        if (userService.findByEmailIgnoreCase(email) == null){
 //            return new ResponseEntity<Object>(new RestError(404,404,"User with email id = " + email + " not found.", "", ""), HttpStatus.NOT_FOUND);
 //        }
 //        Map<String, Object> response = new HashedMap();
@@ -62,7 +62,7 @@ public class MiscRestController {
 //    @PutMapping(ApiV2Urls.URL_FORGOT_PASSWORD_VERIFY_OTP)
 //    public ResponseEntity<?> forgotPasswordVerifyOTP(@RequestParam("email") String email,
 //                                                   @RequestParam("otp") String otp){
-//        if (userService.findByEmail(email) == null){
+//        if (userService.findByEmailIgnoreCase(email) == null){
 //            return new ResponseEntity<Object>(new RestError(404,404,"User with email id = " + email + " not found.", "", ""), HttpStatus.NOT_FOUND);
 //        }
 //        Map<String, Object> response = new HashedMap();
@@ -81,7 +81,7 @@ public class MiscRestController {
 //    public ResponseEntity<?> changeForgotPassword(@RequestParam("email") String email,
 //                                            @RequestParam(value = "otp") String otp,
 //                                            @RequestParam("newPassword") String newPassword){
-//        if (userService.findByEmail(email) == null){
+//        if (userService.findByEmailIgnoreCase(email) == null){
 //            return new ResponseEntity<Object>(new RestError(404,404,"User with email id = " + email + " not found.", "", ""), HttpStatus.NOT_FOUND);
 //        }
 //        Map<String, Object> response = new HashedMap();
