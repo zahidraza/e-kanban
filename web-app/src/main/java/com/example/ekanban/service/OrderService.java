@@ -6,6 +6,7 @@ import com.example.ekanban.entity.Order;
 import com.example.ekanban.entity.Product;
 import com.example.ekanban.enums.BinState;
 import com.example.ekanban.enums.OrderState;
+import com.example.ekanban.exception.ScanException;
 import com.example.ekanban.respository.InventoryRepository;
 import com.example.ekanban.respository.OrderRepository;
 import com.example.ekanban.respository.ProductRepository;
@@ -111,22 +112,31 @@ public class OrderService {
             return null;
         }
         Product product = productRepository.findOne(order2.getProduct().getId());
-        //create a list of incoming bins to be updated
-        String[] bins = order.getBins().split(",");
-        List<Integer> binList = new ArrayList<>();
-        for (String bin: bins) {
-            if (bin.trim().length() != 0){
-                binList.add(Integer.parseInt(bin.trim()));
-            }
+
+        //Check whether InwardScan is possible
+        if (!isInwardScanPossible(product)) {
+            throw new ScanException("Inward Scan cannot be done. Maximum bins in stock cannot be greater than " + product.getNoOfBins());
         }
+
+        //Check whether card is valid
+        int binNo = Integer.parseInt(order.getBins().trim());
+        Inventory inv = inventoryRepository.findByProductAndBinNo(product,binNo);
+        if (inv == null) {
+            throw new ScanException("Invalid card. It does not exist.");
+        }
+        else if (inv.getBinState() == BinState.FREEZED) {
+            throw new ScanException("Invalid card. This card is freezed.");
+        }
+
         //find all inventory for this product and update the inevntory matching incoming bins
         List<Inventory> inventoryList = inventoryRepository.findByProduct(order2.getProduct());
         inventoryList.forEach(inventory -> {
-            if (binList.contains(inventory.getBinNo())) {
+            if (inventory.getBinNo() == binNo) {
                 inventory.setBinState(BinState.STORE);
                 product.setStkOnFloor(product.getStkOnFloor()+product.getBinQty());
             }
         });
+
         //create a list of bins in this order
         String[] bins2 = order2.getBins().split(",");
         List<Integer> binList2 = new ArrayList<>();
@@ -137,8 +147,8 @@ public class OrderService {
         }
         //Check whether all bins of this order are in store
         boolean isOrderComplete = true;
-        for (Inventory inv: inventoryList){
-            if (binList2.contains(inv.getBinNo()) && inv.getBinState() != BinState.STORE){
+        for (Inventory inv2: inventoryList){
+            if (binList2.contains(inv2.getBinNo()) && inv2.getBinState() != BinState.STORE){
                 isOrderComplete = false;
             }
         }
@@ -153,5 +163,15 @@ public class OrderService {
     public void delete(Long id) {
         logger.debug("delete(): id = {}",id);
         orderRepository.delete(id);
+    }
+
+    private boolean isInwardScanPossible(Product product) {
+        int binsInStock = inventoryRepository.findByProduct(product).stream()
+                .filter(inv -> inv.getBinState() == BinState.STORE)
+                .collect(Collectors.toList()).size();
+        if (binsInStock >= product.getNoOfBins()) {
+            return false;
+        }
+        return true;
     }
 }

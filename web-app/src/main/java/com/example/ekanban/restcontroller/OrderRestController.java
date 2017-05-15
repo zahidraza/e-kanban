@@ -99,6 +99,11 @@ public class OrderRestController {
         if (!orderService.exists(orderId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        if (order.getBins() == null || !order.getBins().trim().matches("^\\d+$")) {
+            List<FieldError> errors = new ArrayList<>();
+            errors.add(new FieldError("bins",order.getBins(),"bins should be one integer value."));
+            return new ResponseEntity<Object>(errors,HttpStatus.BAD_REQUEST);
+        }
         order.setId(orderId);
         order = orderService.update(order);
         return new ResponseEntity<>(orderAssembler.toResource(order), HttpStatus.OK);

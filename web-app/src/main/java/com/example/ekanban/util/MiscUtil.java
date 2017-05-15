@@ -165,7 +165,7 @@ public class MiscUtil {
             mainTable.setWidthPercentage(100f);
 
             PdfPCell cell = null;
-            for (int i = 0; i < product.getNoOfBins(); i++){
+            for (int i = 1; i <= product.getNoOfBins(); i++){
                 cell = new PdfPCell();
                 cell.addElement(getTable(docWriter,product,i));
                 cell.setBorder(PdfPCell.NO_BORDER);
@@ -397,7 +397,7 @@ public class MiscUtil {
         table.addCell(getCellContent("PACKET SIZE",pktSize,Element.ALIGN_CENTER));
 
             /*Row last*/
-        cell = getCellContent("CARD",""+binNo+"/"+product.getNoOfBins(),Element.ALIGN_CENTER);
+        cell = getCellContent("CARD",""+binNo,Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.addCell(cell);
 

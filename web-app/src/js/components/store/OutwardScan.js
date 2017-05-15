@@ -165,7 +165,7 @@ class OutwardScan extends Component {
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
             <span> Card </span>
-            <span className="secondary">{bin.binNo + '/' + bin.noOfBins}</span>
+            <span className="secondary">{bin.binNo}</span>
           </ListItem>
           <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
             <span> Category </span>

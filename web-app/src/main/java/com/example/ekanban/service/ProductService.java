@@ -376,13 +376,39 @@ public class ProductService {
             }
             product.setNew(false);
         } else {
-            int noOfInventory = product.getInventorySet().size();
-            //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
-            if (noOfInventory < product.getNoOfBins()){
-                for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
-                    product.addInventory(new Inventory(i, BinState.PURCHASE));
+            Set<Inventory> inventoryList = product.getInventorySet();
+            int activeInv = inventoryList.stream()
+                    .filter(inventory -> inventory.getBinState() != BinState.FREEZED)
+                    .collect(Collectors.toList())
+                    .size();
+
+            Inventory inv = null;
+            if (activeInv < product.getNoOfBins()) {
+                List<Inventory> passiveInvList = inventoryList.stream()
+                        .filter(inventory -> inventory.getBinState() == BinState.FREEZED)
+                        .collect(Collectors.toList());
+                int passiveInv = passiveInvList.size();
+                if (product.getNoOfBins() - activeInv < passiveInv) {
+                    for (int i = 0; i < product.getNoOfBins() - activeInv; i++) {
+                        inv = passiveInvList.get(i);
+                        inv.setBinState(BinState.PURCHASE);
+                    }
+                }else {
+                    passiveInvList.forEach(inventory -> inventory.setBinState(BinState.PURCHASE));
+                    for (int i = activeInv + passiveInv + 1; i <= product.getNoOfBins(); i++) {
+                        product.addInventory(new Inventory(i, BinState.PURCHASE));
+                    }
+                }
+            }else {
+                List<Inventory> activeInvList = inventoryList.stream()
+                        .filter(inventory -> inventory.getBinState() != BinState.FREEZED)
+                        .collect(Collectors.toList());
+                for (int i = 0; i < activeInv - product.getNoOfBins(); i++) {
+                    inv = activeInvList.get(i);
+                    inv.setBinState(BinState.FREEZED);
                 }
             }
+
         }
     }
 

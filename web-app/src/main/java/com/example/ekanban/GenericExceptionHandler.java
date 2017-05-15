@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.example.ekanban.exception.MailException;
 import com.example.ekanban.exception.ProductDetailsNotValidException;
+import com.example.ekanban.exception.ScanException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.apache.commons.beanutils.ConversionException;
 import org.slf4j.Logger;
@@ -47,7 +48,6 @@ public class GenericExceptionHandler {
             builder.setLength(builder.length()-1);
         }
         builder.append(']');
-        
         return response(HttpStatus.METHOD_NOT_ALLOWED, 405,"Supported methods are " + builder.toString() , e.getMessage(), "");
     }
 
@@ -70,18 +70,10 @@ public class GenericExceptionHandler {
         return new ResponseEntity<>(e.getProductErrors(), HttpStatus.BAD_REQUEST);
     }
 
-    private List<FieldError> processFieldError(List<org.springframework.validation.FieldError> fieldErrors) {
-        //NoSuchMessageException
-        //messageSource.
-        List<FieldError> errors = fieldErrors.stream()
-                .map(error -> {
-                    return new FieldError(error.getField(),
-                            error.getRejectedValue(),
-                            messageSource.getMessage(error.getCodes()[0], null,error.getDefaultMessage(), LocaleContextHolder.getLocale())
-                    );
-                })
-                .collect(Collectors.toList());
-        return errors;
+    @ExceptionHandler
+    public ResponseEntity<?> handleScanException(ScanException e){
+        logger.debug("handleScanException: {} \n {}",e , e.getMessage());
+        return response(HttpStatus.CONFLICT, 409, e.getMessage(), e.getMessage(), "");
     }
 
     @ExceptionHandler
@@ -128,6 +120,16 @@ public class GenericExceptionHandler {
             e = (Exception)e.getCause();
         }while(e != null);
         return response(HttpStatus.INTERNAL_SERVER_ERROR, 500, msg, devMsg, "");
+    }
+
+    private List<FieldError> processFieldError(List<org.springframework.validation.FieldError> fieldErrors) {
+        List<FieldError> errors = fieldErrors.stream()
+                .map(error -> new FieldError(error.getField(),
+                        error.getRejectedValue(),
+                        messageSource.getMessage(error.getCodes()[0], null,error.getDefaultMessage(), LocaleContextHolder.getLocale())
+                ))
+                .collect(Collectors.toList());
+        return errors;
     }
 
     private ResponseEntity<RestError> response(HttpStatus status, int code, String msg) {

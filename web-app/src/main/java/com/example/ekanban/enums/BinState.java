@@ -10,7 +10,7 @@ package com.example.ekanban.enums;
  * @author razamd
  */
 public enum BinState {
-    UNAVAILABLE("UNAVAILABLE"), STORE("STORE"), PURCHASE("PURCHASE"), ORDERED("ORDERED");
+    FREEZED("FREEZED"), STORE("STORE"), PURCHASE("PURCHASE"), ORDERED("ORDERED");
 
     private final String value;
 
