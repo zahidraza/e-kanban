@@ -144,8 +144,13 @@ public class ProductService {
         }
         product.setSectionList(sectionList);
         product.setSupplierList(supplierList);
-        product.setStkOnFloor(0L);
-        product.setOrderedQty(0L);
+        /*//////Setting stkOnFloor and orderedQty to zero if value is null*/
+        if (product.getStkOnFloor() == null)    product.setStkOnFloor(0L);
+        if (product.getOrderedQty() == null)    product.setOrderedQty(0L);
+        /*//////Setting ignoreSync, isFrrezed and isNew Value/////////////*/
+        product.setIgnoreSync(false);
+        product.setNew(true);
+        product.setFreezed(false);
         product = productRepository.save(product);
         return mapper.map(product, ProductDto.class);
     }
@@ -581,9 +586,10 @@ public class ProductService {
                 /*//////Setting stkOnFloor and orderedQty to zero if value is null*/
                 if (product.getStkOnFloor() == null)    product.setStkOnFloor(0L);
                 if (product.getOrderedQty() == null)    product.setOrderedQty(0L);
-                /*//////Setting ignoreSync and isNew Value///////////////////////*/
+                /*//////Setting ignoreSync, isFrrezed and isNew Value///////////////////////*/
                 product.setIgnoreSync(false);
                 product.setNew(true);
+                product.setFreezed(false);
                 products.add(product);
             }
             i++;

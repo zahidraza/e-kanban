@@ -122,6 +122,9 @@ public class Product {
     @Column(name = "IS_NEW")
     private Boolean isNew;
 
+    @Column(name = "IS_FREEZED")
+    private Boolean isFreezed;
+
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED")
@@ -328,7 +331,6 @@ public class Product {
         this.supplierList = supplierList;
     }
 
-
     public Date getLastUpdated() {
         return lastUpdated;
     }
@@ -383,6 +385,14 @@ public class Product {
 
     public void setNew(Boolean aNew) {
         isNew = aNew;
+    }
+
+    public Boolean getFreezed() {
+        return isFreezed;
+    }
+
+    public void setFreezed(Boolean freezed) {
+        isFreezed = freezed;
     }
 
     @Override

@@ -58,8 +58,10 @@ export function updateOrder (order) {
       }
     }).catch( (err) => {
       console.log(err);
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
       dispatch({type: c.ORDER_EDIT_FAIL});
     });
   };
 }
-

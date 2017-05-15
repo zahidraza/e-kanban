@@ -10,14 +10,12 @@ import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
 import Section from 'grommet/components/Section';
 import Spinning from 'grommet/components/icons/Spinning';
-// import Header from 'grommet/components/Header';
-// import Heading from 'grommet/components/Heading';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Toast from 'grommet/components/Toast';
 
 class InwardScan extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -88,7 +86,7 @@ class InwardScan extends Component {
         available = true;
         binId = '';
       }
-      
+
     }
 
     this.setState({binId, bin, available,notFound});
@@ -113,7 +111,7 @@ class InwardScan extends Component {
       if (x != -1) break;
     }
     console.log(order);
-    
+
     if (x >= 0) {
       const inv = {orderId: order.id, bins: String(bin.binNo)};
       this.props.dispatch(updateOrder(inv));
@@ -135,7 +133,7 @@ class InwardScan extends Component {
       );
     }
 
-    const toastControl = !show ? null : ( 
+    const toastControl = !show ? null : (
       <Toast status={toast.status}
         onClose={this._onCloseToast.bind(this)}>
         {toast.message}
@@ -206,7 +204,7 @@ class InwardScan extends Component {
         <Box alignSelf='center' pad={{vertical: 'medium'}}>
           {scanBtn}
         </Box>
-        
+
       </Box>
     );
 
