@@ -29,7 +29,7 @@ import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
 
 class Category extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -54,7 +54,7 @@ class Category extends Component {
   componentWillReceiveProps (nextProps) {
     if (sessionStorage.session == undefined) {
       this.context.router.push('/');
-      
+
     }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
@@ -66,13 +66,10 @@ class Category extends Component {
 
   _addCategory () {
     this.props.dispatch(addCategory(this.state.category));
-    this.setState({category: {}});
   }
 
   _updateCategory () {
     this.props.dispatch(updateCategory(this.state.category));
-    this.setState({category: {}});
-    console.log(this.state.category);
   }
 
   _onSearch (event) {
@@ -88,6 +85,7 @@ class Category extends Component {
   }
 
   _onAddClick () {
+    this.setState({category: {}});
     this.props.dispatch({type: c.CATEGORY_ADD_FORM_TOGGLE, payload: {adding: true}});
   }
 
@@ -110,15 +108,10 @@ class Category extends Component {
 
   _onCloseLayer (layer) {
     if ( layer == 'add') {
-      this.setState({category: {}});
       this.props.dispatch({type: c.CATEGORY_ADD_FORM_TOGGLE, payload: {adding: false}});
-      
     } else if (layer == 'edit') {
-      this.setState({category: {}});
       this.props.dispatch({type: c.CATEGORY_EDIT_FORM_TOGGLE, payload: {editing: false}});
-      
     }
-      
   }
 
   render() {
@@ -156,7 +149,7 @@ class Category extends Component {
           <Header><Heading tag="h3" strong={true}>Add New Category</Heading></Header>
           <FormFields>
             <FormField label="Category Name" error={errors.name}>
-              <input type="text" name="name" value={category.name} onChange={this._onChangeInput.bind(this)} />
+              <input type="text" name="name" value={category.name == undefined ? '' : category.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
@@ -198,7 +191,7 @@ class Category extends Component {
           <Box size="large" alignSelf="center" >
             <List > {items} </List>
             <ListPlaceholder unfilteredTotal={count} filteredTotal={count} emptyMessage={this.localeData.category_empty_message} />
-          </Box>         
+          </Box>
         </Section>
         {layerAdd}
         {layerEdit}

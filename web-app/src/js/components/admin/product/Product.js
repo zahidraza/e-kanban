@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
 import {removeProduct,syncProduct}  from '../../../actions/product';
 import {initialize}  from '../../../actions/misc';
+import {getMonth,getItemMasterHeader,getItemMasterBody}  from '../../../utils/miscUtil';
 import {PRODUCT_CONSTANTS as c}  from '../../../utils/constants';
 import {CSVLink} from 'react-csv';
 
@@ -127,17 +128,13 @@ class Product extends Component {
     if (filteredCount == 0) {
       productNotAvailable = true;
     }
-    let productsDownload = [
-      ['Product Id','Item Code','Product Name','Category','Sub Category','Sections','Price','Ordering Time','Production Time','Transportation Time',
-        'Buffer Time','UOM Purchase','UOM Consumption','Conversion Factor','MOQ',
-        'Packet Size','Class Type','No of Bins','Bin Size','Kanban Type','Demand']];
+    let productsDownload = [getItemMasterHeader()];
     products.forEach(p => {
-      let sections = '  ';
-      p.sectionList.forEach(s => sections += s.name + ', ');
-      sections = sections.substring(0,sections.length-2).trim();
-      productsDownload.push([p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
-        p.timeTransporation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
-        p.minOrderQty,p.packetSize,p.classType,p.noOfBins,p.binQty,p.kanbanType,p.demand]);
+      p.consumptions.forEach(c => {
+        p[getMonth(c.month)] = c.value;
+      });
+
+      productsDownload.push(getItemMasterBody(p));
     });
 
     products = products.slice(0,20*page);
@@ -161,7 +158,7 @@ class Product extends Component {
     console.log('_onSearch');
     let value = event.target.value;
     if (value.length > 1) {
-      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.productId.toLowerCase().includes(value.toLowerCase()));
+      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.itemCode.toLowerCase().includes(value.toLowerCase()));
       this.setState({searchText: value,products, searching: true});
     }else{
       this.setState({searchText: value,searching: false});
@@ -223,16 +220,16 @@ class Product extends Component {
     const items = products.map((p, index)=>{
       let sections = '  ';
       p.sectionList.forEach(s => sections += s.name + ', ');
+      sections = sections.substring(0,sections.length-2).trim();
       return (
         <TableRow key={index}  >
-          <td >{p.productId}</td>
           <td>{p.itemCode}</td>
-          <td >{p.name}</td>
+          <td >{p.name.length > 21 ? p.name.substr(0,21) + ' ...' : p.name}</td>
           <td >{p.category.name}</td>
           <td >{p.subCategory.name}</td>
-          <td >{sections.substring(0,sections.length-2).trim()}</td>
+          <td >{sections.length > 10 ? sections.substr(0,10) + ' ...' : sections}</td>
           <td >{p.noOfBins}</td>
-          <td >{p.binQty}</td>
+          <td >{p.binQty + ' ' + p.uomConsumption}</td>
           <td>{p.price}</td>
           <td>{p.classType}</td>
           <td style={{textAlign: 'right', padding: 0}}>
@@ -268,7 +265,7 @@ class Product extends Component {
 
     let productItem = productNotAvailable ? <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product available</h3></Box>: (
       <Table scrollable={true} onMore={this._onMoreProducts.bind(this)}>
-        <TableHeader labels={['Product Id','ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
+        <TableHeader labels={['ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
 
         <tbody>{items}</tbody>
       </Table>

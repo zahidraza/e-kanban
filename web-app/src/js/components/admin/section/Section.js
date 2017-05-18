@@ -28,7 +28,7 @@ import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
 
 class Sections extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -84,18 +84,16 @@ class Sections extends Component {
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
+    this.setState({section: {}});
     this.props.dispatch({type: c.SECTION_ADD_FORM_TOGGLE, payload: {adding: true}});
   }
 
   _onRemoveClick (index) {
-    console.log('_onRemoveClick: index = ' + index);
     this.props.dispatch(removeSection(this.state.sections[index]));
     this.setState({searchText: ''});
   }
 
   _onEditClick (index) {
-    console.log('_onEditClick: index = ' + index);
     this.setState({section: {...this.props.section.sections[index]}});
     this.props.dispatch({type: c.SECTION_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
@@ -108,12 +106,9 @@ class Sections extends Component {
     console.log('_onCloseLayer');
     if ( layer == 'add') {
       this.props.dispatch({type: c.SECTION_ADD_FORM_TOGGLE, payload: {adding: false}});
-      this.setState({section: {}});
     } else if (layer == 'edit') {
       this.props.dispatch({type: c.SECTION_EDIT_FORM_TOGGLE, payload: {editing: false}});
-      this.setState({section: {}});
     }
-      
   }
 
   render() {
@@ -151,7 +146,7 @@ class Sections extends Component {
           <Header><Heading tag="h3" strong={true}>Add New Section</Heading></Header>
           <FormFields>
             <FormField label="Section Name" error={errors.name}>
-              <input type="text" name="name" value={section.name} onChange={this._onChangeInput.bind(this)} />
+              <input type="text" name="name" value={section.name == undefined ? '' : section.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >
@@ -193,7 +188,7 @@ class Sections extends Component {
           <Box size="large" alignSelf="center" >
             <List > {items} </List>
             <ListPlaceholder unfilteredTotal={count} filteredTotal={count} emptyMessage={this.localeData.section_empty_message} />
-          </Box>         
+          </Box>
         </Section>
         {layerAdd}
         {layerEdit}

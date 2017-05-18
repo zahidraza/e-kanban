@@ -2,6 +2,7 @@ import Dashboard from "./components/Dashboard";
 import Main from "./components/Main";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
+import Reports from './components/Reports';
 
 import Category from "./components/admin/category/Category";
 import Product from "./components/admin/product/Product";
@@ -23,6 +24,7 @@ import AwaitingOrder from './components/store/AwaitingOrder';
 
 import Tracking from './components/purchase/Tracking';
 import Order from './components/purchase/Order';
+import Followup from './components/purchase/Followup';
 import Test from "./components/Test";
 
 export default {
@@ -32,6 +34,7 @@ export default {
   childRoutes: [
     { path: 'dashboard', component: Dashboard},
     { path: 'profile', component: Profile},
+    { path: 'reports', component: Reports},
 
     { path: 'category', component: Category},
     { path: 'product', component: Product},
@@ -50,9 +53,10 @@ export default {
     { path: 'outward', component: OutwardScan},
     { path: 'barcode', component: BarcodeGenerate},
     { path: 'awaiting', component: AwaitingOrder},
-    
+
     { path: 'tracking', component: Tracking},
     { path: 'order', component: Order},
+    { path: 'followup', component: Followup},
     { path: 'test', component: Test}
   ]
 };

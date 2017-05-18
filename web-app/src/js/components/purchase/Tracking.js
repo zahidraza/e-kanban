@@ -32,7 +32,7 @@ import FormFields from 'grommet/components/FormFields';
 import Footer from 'grommet/components/Footer';
 
 class Tracking extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -82,7 +82,7 @@ class Tracking extends Component {
     for (var [key, value] of pendingMap) {
       const p = products.find(prod => prod.productId == key);
       if (p != undefined) {
-        pendingInv.push({productId: key,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: value.bins, noOfBins: getNoOfBins(value.bins),createdAt: value.createdAt});
+        pendingInv.push({productId: key,prodId: p.id,itemCode: p.itemCode, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: value.bins, noOfBins: getNoOfBins(value.bins),createdAt: value.createdAt});
       }
     }
     return pendingInv;
@@ -97,7 +97,7 @@ class Tracking extends Component {
       let orderedBy = u == undefined ? '' : u.name;
 
       if (p != undefined) {
-        orderedInv.push({productId: p.productId, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,orderedBy,
+        orderedInv.push({productId: p.productId, itemCode: p.itemCode, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,orderedBy,
           tat: p.timeProcurement + p.timeTransporation});
       }
     });
@@ -212,10 +212,9 @@ class Tracking extends Component {
       let items = pendingInv.map((inv,i) => {
         return (
           <TableRow key={i}  >
-            <td>{inv.productId}</td>
-            <td>{inv.productName}</td>
+            <td>{inv.itemCode}</td>
+            <td>{inv.productName.length > 25 ? inv.productName.substr(0,25) + ' ...': inv.productName}</td>
             <td>{inv.binSize}</td>
-            <td>{inv.bins}</td>
             <td>{inv.noOfBins}</td>
             <td>{moment(new Date(inv.createdAt)).utcOffset('+05:30').format('DD/MM/YYYY, hh:mm A')}</td>
             <td>{getAgeing(inv.createdAt)}</td>
@@ -226,11 +225,11 @@ class Tracking extends Component {
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Cards','No Of Bins','Created At','Ageing','ACTION']} />
+            <TableHeader labels={['Item Code','Product','Bin Size','Bins','Created At','Ageing','ACTION']} />
 
             <tbody>{items}</tbody>
-          </Table>       
-        </Box>  
+          </Table>
+        </Box>
       );
     } else {
       return (
@@ -238,23 +237,23 @@ class Tracking extends Component {
           <h3>No Pending Orders available</h3>
         </Box>
       );
-    } 
+    }
   }
 
   _renderOrdered () {
     let {orderedInv} = this.state;
-    
- 
+
+
     if (orderedInv.length > 0) {
       let items = orderedInv.map((inv,i) => {
         return (
           <TableRow key={i}  >
-            <td>{inv.productId}</td>
-            <td>{inv.productName}</td>
+            <td>{inv.itemCode}</td>
+            <td>{inv.productName.length > 25 ? inv.productName.substr(0,25) + ' ...': inv.productName}</td>
             <td>{inv.binSize}</td>
-            <td>{inv.bins}</td>
+            <td>{getNoOfBins(inv.bins)}</td>
             <td>{inv.orderedBy}</td>
-            <td>{moment(new Date(inv.orderedAt)).utcOffset('+05:30').format('DD MMM, YY hh:mm A')}</td>           
+            <td>{moment(new Date(inv.orderedAt)).utcOffset('+05:30').format('DD MMM, YY hh:mm A')}</td>
             <td>{moment(new Date(inv.orderedAt)).add(inv.tat,'days').utcOffset('+05:30').format('DD MMM, YY')}</td>
           </TableRow>
         );
@@ -262,11 +261,11 @@ class Tracking extends Component {
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Cards','Ordered By','Ordered At','Exp. Arrival']} />
+            <TableHeader labels={['Item Code','Product','Bin Size','Bins','Ordered By','Ordered At','Exp. Arrival']} />
 
             <tbody>{items}</tbody>
-          </Table>       
-        </Box>  
+          </Table>
+        </Box>
       );
     } else {
       return (
@@ -274,7 +273,7 @@ class Tracking extends Component {
           <h3>No Ordered Orders available</h3>
         </Box>
       );
-    } 
+    }
   }
 
   render() {

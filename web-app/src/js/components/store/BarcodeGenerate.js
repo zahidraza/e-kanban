@@ -86,7 +86,7 @@ class BarcodeGenerate extends Component {
               <td >{p.subCategory.name}</td>
               <td >{p.noOfBins}</td>
               <td >{p.binQty}</td>
-              <td style={{textAlign: 'right', padding: 0}}>
+              <td>
                 <Button icon={<PrintIcon />} onClick={this._onPrint.bind(this,p.id)} />
               </td>
             </TableRow>
@@ -94,7 +94,7 @@ class BarcodeGenerate extends Component {
         });
         return (
           <Table scrollable={true}>
-            <TableHeader labels={['Product Id','Product Name','Category','Sub Category','No. of Bins', 'Bin Size','ACTION']} />
+            <TableHeader labels={['Product Id','Product Name','Category','Sub Category','No. of Bins', 'Bin Size','Print']} />
 
             <tbody>{items}</tbody>
           </Table>

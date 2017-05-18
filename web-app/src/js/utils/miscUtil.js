@@ -76,3 +76,84 @@ export function getAgeing (createdAt) {
   }
   return String(durationDays) + daySuffix;
 }
+
+export function getMonth(month) {
+
+  switch (month) {
+    case 1: return 'jan';
+      break;
+    case 2: return 'feb';
+      break;
+    case 3: return 'mar';
+      break;
+    case 4: return 'apr';
+      break;
+    case 5: return 'may';
+      break;
+    case 6: return 'jun';
+      break;
+    case 7: return 'jul';
+      break;
+    case 8: return 'aug';
+      break;
+    case 9: return 'sep';
+      break;
+    case 10: return 'oct';
+      break;
+    case 11: return 'nov';
+      break;
+    case 12: return 'dec';
+      break;
+  }
+}
+
+export function getCurrYear() {
+  return new Date().getFullYear();
+}
+
+export function getCurrMonth() {
+  return new Date().getMonth()+1;
+}
+
+export function getItemMasterHeader() {
+  let productsDownload = ['Product Id','Item Code','Product Name','Category','Sub Category','Sections','Price','Ordering Time','Production Time',
+    'Transportation Time','Buffer Time','UOM Purchase','UOM Consumption','Conversion Factor','MOQ','Packet Size'];
+  for (var i = 0, j = getCurrMonth() + 1; i < 12; i++) {
+    productsDownload.push(getMonth(j));
+    j++;
+    if (j == 13) {
+      j = 1;
+    }
+  }
+  productsDownload.push('Class Type');
+  productsDownload.push('No of Bins');
+  productsDownload.push('Bin Size');
+  productsDownload.push('Kanban Type');
+  productsDownload.push('Demand');
+
+  return productsDownload;
+}
+
+export function getItemMasterBody(p) {
+  let sections = '  ';
+  p.sectionList.forEach(s => sections += s.name + ', ');
+  sections = sections.substring(0,sections.length-2).trim();
+
+  let body = [p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
+    p.timeTransporation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
+    p.minOrderQty,p.packetSize];
+  for (var i = 0, j = getCurrMonth() + 1; i < 12; i++) {
+
+    body.push(p[getMonth(j)] == undefined ? '' : p[getMonth(j)]);
+    j++;
+    if (j == 13) {
+      j = 1;
+    }
+  }
+  body.push(p.classType);
+  body.push(p.noOfBins);
+  body.push(p.binQty);
+  body.push(p.kanbanType);
+  body.push(p.demand);
+  return body;
+}

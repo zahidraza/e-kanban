@@ -50,6 +50,14 @@ public class Consumption {
         this.value = value;
     }
 
+    public Consumption(Long id, Product product, Integer year, Integer month, Long value) {
+        this.id = id;
+        this.product = product;
+        this.year = year;
+        this.month = month;
+        this.value = value;
+    }
+
     public Long getId() {
         return id;
     }

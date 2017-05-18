@@ -7,6 +7,8 @@ package com.example.ekanban.entity;
 
 import com.example.ekanban.enums.ClassType;
 import com.example.ekanban.enums.KanbanType;
+import com.example.ekanban.respository.ConsumptionRepositoryImpl;
+import com.example.ekanban.util.ApplicationContextUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
@@ -45,7 +47,7 @@ public class Product {
     )
     private Set<Supplier> supplierList = new HashSet<>();
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Consumption> consumptions = new HashSet<>();
 
@@ -53,7 +55,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Inventory> inventorySet = new HashSet<>();
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
     @Column(name = "DESCRIPTION", nullable = true, length = 500)
@@ -62,7 +64,7 @@ public class Product {
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "ITEM_CODE", nullable = true)
+    @Column(name = "ITEM_CODE", nullable = false, unique = true)
     private String itemCode;
 
     @Column(name = "TIME_ORDERING", nullable = false)
@@ -152,7 +154,8 @@ public class Product {
     }
 
     public Set<Consumption> getConsumptions() {
-        return consumptions;
+        ConsumptionRepositoryImpl consumptionRepository = ApplicationContextUtil.getApplicationContext().getBean(ConsumptionRepositoryImpl.class);
+        return consumptionRepository.findLastYearConsumption(id);
     }
 
     public Long getId() {

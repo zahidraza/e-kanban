@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import {initialize} from '../../actions/misc';
 import {syncOrder} from '../../actions/order';
 import {syncInventory} from '../../actions/inventory';
-//import {getHeaders} from '../../utils/restUtil';
-//import moment from 'moment';
+import {getNoOfBins} from '../../utils/miscUtil';
+import moment from 'moment';
 
 
 import AppHeader from '../AppHeader';
@@ -76,7 +76,7 @@ class AwaitingOrder extends Component {
     awaitingOrders.forEach(o => {
       const p = products.find(prod => prod.id == o.productId);
       if (p != undefined) {
-        awaitingInv.push({productId: p.productId,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,
+        awaitingInv.push({productId: p.productId,itemCode: p.itemCode,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,
           createdAt: o.createdAt, tat: p.timeOrdering + p.timeProcurement + p.timeTransportation + p.timeBuffer});
       }
     });
@@ -126,23 +126,25 @@ class AwaitingOrder extends Component {
 
   _renderAwaiting () {
     let {awaitingInv} = this.state;
+    console.log(awaitingInv[0]);
 
     if (awaitingInv.length > 0) {
       let items = awaitingInv.map((inv,i) => {
         return (
           <TableRow key={i}  >
-            <td>{inv.productId}</td>
-            <td>{inv.productName}</td>
+            <td>{inv.itemCode}</td>
+            <td>{inv.productName.length > 25 ? inv.productName.substr(0,25) + ' ...': inv.productName}</td>
             <td>{inv.binSize}</td>
-            <td>{inv.bins}</td>
-            <td style={{textAlign: 'right', padding: 0}}><Button icon={<PrintIcon />} onClick={this._onPrint.bind(this,i)} /></td>
+            <td>{getNoOfBins(inv.bins)}</td>
+            <td>{moment(new Date(inv.orderedAt)).add(inv.tat,'days').utcOffset('+05:30').format('DD MMM, YY')}</td>
+            <td ><Button icon={<PrintIcon />} onClick={this._onPrint.bind(this,i)} /></td>
           </TableRow>
         );
       });
       return (
         <Box pad={{horizontal: 'medium', vertical: 'medium'}}>
           <Table scrollable={true} onMore={this._onMoreOrders.bind(this)}>
-            <TableHeader labels={['Product Id','Product','Bin Size','Cards','']} />
+            <TableHeader labels={['Item Code','Product','Bin Size','Bins','Exp. Arrival','Print']} />
 
             <tbody>{items}</tbody>
           </Table>

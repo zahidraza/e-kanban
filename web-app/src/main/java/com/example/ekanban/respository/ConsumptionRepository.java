@@ -6,6 +6,7 @@
 package com.example.ekanban.respository;
 
 import com.example.ekanban.entity.Consumption;
+import com.example.ekanban.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,5 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author razamd
  */
 public interface ConsumptionRepository extends JpaRepository<Consumption, Long>{
-    
+
+    Consumption findByProductAndYearAndMonth(Product product,Integer year, Integer month);
+
 }

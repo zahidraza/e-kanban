@@ -6,13 +6,16 @@
 package com.example.ekanban.service;
 
 import com.example.ekanban.dto.InventoryDto;
+import com.example.ekanban.entity.Consumption;
 import com.example.ekanban.entity.Inventory;
 import com.example.ekanban.entity.Product;
 import com.example.ekanban.enums.BinState;
 import com.example.ekanban.exception.ScanException;
+import com.example.ekanban.respository.ConsumptionRepository;
 import com.example.ekanban.respository.InventoryRepository;
 import com.example.ekanban.respository.ProductRepository;
 import com.example.ekanban.storage.BarcodeService;
+import com.example.ekanban.util.MiscUtil;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,7 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
     @Autowired private ProductRepository productRepository;
     @Autowired private BarcodeService barcodeService;
+    @Autowired private ConsumptionRepository consumptionRepository;
 
     private final Mapper mapper;
 
@@ -53,6 +57,8 @@ public class InventoryService {
             int binsInStock = stockList.size();
             long binQty = product.getBinQty();
             product.setStkOnFloor(binQty*(binsInStock-1));
+            Consumption consumption = consumptionRepository.findByProductAndYearAndMonth(product, MiscUtil.getCurrentYear(),MiscUtil.getCurrentMonth());
+            consumption.setValue(consumption.getValue()+binQty);
         }
         inventory2.setBinState(BinState.parse(inventory.getBinState()));
         return mapper.map(inventory2, InventoryDto.class);

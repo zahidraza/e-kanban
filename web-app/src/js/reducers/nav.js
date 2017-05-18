@@ -4,6 +4,7 @@ const initialState = {
   active: false,
   itemsAdmin:[
     { path: '/dashboard', label: 'Dashboard'},
+    { path: '/reports', label: 'Reports'},
     { path: '/user', label: 'User'},
     { path: '/category', label: 'Category'},
     { path: '/subCategory', label: 'Sub Category'},
@@ -13,6 +14,7 @@ const initialState = {
   ],
   itemsStore:[
      { path: '/dashboard', label: 'Dashboard'},
+     { path: '/reports', label: 'Reports'},
      { path: '/stock', label: 'Stock'},
      { path: '/inward', label: 'Inward Scan'},
      { path: '/outward', label: 'Outward Scan'},
@@ -22,7 +24,9 @@ const initialState = {
   ],
   itemsPurchase:[
      { path: '/dashboard', label: 'Dashboard'},
-     { path: '/tracking', label: 'Tracking'}
+     { path: '/reports', label: 'Reports'},
+     { path: '/tracking', label: 'Tracking'},
+     { path: '/followup', label: 'Follow Up'}
   ],
   itemsUser:[
      { path: '/dashboard', label: 'Dashboard'}

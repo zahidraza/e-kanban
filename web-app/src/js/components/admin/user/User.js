@@ -30,7 +30,7 @@ import View from "grommet/components/icons/base/View";
 
 
 class User extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -68,16 +68,16 @@ class User extends Component {
   }
 
   _addUser () {
+    console.log('_addUser');
     this.props.dispatch(addUser(this.state.user));
-    this.setState({user:{}});
   }
 
   _updateUser () {
     this.props.dispatch(updateUser(this.state.user));
-    this.setState({user:{}});
   }
 
   _onChangeInput ( event ) {
+    console.log('_onChangeInput');
     var user = this.state.user;
     user[event.target.getAttribute('name')] = event.target.value;
     this.setState({user: user});
@@ -90,7 +90,8 @@ class User extends Component {
   }
 
   _onAddClick () {
-    const user = this.state.user;
+    console.log('_onAddClick');
+    let user = {};
     user.role = ur.ROLE_USER;
     this.setState({ user: user});
     this.props.dispatch({type: u.USER_ADD_FORM_TOGGLE, payload: {adding: true}});
@@ -115,18 +116,20 @@ class User extends Component {
 
   _onCloseLayer (layer) {
     console.log('_onCloseLayer');
-    if( layer == 'add')
+    if( layer == 'add') {
       this.props.dispatch({type: u.USER_ADD_FORM_TOGGLE, payload: {adding: false}});
-    else if (layer == 'view')
+    }else if (layer == 'view') {
       this.setState({viewing: false, user: {}});
-    else if (layer == 'edit')
+    }else if (layer == 'edit') {
       this.props.dispatch({type: u.USER_EDIT_FORM_TOGGLE, payload: {editing: false}});
+    }
+
   }
 
   render() {
     const {adding,editing,users,errors,busy} = this.props.user;
     let {viewing, user, roles,initializing } = this.state;
-    
+
     if (initializing) {
       return (
         <Box pad={{vertical: 'large'}}>
@@ -154,17 +157,17 @@ class User extends Component {
 
     const layerAdd = (
       <Layer hidden={!adding} onClose={this._onCloseLayer.bind(this, 'add')}  closer={true} align="center">
-        <Form>
+        <Form autoComplete="off">
           <Header><Heading tag="h3" strong={true}>Add New User</Heading></Header>
           <FormFields>
             <FormField label="User Name" error={errors.name}>
-              <input type="text" name="name" value={user.name} onChange={this._onChangeInput.bind(this)} />
+              <input type="text" name="name" value={user.name == undefined ? '' : user.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
             <FormField label="Email" error={errors.email}>
-              <input type="email" name="email" value={user.email} onChange={this._onChangeInput.bind(this)} />
+              <input type="email" name="email" value={user.email == undefined ? '' : user.email} onChange={this._onChangeInput.bind(this)} />
             </FormField>
             <FormField label="Mobile Number" error={errors.mobile}>
-              <input type="text" name="mobile" value={user.mobile} onChange={this._onChangeInput.bind(this)} />
+              <input type="text" name="mobile" value={user.mobile == undefined ? '': user.mobile} onChange={this._onChangeInput.bind(this)} />
             </FormField>
             <FormField error={errors.role}>
               <Select options={roles} value={user.role} onChange={this._onRoleFilter.bind(this)}/>

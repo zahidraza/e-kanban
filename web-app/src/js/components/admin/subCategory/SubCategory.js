@@ -31,7 +31,7 @@ import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
 
 class SubCategory extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -64,7 +64,7 @@ class SubCategory extends Component {
         let cFilter = categories[0].name;
         this.setState({cFilter});
       }
-      
+
     }
   }
 
@@ -99,10 +99,10 @@ class SubCategory extends Component {
       const categoryFilter = filter.category;
       let list2 = list1.filter(sc => categoryFilter.includes(sc.category.name));
       list2 = this._subCategorySort(list2,sort);
-      this.setState({subCategories: list2, filteredCount: list2.length, unfilteredCount: list1.length});    
+      this.setState({subCategories: list2, filteredCount: list2.length, unfilteredCount: list1.length});
     } else {
       list1 = this._subCategorySort(list1,sort);
-      this.setState({subCategories: list1, filteredCount: list1.length, unfilteredCount: list1.length}); 
+      this.setState({subCategories: list1, filteredCount: list1.length, unfilteredCount: list1.length});
     }
   }
 
@@ -165,6 +165,7 @@ class SubCategory extends Component {
 
   _onAddClick () {
     console.log('_onAddClick');
+    this.setState({subCategory: {}});
     this.props.dispatch({type: c.SUB_CATEGORY_ADD_FORM_TOGGLE,payload: {adding: true}});
   }
 
@@ -172,11 +173,11 @@ class SubCategory extends Component {
     console.log('_onRemoveClick');
     const category = this.props.category.categories.find(c => c.name === cName);
     let subCategory = {
-      id: scId, 
-      name: scName, 
+      id: scId,
+      name: scName,
       _links: {
-        self: {href: category._links.subCategoryList.href + '/' + scId}, 
-        category: {href: category._links.self.href} 
+        self: {href: category._links.subCategoryList.href + '/' + scId},
+        category: {href: category._links.self.href}
       }
     };
     this.props.dispatch(removeSubCategory(subCategory));
@@ -197,10 +198,8 @@ class SubCategory extends Component {
     console.log('_onCloseLayer');
     if ( layer == 'add') {
       this.props.dispatch({type: c.SUB_CATEGORY_ADD_FORM_TOGGLE,payload: {adding: false}});
-      this.setState({subCategory: {}});
     } else if (layer == 'edit') {
       this.props.dispatch({type: c.SUB_CATEGORY_EDIT_FORM_TOGGLE,payload: {editing: false}});
-      this.setState({subCategory: {}});
     }
   }
 
@@ -246,7 +245,7 @@ class SubCategory extends Component {
               <Select options={cItems} value={cFilter} onChange={this._onFilter.bind(this)}/>
             </FormField>
             <FormField label="SubCategory Name" error={errors.name}>
-              <input type="text" name="name" value={subCategory.name} onChange={this._onChangeInput.bind(this)} />
+              <input type="text" name="name" value={subCategory.name == undefined ? '' : subCategory.name} onChange={this._onChangeInput.bind(this)} />
             </FormField>
           </FormFields>
           <Footer pad={{"vertical": "medium"}} >

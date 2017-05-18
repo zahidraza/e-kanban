@@ -25,7 +25,7 @@ import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
 
 class Supplier extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -71,10 +71,10 @@ class Supplier extends Component {
       const supplierTypeFilter = filter.supplierType;
       let list1 = suppliers.filter(s => supplierTypeFilter.includes(s.supplierType));
       list1 = this._supplierSort(list1,sort);
-      this.setState({suppliers: list1, filteredCount: list1.length, unfilteredCount: suppliers.length});    
+      this.setState({suppliers: list1, filteredCount: list1.length, unfilteredCount: suppliers.length});
     } else {
       suppliers = this._supplierSort(suppliers,sort);
-      this.setState({suppliers: suppliers, filteredCount: suppliers.length, unfilteredCount: suppliers.length}); 
+      this.setState({suppliers: suppliers, filteredCount: suppliers.length, unfilteredCount: suppliers.length});
     }
   }
 
@@ -166,11 +166,11 @@ class Supplier extends Component {
       }
       return (
         <TableRow key={index}  >
-          <td >{s.name}</td>
-          <td >{s.contactPerson}</td>
+          <td >{s.name.length > 25 ? s.name.substr(0,25) + ' ...' : s.name}</td>
+          <td >{s.contactPerson != null && s.contactPerson.length > 15 ? s.contactPerson.substr(0,15) + ' ...' : s.contactPerson}</td>
           <td >{s.supplierType}</td>
-          <td >{addr}</td>
-          <td style={{textAlign: 'right', padding: 0}}>
+          <td >{addr.length > 25 ? addr.substr(0,25) + ' ...' : addr}</td>
+          <td>
             <Button icon={<Edit />} onClick={this._onEditClick.bind(this,index)} />
             <Button icon={<Trash />} onClick={this._onRemoveClick.bind(this,index)} />
           </td>
