@@ -125,16 +125,21 @@ export function getItemMasterHeader() {
       j = 1;
     }
   }
+  productsDownload.push('Average');
+  productsDownload.push('Max');
+  productsDownload.push('Monthly Consumption Value');
   productsDownload.push('Class Type');
+  productsDownload.push('Current Inventory');
+  productsDownload.push('Demand');
   productsDownload.push('No of Bins');
   productsDownload.push('Bin Size');
   productsDownload.push('Kanban Type');
-  productsDownload.push('Demand');
 
   return productsDownload;
 }
 
 export function getItemMasterBody(p) {
+  console.log('getItemMasterBody');
   let sections = '  ';
   p.sectionList.forEach(s => sections += s.name + ', ');
   sections = sections.substring(0,sections.length-2).trim();
@@ -142,18 +147,34 @@ export function getItemMasterBody(p) {
   let body = [p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
     p.timeTransporation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
     p.minOrderQty,p.packetSize];
+  let sum = 0, max = 0, count = 0,value;
   for (var i = 0, j = getCurrMonth() + 1; i < 12; i++) {
-
-    body.push(p[getMonth(j)] == undefined ? '' : p[getMonth(j)]);
+    value = p[getMonth(j)];
+    if (value != undefined) {
+      max = value > max ? value : max;
+      sum += value;
+      count++;
+      body.push(value);
+    } else {
+      body.push('');
+    }
     j++;
     if (j == 13) {
       j = 1;
     }
   }
+  console.log(max);
+  console.log(p.price);
+  const avg = Math.ceil(sum/count);
+  body.push(avg);
+  body.push(max);
+  body.push(Math.ceil(avg*p.price));
   body.push(p.classType);
+  body.push(p.stkOnFloor);
+  body.push(p.demand);
   body.push(p.noOfBins);
   body.push(p.binQty);
   body.push(p.kanbanType);
-  body.push(p.demand);
+
   return body;
 }
