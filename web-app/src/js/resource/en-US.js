@@ -1,7 +1,7 @@
 module.exports = {
   "app_name_short": "e-Kanban",
   "app_name_full": "e-Kanban",
-  "app_version": "0.1",
+  "app_version": "1.0",
   "company_name": "Raza Enterprises",
 
   /*/////////////////// Label /////////////////////*/

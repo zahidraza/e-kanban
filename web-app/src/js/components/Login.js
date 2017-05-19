@@ -4,6 +4,7 @@ import { localeData } from '../reducers/localization';
 import {initialize,navActivate} from '../actions/misc';
 import {authenticate} from '../actions/user';
 import {USER_CONSTANTS as u} from '../utils/constants';
+import axios from 'axios';
 
 //Components
 import Box from 'grommet/components/Box';
@@ -12,9 +13,9 @@ import Footer from 'grommet/components/Footer';
 import Form from 'grommet/components/Form';
 import FormField from 'grommet/components/FormField';
 import FormFields from 'grommet/components/FormFields';
-//import Header from 'grommet/components/Header';
+import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
-//import Layer from 'grommet/components/Layer';
+import Layer from 'grommet/components/Layer';
 import Spinning from 'grommet/components/icons/Spinning';
 
 class Login extends Component {
@@ -23,7 +24,7 @@ class Login extends Component {
     this.state = {
       initializing: false,
       credential: {},
-      errors: [],
+      errors: {},
       isForgot: false,
       email: '',
       changing: false,  //changing password
@@ -64,11 +65,33 @@ class Login extends Component {
   }
 
   _forgotPasswordClick () {
-
+    this.setState({isForgot: true});
   }
 
   _forgotPassword () {
+    const {email} = this.state;
 
+    if (email == '') {
+      this.setState({errors: {email: 'Email cannot be empty.'}});
+      return;
+    }
+    this.setState({changing: true});
+    axios.put(window.serviceHost + '/misc/forgot_password?email=' + this.state.email)
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+        alert('New password sent to your email id.');
+      }
+      this.setState({changing: false,isForgot: false,email: ''});
+    }).catch( (err) => {
+
+      if (err.response.status == 404) {
+        alert('No acoount found for ' + this.state.email);
+      } else {
+        alert('problem resetting password. try again later.');
+      }
+      this.setState({changing: false,isForgot: false,email: ''});
+    });
   }
 
   _onChange (event) {
@@ -82,17 +105,17 @@ class Login extends Component {
   }
 
   _onCloseLayer () {
-    this.setState({isForgot: false, errors:[]});
+    this.setState({isForgot: false, changing: false, email: '', errors:{}});
   }
 
   _renderForgotPasswdLayer () {
-    return null;
-    /*return (
-      <Layer onClose={this._onCloseLayer.bind(this)}  closer={true} align="center">
+    const busy = this.state.changing ? <Spinning /> : null;
+    return (
+      <Layer hidden={!this.state.isForgot} onClose={this._onCloseLayer.bind(this)}  closer={true} align="center">
         <Form>
           <Header><Heading tag="h3" strong={true}>Forgot Password</Heading></Header>
           <FormFields>
-              <FormField label="Email Id" error={this.state.errors[0]} >
+              <FormField label="Email Id" error={this.state.errors.email}>
                 <input type="email" value={this.state.email} onChange={this._onChangeInput.bind(this)} />
               </FormField>
           </FormFields>
@@ -101,7 +124,7 @@ class Login extends Component {
           </Footer>
         </Form>
       </Layer>
-    );*/
+    );
   }
 
   render () {
@@ -122,11 +145,11 @@ class Login extends Component {
 
     const busyIcon = this.props.user.busy ? <Spinning /> : null;
     return (
-      
+
       <Box pad={{horizontal: 'large', vertical: "large"}} wrap={true}  full="vertical" texture="url(/andon-system/static/img/cover.jpg)" >
         <Box align="end" justify="end" pad={{"horizontal": "large", vertical:"large", between:"large"}}>
           <Box size="auto"  align="center" separator="all" justify="center" colorIndex="light-1" pad={{"horizontal": "medium", vertical:"medium", between:"medium"}} >
-            
+
             <Heading tag="h1">{this.localeData.app_name_full} {this.localeData.app_version}</Heading>
             {busyIcon}
             <Form>
