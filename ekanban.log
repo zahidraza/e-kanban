@@ -1,0 +1,46 @@
+00:47:02.048 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2245 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+00:47:02.049 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+00:47:02.050 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+00:47:12.878 [main] INFO  c.e.e.s.BarcodeService - init()
+00:47:12.883 [main] INFO  c.e.e.s.BarcodeService - Created data directory.
+00:47:12.909 [main] DEBUG c.e.e.s.UserService - count()
+00:47:13.181 [main] INFO  c.e.e.Application - Started Application in 26.683 seconds (JVM running for 27.783)
+00:47:20.524 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+00:49:55.231 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2267 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+00:49:55.231 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+00:49:55.232 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+00:50:05.856 [main] INFO  c.e.e.s.BarcodeService - init()
+00:50:05.888 [main] DEBUG c.e.e.s.UserService - count()
+00:50:06.111 [main] INFO  c.e.e.Application - Started Application in 26.441 seconds (JVM running for 27.491)
+00:50:13.578 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+00:50:15.589 [http-nio-8000-exec-2] DEBUG c.e.e.Application - home page
+00:54:30.325 [http-nio-8000-exec-4] DEBUG c.e.e.Application - home page
+01:00:55.687 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2285 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+01:00:55.688 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+01:00:55.688 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+01:01:06.001 [main] INFO  c.e.e.s.BarcodeService - init()
+01:01:06.032 [main] DEBUG c.e.e.s.UserService - count()
+01:01:06.268 [main] INFO  c.e.e.Application - Started Application in 26.215 seconds (JVM running for 28.119)
+01:01:27.796 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+01:01:45.953 [http-nio-8000-exec-2] DEBUG c.e.e.Application - home page
+01:01:50.989 [http-nio-8000-exec-3] DEBUG c.e.e.Application - home page
+01:01:53.782 [http-nio-8000-exec-4] DEBUG c.e.e.Application - home page
+01:01:56.964 [http-nio-8000-exec-5] DEBUG c.e.e.Application - home page
+01:01:58.557 [http-nio-8000-exec-6] DEBUG c.e.e.Application - home page
+01:03:09.598 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2305 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+01:03:09.599 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+01:03:09.600 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+01:03:19.820 [main] INFO  c.e.e.s.BarcodeService - init()
+01:03:19.851 [main] DEBUG c.e.e.s.UserService - count()
+01:03:20.068 [main] INFO  c.e.e.Application - Started Application in 26.037 seconds (JVM running for 27.903)
+01:03:27.223 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+01:03:29.375 [http-nio-8000-exec-2] DEBUG c.e.e.Application - home page
+01:03:32.016 [http-nio-8000-exec-3] DEBUG c.e.e.Application - home page
+01:05:15.822 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2319 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+01:05:15.823 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+01:05:15.824 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+01:05:27.777 [main] INFO  c.e.e.s.BarcodeService - init()
+01:05:27.809 [main] DEBUG c.e.e.s.UserService - count()
+01:05:28.038 [main] INFO  c.e.e.Application - Started Application in 27.767 seconds (JVM running for 28.872)
+01:05:39.566 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+01:33:33.448 [http-nio-8000-exec-3] DEBUG c.e.e.Application - home page
