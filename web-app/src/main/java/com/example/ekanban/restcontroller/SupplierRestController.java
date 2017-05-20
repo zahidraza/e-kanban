@@ -1,7 +1,7 @@
 package com.example.ekanban.restcontroller;
 
 import com.example.ekanban.assembler.SupplierAssembler;
-import com.example.ekanban.entity.Supplier;
+import com.example.ekanban.dto.SupplierDto;
 import com.example.ekanban.service.SupplierService;
 import com.example.ekanban.util.ApiUrls;
 import java.net.URI;
@@ -49,14 +49,14 @@ public class SupplierRestController {
     @GetMapping
     public ResponseEntity<?> listAllSuppliers() {
         logger.debug("listAllSuppliers()");
-        List<Supplier> suppliers = supplierService.findAll();
+        List<SupplierDto> suppliers = supplierService.findAll();
         return new ResponseEntity<>(supplierAssembler.toResources(suppliers), HttpStatus.OK);
     }
     
     @GetMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
     public ResponseEntity<?> loadSupplier(@PathVariable("supplierId") Long supplierId){
         logger.debug("loadSupplier(): supplierId = {}",supplierId);
-        Supplier supplier = supplierService.findOne(supplierId);
+        SupplierDto supplier = supplierService.findOne(supplierId);
         if (supplier == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -65,24 +65,24 @@ public class SupplierRestController {
     
     
     @PostMapping
-    public ResponseEntity<?> createSupplier(@Valid @RequestBody Supplier supplier) {
-        logger.debug("createSupplier(): {}", supplier);
-        supplier = supplierService.save(supplier);
-        Link selfLink = linkTo(SupplierRestController.class).slash(supplier.getId()).withSelfRel();
+    public ResponseEntity<?> createSupplier(@Valid @RequestBody SupplierDto supplierDto) {
+        logger.debug("createSupplier()");
+        supplierDto = supplierService.save(supplierDto);
+        Link selfLink = linkTo(SupplierRestController.class).slash(supplierDto.getId()).withSelfRel();
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(selfLink.getHref()));
-        return new ResponseEntity<>(supplierAssembler.toResource(supplier),headers,HttpStatus.CREATED);
+        return new ResponseEntity<>(supplierAssembler.toResource(supplierDto),headers,HttpStatus.CREATED);
     }
  
     @PutMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)
-    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") long supplierId,@Valid @RequestBody Supplier supplier) {
-        logger.debug("updateSupplier(): supplierId = {} \n {}",supplierId,supplier);
+    public ResponseEntity<?> updateSupplier(@PathVariable("supplierId") long supplierId,@Valid @RequestBody SupplierDto supplierDto) {
+        logger.debug("updateSupplier(): supplierId = {}",supplierId);
         if (!supplierService.exists(supplierId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        supplier.setId(supplierId);
-        supplier = supplierService.update(supplier);
-        return new ResponseEntity<>(supplierAssembler.toResource(supplier), HttpStatus.OK);
+        supplierDto.setId(supplierId);
+        supplierDto = supplierService.update(supplierDto);
+        return new ResponseEntity<>(supplierAssembler.toResource(supplierDto), HttpStatus.OK);
     }
   
     @DeleteMapping(ApiUrls.URL_SUPPLIERS_SUPPLIER)

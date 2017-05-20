@@ -33,11 +33,15 @@ class Sections extends Component {
     super();
     this.state = {
       initializing: false,
+      page: 1,
+      total: 0,
       section: {},
       sections: [],
       searchText: ''
     };
     this.localeData = localeData();
+    this._loadSection = this._loadSection.bind(this);
+    this._onMore = this._onMore.bind(this);
   }
 
   componentWillMount () {
@@ -46,7 +50,7 @@ class Sections extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }else {
-      this.setState({sections: this.props.section.sections});
+      this._loadSection(this.props.section.sections,1);
     }
   }
 
@@ -55,11 +59,20 @@ class Sections extends Component {
       this.context.router.push('/');
     }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
-      this.setState({initializing: false, sections: nextProps.section.sections});
+      this.setState({initializing: false});
+      his._loadSection(nextProps.section.sections,1);
     }
     if (nextProps.misc.initialized) {
       this.setState({sections: nextProps.section.sections});
+      this._loadSection(nextProps.section.sections,1);
     }
+  }
+
+  _loadSection (sections,page) {
+    const total = sections.length;
+    sections = sections.sort((a,b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1);
+    sections = sections.slice(0,15*page);
+    this.setState({sections,page,page,total});
   }
 
   _addSection () {
@@ -74,7 +87,12 @@ class Sections extends Component {
     console.log('_onSearch');
     const value = event.target.value;
     const sections = this.props.section.sections.filter(s => s.name.toLowerCase().includes(value.toLowerCase()));
-    this.setState({searchText: value, sections});
+    this.setState({searchText: value});
+    this._loadSection(sections,1);
+  }
+
+  _onMore () {
+    this._loadSection(this.props.section.sections,this.state.page+1);
   }
 
   _onChangeInput ( event ) {
@@ -94,7 +112,7 @@ class Sections extends Component {
   }
 
   _onEditClick (index) {
-    this.setState({section: {...this.props.section.sections[index]}});
+    this.setState({section: {...this.state.sections[index]}});
     this.props.dispatch({type: c.SECTION_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
   _onHelpClick () {
@@ -113,7 +131,7 @@ class Sections extends Component {
 
   render() {
     const { busy, adding, editing, errors } = this.props.section;
-    const { section, sections, searchText,initializing } = this.state;
+    const { section, sections, searchText,initializing,total } = this.state;
 
     if (initializing) {
       return (
@@ -139,6 +157,12 @@ class Sections extends Component {
         </ListItem>
       );
     });
+
+    let onMore;
+    if (sections.length > 0 && sections.length < total) {
+      onMore = this._onMore;
+    }
+
 
     const layerAdd = (
       <Layer hidden={!adding} onClose={this._onCloseLayer.bind(this, 'add')}  closer={true} align="center">
@@ -175,7 +199,7 @@ class Sections extends Component {
     return (
       <Box>
         <AppHeader/>
-        <Header size='large' pad={{ horizontal: 'medium' }}>
+        <Header fixed={true} size='large' pad={{ horizontal: 'medium' }}>
           <Title responsive={false}>
             <span>{this.localeData.label_section}</span>
           </Title>
@@ -186,7 +210,7 @@ class Sections extends Component {
         </Header>
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
           <Box size="large" alignSelf="center" >
-            <List > {items} </List>
+            <List onMore={onMore}> {items} </List>
             <ListPlaceholder unfilteredTotal={count} filteredTotal={count} emptyMessage={this.localeData.section_empty_message} />
           </Box>
         </Section>

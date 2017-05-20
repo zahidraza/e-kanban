@@ -442,11 +442,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "sectionList=" + sectionList +
-                ", supplierList=" + supplierList +
-                ", consumptions=" + consumptions +
-                ", inventorySet=" + inventorySet +
-                '}';
+        return name;
     }
 }

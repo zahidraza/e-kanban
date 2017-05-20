@@ -56,6 +56,7 @@ export function updateSubCategory (url,subCategory) {
 }
 
 export function removeSubCategory (subCategory) {
+  console.log(subCategory);
   return function (dispatch) {
     axios.delete(subCategory._links.self.href, {headers: getHeaders()})
     .then((response) => {
@@ -69,4 +70,3 @@ export function removeSubCategory (subCategory) {
     });
   };
 }
-

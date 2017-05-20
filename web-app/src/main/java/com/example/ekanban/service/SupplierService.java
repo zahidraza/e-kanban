@@ -1,10 +1,14 @@
 package com.example.ekanban.service;
 
 
+import com.example.ekanban.dto.SupplierDto;
 import com.example.ekanban.entity.Address;
 import com.example.ekanban.entity.Supplier;
 import com.example.ekanban.respository.SupplierRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,29 +24,41 @@ public class SupplierService {
 
     private final SupplierRepository supplierRepository;
 
+    @Autowired Mapper mapper;
+
     @Autowired
     public SupplierService(SupplierRepository supplierRepository) {
         this.supplierRepository = supplierRepository;
     }
 
-    public Supplier findOne(Long id) {
+    public SupplierDto findOne(Long id) {
         logger.debug("findOne(): id = {}",id);
-        return supplierRepository.findOne(id);
+        Supplier supplier = supplierRepository.findOne(id);
+        if (supplier != null) {
+            return mapper.map(supplier, SupplierDto.class);
+        }
+        return null;
     }
 
-    public List<Supplier> findAll() {
+    public List<SupplierDto> findAll() {
         logger.debug("findAll()");
-        return supplierRepository.findAll();
+        return supplierRepository.findAll().stream()
+                .map(supplier -> mapper.map(supplier,SupplierDto.class))
+                .collect(Collectors.toList());
     }
+//
+//    public Page<Supplier> findAllByPage(Pageable pageable){
+//        logger.debug("findAllByPage()");
+//        return supplierRepository.findAll(pageable);
+//    }
     
-    public Page<Supplier> findAllByPage(Pageable pageable){
-        logger.debug("findAllByPage()");
-        return supplierRepository.findAll(pageable);
-    }
-    
-    public Supplier findByName(String name) {
+    public SupplierDto findByName(String name) {
         logger.debug("findByNameIgnoreCase(): name = " , name);
-        return supplierRepository.findByNameIgnoreCase(name);
+        Supplier supplier = supplierRepository.findByNameIgnoreCase(name);
+        if (supplier != null) {
+            return mapper.map(supplier, SupplierDto.class);
+        }
+        return null;
     }
 
     public Boolean exists(Long id) {
@@ -56,32 +72,33 @@ public class SupplierService {
     }
 
     @Transactional
-    public Supplier save(Supplier supplier) {
+    public SupplierDto save(SupplierDto supplierDto) {
         logger.debug("save()");
+        Supplier supplier = mapper.map(supplierDto,Supplier.class);
         supplier = supplierRepository.save(supplier);
-        return supplier;
+        return mapper.map(supplier,SupplierDto.class);
     }
 
     @Transactional
-    public Supplier update(Supplier supplier) {
+    public SupplierDto update(SupplierDto supplierDto) {
         logger.debug("update()");
-        Supplier supplier2 = supplierRepository.findOne(supplier.getId());
+        Supplier supplier = supplierRepository.findOne(supplierDto.getId());
 
-        if(supplier.getName() != null)  supplier2.setName(supplier.getName());
-        if(supplier.getContactPerson() != null)  supplier2.setContactPerson(supplier.getContactPerson());
-        if(supplier.getSupplierType() != null)  supplier2.setSupplierType(supplier.getSupplierType());
-        if(supplier.getAddress() != null){
-            Address address = supplier.getAddress();
-            Address address2 = (supplier2.getAddress() != null) ? supplier2.getAddress() : new Address();
+        if(supplierDto.getName() != null)  supplier.setName(supplierDto.getName());
+        if(supplierDto.getContactPerson() != null)  supplier.setContactPerson(supplierDto.getContactPerson());
+        if(supplierDto.getSupplierType() != null)  supplier.setSupplierType(supplierDto.getSupplierType());
+        if(supplierDto.getAddress() != null){
+            Address address = supplierDto.getAddress();
+            Address address2 = (supplier.getAddress() != null) ? supplier.getAddress() : new Address();
             if(address.getStreet() != null) address2.setStreet(address.getStreet());
             if(address.getLandmark() != null) address2.setLandmark(address.getLandmark());
             if(address.getCity() != null) address2.setCity(address.getCity());
             if(address.getState() != null) address2.setState(address.getState());
             if(address.getCountry() != null) address2.setCountry(address.getCountry());
             if(address.getZip() != null) address2.setZip(address.getZip());
-            supplier2.setAddress(address2);
+            supplier.setAddress(address2);
         }
-        return supplier2;
+        return mapper.map(supplier,SupplierDto.class);
     }
     
     @Transactional

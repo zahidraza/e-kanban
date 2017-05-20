@@ -68,7 +68,7 @@ class AppHeader extends Component {
     }
 
     return (
-      <Header fixed={true} float={false} size="large" justify="between" colorIndex="neutral-1-a" pad={{horizontal: "medium"}}>
+      <Header fixed={false} float={false} size="large" justify="between" colorIndex="neutral-1-a" pad={{horizontal: "medium"}}>
         {title}
         {login}
       </Header>

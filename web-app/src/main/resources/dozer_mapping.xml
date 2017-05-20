@@ -95,4 +95,14 @@
             <b>lastUpdated</b>
         </field>
     </mapping>
+
+    <mapping>
+        <class-a>com.example.ekanban.entity.Supplier</class-a>
+        <class-b>com.example.ekanban.dto.SupplierDto</class-b>
+        <field type="one-way">
+            <a>productList</a>
+            <b>products</b>
+        </field>
+
+    </mapping>
 </mappings>

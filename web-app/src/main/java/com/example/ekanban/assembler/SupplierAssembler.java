@@ -1,5 +1,6 @@
 package com.example.ekanban.assembler;
 
+import com.example.ekanban.dto.SupplierDto;
 import com.example.ekanban.entity.Supplier;
 import com.example.ekanban.restcontroller.SupplierRestController;
 import org.springframework.hateoas.Resource;
@@ -12,21 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SupplierAssembler extends ResourceAssemblerSupport<Supplier, Resource>{
+public class SupplierAssembler extends ResourceAssemblerSupport<SupplierDto, Resource>{
 
     public SupplierAssembler() {
         super(SupplierRestController.class, Resource.class);
     }
 
     @Override
-    public Resource toResource(Supplier supplier) {       
-        return new Resource<>(supplier, linkTo(SupplierRestController.class).slash(supplier.getId()).withSelfRel()); 
+    public Resource toResource(SupplierDto supplier) {
+        return new Resource<>(supplier, linkTo(SupplierRestController.class).slash(supplier.getId()).withSelfRel());
     }
 
     @Override
-    public List<Resource> toResources(Iterable<? extends Supplier> suppliers) {
+    public List<Resource> toResources(Iterable<? extends SupplierDto> suppliers) {
         List<Resource> resources = new ArrayList<>();
-        for(Supplier supplier : suppliers) {
+        for(SupplierDto supplier : suppliers) {
             resources.add(new Resource<>(supplier, linkTo(methodOn(SupplierRestController.class).loadSupplier(supplier.getId())).withSelfRel()));
         }
         return resources;

@@ -34,9 +34,10 @@ export function addSupplier (supplier) {
 }
 
 export function updateSupplier (supplier) {
+  console.log(supplier);
   return function (dispatch) {
     dispatch({type: c.SUPPLIER_EDIT_PROGRESS});
-    axios.put(supplier.links[0].href, JSON.stringify(supplier),{headers: getHeaders()})
+    axios.put(window.serviceHost + '/suppliers/' + supplier.id, JSON.stringify(supplier),{headers: getHeaders()})
     .then((response) => {
       if (response.status == 200) {
         dispatch({type: c.SUPPLIER_EDIT_SUCCESS, payload: {supplier: response.data}});
@@ -56,7 +57,7 @@ export function updateSupplier (supplier) {
 
 export function removeSupplier (supplier) {
   return function (dispatch) {
-    axios.delete(supplier.links[0].href, {headers: getHeaders()})
+    axios.delete(window.serviceHost + '/suppliers/' + supplier.id, {headers: getHeaders()})
     .then((response) => {
       dispatch({type: c.SUPPLIER_REMOVE_SUCCESS, payload: {supplier: supplier}});
     }).catch( (err) => {
@@ -67,4 +68,3 @@ export function removeSupplier (supplier) {
     });
   };
 }
-
