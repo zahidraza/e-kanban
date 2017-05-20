@@ -7,10 +7,12 @@ const initialState = {
   users:[],
   errors: [],
   toggleStatus: true,
-  message: ''
+  message: '',
+  filter: {},
+  sort: 'name:asc'
 };
 
-const handlers = { 
+const handlers = {
   [c.INITIALIZE_USER]: (_, action) => ({users: action.payload.users, loaded: true, toggleStatus: !_.toggleStatus}),
   [c.USER_BUSY]: (_, action) => ({busy: action.payload.busy}),
   [c.USER_AUTH_NOT_PROGRESS]: (_, action) => ({busy: false}),
@@ -61,7 +63,9 @@ const handlers = {
     let users = _.users.filter(s => s.id != action.payload.user.id);
     return ({toggleStatus: !_.toggleStatus,users: users});
   },
-  [c.USER_CHANGE_PASSWD]: (_, action) => ({busy: false})
+  [c.USER_CHANGE_PASSWD]: (_, action) => ({busy: false}),
+  [c.USER_FILTER]: (_, action) => ({filter: action.payload.filter, toggleStatus: !_.toggleStatus}),
+  [c.USER_SORT]: (_, action) => ({sort: action.payload.sort, toggleStatus: !_.toggleStatus})
 };
 
 export default function user (state = initialState, action) {

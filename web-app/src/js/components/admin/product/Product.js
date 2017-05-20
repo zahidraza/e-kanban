@@ -264,7 +264,7 @@ class Product extends Component {
     const layerFilter = filterActive ? <ProductFilter onClose={this._onFilterDeactivate.bind(this)}/> : null;
 
     let productItem = productNotAvailable ? <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product available</h3></Box>: (
-      <Table scrollable={true} onMore={this._onMoreProducts.bind(this)}>
+      <Table onMore={this._onMoreProducts.bind(this)}>
         <TableHeader labels={['ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
 
         <tbody>{items}</tbody>
@@ -286,7 +286,7 @@ class Product extends Component {
 
 
     return (
-      <Box >
+      <Box horizontal='full'>
         <AppHeader/>
 
         <Header size='large' pad={{ horizontal: 'medium' }}>

@@ -22,11 +22,11 @@ import Layer from 'grommet/components/Layer';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import ListPlaceholder from 'grommet-addons/components/ListPlaceholder';
-import Search from 'grommet/components/Search';
 import Section from 'grommet/components/Section';
 import Spinning from 'grommet/components/icons/Spinning';
 import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
+import Search from 'grommet/components/Search';
 
 class Category extends Component {
 

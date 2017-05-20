@@ -21,7 +21,7 @@ class AppHeader extends Component {
 
   componentWillMount () {
     this.setState({localeData: localeData()});
-    
+
     if (sessionStorage.session == 'false') {
       this.context.router.push("/");
     }
@@ -68,7 +68,7 @@ class AppHeader extends Component {
     }
 
     return (
-      <Header size="large" justify="between" colorIndex="neutral-1-a" pad={{horizontal: "medium"}}>
+      <Header fixed={true} float={false} size="large" justify="between" colorIndex="neutral-1-a" pad={{horizontal: "medium"}}>
         {title}
         {login}
       </Header>

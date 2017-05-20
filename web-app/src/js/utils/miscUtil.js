@@ -139,7 +139,6 @@ export function getItemMasterHeader() {
 }
 
 export function getItemMasterBody(p) {
-  console.log('getItemMasterBody');
   let sections = '  ';
   p.sectionList.forEach(s => sections += s.name + ', ');
   sections = sections.substring(0,sections.length-2).trim();
@@ -163,8 +162,6 @@ export function getItemMasterBody(p) {
       j = 1;
     }
   }
-  console.log(max);
-  console.log(p.price);
   const avg = Math.ceil(sum/count);
   body.push(avg);
   body.push(max);

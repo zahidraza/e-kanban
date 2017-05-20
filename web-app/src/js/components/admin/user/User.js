@@ -6,6 +6,7 @@ import {addUser,removeUser,updateUser}  from '../../../actions/user';
 import {USER_CONSTANTS as u, USER_ROLES as ur} from '../../../utils/constants';
 
 import AppHeader from '../../AppHeader';
+import UserFilter from './UserFilter';
 import Add from "grommet/components/icons/base/Add";
 import Box from 'grommet/components/Box';
 import Button from 'grommet/components/Button';
@@ -14,9 +15,10 @@ import Footer from 'grommet/components/Footer';
 import Form from 'grommet/components/Form';
 import FormField from 'grommet/components/FormField';
 import FormFields from 'grommet/components/FormFields';
+import FilterControl from 'grommet-addons/components/FilterControl';
 import Header from 'grommet/components/Header';
 import Heading from 'grommet/components/Heading';
-//import HelpIcon from 'grommet/components/icons/base/Help';
+import HelpIcon from 'grommet/components/icons/base/Help';
 import Layer from 'grommet/components/Layer';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
@@ -27,6 +29,8 @@ import Table from 'grommet/components/Table';
 import TableRow from 'grommet/components/TableRow';
 import Trash from "grommet/components/icons/base/Trash";
 import View from "grommet/components/icons/base/View";
+import Title from 'grommet/components/Title';
+import Search from 'grommet/components/Search';
 
 
 class User extends Component {
@@ -35,12 +39,23 @@ class User extends Component {
     super();
     this.state = {
       initializing: false,
+      searchText: '',
+      page: 1,
+      filteredCount: 0,
+      unfilteredCount: 0,
+      filterActive: false,
       viewing: false,
       users: [],
       user: {},
       roles: [ur.ROLE_USER,ur.ROLE_PURCHASE,ur.ROLE_STORE,ur.ROLE_ADMIN]
     };
     this.localeData = localeData();
+    this._loadUser = this._loadUser.bind(this);
+    this._userSort = this._userSort.bind(this);
+    this._renderLayerView = this._renderLayerView.bind(this);
+    this._renderLayerAdd= this._renderLayerAdd.bind(this);
+    this._renderLayerEdit = this._renderLayerEdit.bind(this);
+    this._onMore = this._onMore.bind(this);
   }
 
   componentWillMount () {
@@ -49,7 +64,8 @@ class User extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }else {
-      this.setState({users: this.props.user.users});
+      const {users,filter,sort} = this.props.user;
+      this._loadUser(users,filter,sort,1);
     }
   }
 
@@ -59,12 +75,38 @@ class User extends Component {
     }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
-      this.setState({users: nextProps.user.users});
+      const {users,filter,sort} = nextProps.user;
+      this._loadUser(users,filter,sort,1);
     }
 
     if (this.props.user.toggleStatus != nextProps.user.toggleStatus) {
-      this.setState({users: nextProps.user.users});
+      const {users,filter,sort} = nextProps.user;
+      this._loadUser(users,filter,sort,1);
     }
+  }
+
+  _loadUser (users,filter,sort,page) {
+    const unfilteredCount = users.length;
+    if ('role' in filter) {
+      const roleFilter = filter.role;
+      users = users.filter(u => roleFilter.includes(u.role));
+    }
+    users = this._userSort(users,sort);
+    let filteredCount = users.length;
+    users = users.slice(0,15*page);
+    this.setState({users,page,filteredCount, unfilteredCount});
+  }
+
+  _userSort (users,sort) {
+    const [sortProperty,sortDirection] = sort.split(':');
+    users = users.sort((a,b) => {
+      if (sortProperty == 'name' && sortDirection == 'asc') {
+        return (a.name.toLowerCase() < b.name.toLowerCase()) ? -1 : 1;
+      } else if (sortProperty == 'name' && sortDirection == 'desc') {
+        return (a.name.toLowerCase() > b.name.toLowerCase()) ? -1 : 1;
+      }
+    });
+    return users;
   }
 
   _addUser () {
@@ -81,6 +123,14 @@ class User extends Component {
     var user = this.state.user;
     user[event.target.getAttribute('name')] = event.target.value;
     this.setState({user: user});
+  }
+
+  _onFilterActivate () {
+    this.setState({filterActive: true});
+  }
+
+  _onFilterDeactivate () {
+    this.setState({filterActive: false});
   }
 
   _onRoleFilter (event) {
@@ -114,6 +164,25 @@ class User extends Component {
     this.props.dispatch({type: u.USER_EDIT_FORM_TOGGLE, payload: {editing: true}});
   }
 
+  _onHelpClick () {
+    console.log('_onHelpClick');
+  }
+
+  _onSearch (event) {
+    console.log('_onSearch');
+    let {users,filter,sort} = this.props.user;
+    let value = event.target.value;
+    users = users.filter(u => u.name.toLowerCase().includes(value.toLowerCase()) || u.email.toLowerCase().includes(value.toLowerCase()));
+    this.setState({searchText: value});
+    this._loadUser(users,filter,sort,1);
+  }
+
+  _onMore () {
+    console.log('_onMore');
+    const {users,filter,sort} = this.props.user;
+    this._loadUser(users,filter,sort,this.state.page+1);
+  }
+
   _onCloseLayer (layer) {
     console.log('_onCloseLayer');
     if( layer == 'add') {
@@ -126,62 +195,10 @@ class User extends Component {
 
   }
 
-  render() {
-    const {adding,editing,users,errors,busy} = this.props.user;
-    let {viewing, user, roles,initializing } = this.state;
-
-    if (initializing) {
-      return (
-        <Box pad={{vertical: 'large'}}>
-          <Box align='center' alignSelf='center' pad={{vertical: 'large'}}>
-            <Spinning /> Initializing Application ...
-          </Box>
-        </Box>
-      );
-    }
-
-    const busyIcon = busy ? <Spinning /> : null;
-    const userItems = users.map((user, index)=>{
-      return (
-        <TableRow key={index}  >
-          <td >{user.name}</td>
-          <td >{user.role}</td>
-          <td style={{textAlign: 'right', padding: 0}}>
-            <Button icon={<View />} onClick={this._onViewClick.bind(this,index)} />
-            <Button icon={<Edit />} onClick={this._onEditClick.bind(this,index)} />
-            <Button icon={<Trash />} onClick={this._onRemoveClick.bind(this,index)} />
-          </td>
-        </TableRow>
-      );
-    });
-
-    const layerAdd = (
-      <Layer hidden={!adding} onClose={this._onCloseLayer.bind(this, 'add')}  closer={true} align="center">
-        <Form autoComplete="off">
-          <Header><Heading tag="h3" strong={true}>Add New User</Heading></Header>
-          <FormFields>
-            <FormField label="User Name" error={errors.name}>
-              <input type="text" name="name" value={user.name == undefined ? '' : user.name} onChange={this._onChangeInput.bind(this)} />
-            </FormField>
-            <FormField label="Email" error={errors.email}>
-              <input type="email" name="email" value={user.email == undefined ? '' : user.email} onChange={this._onChangeInput.bind(this)} />
-            </FormField>
-            <FormField label="Mobile Number" error={errors.mobile}>
-              <input type="text" name="mobile" value={user.mobile == undefined ? '': user.mobile} onChange={this._onChangeInput.bind(this)} />
-            </FormField>
-            <FormField error={errors.role}>
-              <Select options={roles} value={user.role} onChange={this._onRoleFilter.bind(this)}/>
-            </FormField>
-          </FormFields>
-          <Footer pad={{"vertical": "medium"}} >
-            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addUser.bind(this)} />
-          </Footer>
-        </Form>
-      </Layer>
-    );
-
-    const layerView = (
-      <Layer hidden={!viewing}  onClose={this._onCloseLayer.bind(this, 'view')}  closer={true} align="center">
+  _renderLayerView () {
+    const {user} = this.state;
+    return (
+      <Layer hidden={!this.state.viewing}  onClose={this._onCloseLayer.bind(this, 'view')}  closer={true} align="center">
         <Box size="medium"  pad={{vertical: 'none', horizontal:'small'}}>
           <Header><Heading tag="h3" strong={true} >User Details</Heading></Header>
           <List>
@@ -206,8 +223,43 @@ class User extends Component {
         <Box pad={{vertical: 'medium', horizontal:'small'}} />
       </Layer>
     );
+  }
 
-    const layerEdit = (
+  _renderLayerAdd () {
+    const {user,roles} = this.state;
+    const {errors,busy,adding} = this.props.user;
+    const busyIcon = busy ? <Spinning /> : null;
+    return (
+      <Layer hidden={!adding} onClose={this._onCloseLayer.bind(this, 'add')}  closer={true} align="center">
+        <Form autoComplete="off">
+          <Header><Heading tag="h3" strong={true}>Add New User</Heading></Header>
+          <FormFields>
+            <FormField label="User Name" error={errors.name}>
+              <input type="text" name="name" value={user.name == undefined ? '' : user.name} onChange={this._onChangeInput.bind(this)} />
+            </FormField>
+            <FormField label="Email" error={errors.email}>
+              <input type="email" name="email" value={user.email == undefined ? '' : user.email} onChange={this._onChangeInput.bind(this)} />
+            </FormField>
+            <FormField label="Mobile Number" error={errors.mobile}>
+              <input type="text" name="mobile" value={user.mobile == undefined ? '': user.mobile} onChange={this._onChangeInput.bind(this)} />
+            </FormField>
+            <FormField error={errors.role}>
+              <Select options={roles} value={user.role} onChange={this._onRoleFilter.bind(this)}/>
+            </FormField>
+          </FormFields>
+          <Footer pad={{"vertical": "medium"}} >
+            <Button icon={busyIcon} label="Add" primary={true}  onClick={this._addUser.bind(this)} />
+          </Footer>
+        </Form>
+      </Layer>
+    );
+  }
+
+  _renderLayerEdit () {
+    const {user,roles} = this.state;
+    const {errors,busy,editing} = this.props.user;
+    const busyIcon = busy ? <Spinning /> : null;
+    return (
       <Layer hidden={!editing} onClose={this._onCloseLayer.bind(this, 'edit')}  closer={true} align="center">
         <Form>
           <Header><Heading tag="h3" strong={true}>Update User Details</Heading></Header>
@@ -231,18 +283,66 @@ class User extends Component {
         </Form>
       </Layer>
     );
+  }
+
+  render() {
+    let {users,initializing,searchText,filteredCount,unfilteredCount,filterActive} = this.state;
+
+    if (initializing) {
+      return (
+        <Box pad={{vertical: 'large'}}>
+          <Box align='center' alignSelf='center' pad={{vertical: 'large'}}>
+            <Spinning /> Initializing Application ...
+          </Box>
+        </Box>
+      );
+    }
+
+    const userItems = users.map((user, index)=>{
+      return (
+        <TableRow key={index}  >
+          <td >{user.name}</td>
+          <td >{user.role}</td>
+          <td style={{textAlign: 'right', padding: 0}}>
+            <Button icon={<View />} onClick={this._onViewClick.bind(this,index)} />
+            <Button icon={<Edit />} onClick={this._onEditClick.bind(this,index)} />
+            <Button icon={<Trash />} onClick={this._onRemoveClick.bind(this,index)} />
+          </td>
+        </TableRow>
+      );
+    });
+    let onMore;
+    if (users.length > 0 && users.length < filteredCount) {
+      onMore = this._onMore;
+    }
+    const layerFilter = filterActive ? <UserFilter onClose={this._onFilterDeactivate.bind(this)}/> : null;
+    const layerAdd = this._renderLayerView();
+    const layerView = this._renderLayerAdd();
+    const layerEdit = this._renderLayerEdit();
 
     return (
       <Box>
-        <AppHeader page={this.localeData.label_user}/>
+        <AppHeader/>
+        <Header fixed={true} size='large' pad={{ horizontal: 'medium' }}>
+          <Title responsive={false}>
+            <span>{this.localeData.label_user}</span>
+          </Title>
+          <Search inline={true} fill={true} size='medium' placeHolder='Search'
+            value={searchText} onDOMChange={this._onSearch.bind(this)} />
+          <Button icon={<Add />} onClick={this._onAddClick.bind(this)}/>
+          <FilterControl filteredTotal={filteredCount}
+            unfilteredTotal={unfilteredCount}
+            onClick={this._onFilterActivate.bind(this)} />
+          <Button icon={<HelpIcon />} onClick={this._onHelpClick.bind(this)}/>
+        </Header>
         <Section direction="column" size="xxlarge" pad={{vertical: 'large', horizontal:'small'}}>
           <Box size="large" alignSelf="center" >
-            <Table>
+            <Table onMore={onMore}>
               <thead>
                 <tr>
                   <th>User Name</th>
                   <th>Role</th>
-                  <th style={{textAlign: 'right'}}>ACTION</th>
+                  <th style={{textAlign: 'right'}}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -250,13 +350,11 @@ class User extends Component {
               </tbody>
             </Table>
           </Box>
-          <Box size="small" alignSelf="center" pad={{vertical:'large'}}>
-            <Button icon={<Add />} label="Add User" primary={true} a11yTitle="Add item" onClick={this._onAddClick.bind(this)}/>
-          </Box>
         </Section>
         {layerAdd}
         {layerView}
         {layerEdit}
+        {layerFilter}
       </Box>
     );
   }
