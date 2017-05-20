@@ -174,7 +174,11 @@ class User extends Component {
     let value = event.target.value;
     users = users.filter(u => u.name.toLowerCase().includes(value.toLowerCase()) || u.email.toLowerCase().includes(value.toLowerCase()));
     this.setState({searchText: value});
-    this._loadUser(users,filter,sort,1);
+    if (value.length == 0) {
+      this._loadUser(users,filter,sort,1);
+    } else {
+      this._loadUser(users,{},sort,1);
+    }
   }
 
   _onMore () {

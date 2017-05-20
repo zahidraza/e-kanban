@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
 import {initialize}  from '../../../actions/misc';
-//import {getCategories} from '../../../actions/category';
 import {addSubCategory,removeSubCategory,updateSubCategory}  from '../../../actions/subCategory';
 import {SUB_CATEGORY_CONSTANTS as c}  from '../../../utils/constants';
 
@@ -42,12 +41,14 @@ class SubCategory extends Component {
       filterActive: false,
       filteredCount: 0,
       unfilteredCount: 0,
+      page: 1,
       cFilter: undefined  //Category Filter value in add and edit layer
     };
     this.localeData = localeData();
     this._loadSubCategory = this._loadSubCategory.bind(this);
     this._subCategorySort = this._subCategorySort.bind(this);
     this._getSubCategories = this._getSubCategories.bind(this);
+    this._onMore = this._onMore.bind(this);
   }
 
   componentWillMount () {
@@ -60,7 +61,7 @@ class SubCategory extends Component {
         alert('You need to add Category first. No SubCategory Available.');
         this.context.router.push('/category');
       }else{
-        this._loadSubCategory(categories,filter,sort);
+        this._loadSubCategory(this._getSubCategories(categories),filter,sort,1);
         let cFilter = categories[0].name;
         this.setState({cFilter});
       }
@@ -78,7 +79,7 @@ class SubCategory extends Component {
     }
     if (this.props.category.toggleStatus != nextProps.category.toggleStatus) {
       const {categories,filter,sort} = nextProps.category;
-      this._loadSubCategory(categories,filter,sort);
+      this._loadSubCategory(this._getSubCategories(categories),filter,sort,1);
     }
 
   }
@@ -93,30 +94,29 @@ class SubCategory extends Component {
     return list;
   }
 
-  _loadSubCategory (categories,filter,sort) {
-    let list1 = this._getSubCategories(categories);
+  _loadSubCategory (subCategories,filter,sort,page) {
+    let unfilteredCount = subCategories.length;
     if ('category' in filter) {
       const categoryFilter = filter.category;
-      let list2 = list1.filter(sc => categoryFilter.includes(sc.category.name));
-      list2 = this._subCategorySort(list2,sort);
-      this.setState({subCategories: list2, filteredCount: list2.length, unfilteredCount: list1.length});
-    } else {
-      list1 = this._subCategorySort(list1,sort);
-      this.setState({subCategories: list1, filteredCount: list1.length, unfilteredCount: list1.length});
+      subCategories = subCategories.filter(sc => categoryFilter.includes(sc.category.name));
     }
+    subCategories = this._subCategorySort(subCategories,sort);
+    let filteredCount = subCategories.length;
+    subCategories = subCategories.slice(0,15*page);
+    this.setState({subCategories, page, filteredCount, unfilteredCount});
   }
 
   _subCategorySort (subCategories,sort) {
     const [sortProperty,sortDirection] = sort.split(':');
     let result = subCategories.sort((a,b) => {
       if (sortProperty == 'category' && sortDirection == 'asc') {
-        return (a.category.name < b.category.name) ? -1 : 1;
+        return (a.category.name.toLowerCase() < b.category.name.toLowerCase()) ? -1 : 1;
       } else if (sortProperty == 'category' && sortDirection == 'desc') {
-        return (a.category.name > b.category.name) ? -1 : 1;
+        return (a.category.name.toLowerCase() > b.category.name.toLowerCase()) ? -1 : 1;
       } else if (sortProperty == 'subCategory' && sortDirection == 'asc') {
-        return (a.subCategory.name < b.subCategory.name) ? -1 : 1;
+        return (a.subCategory.name.toLowerCase() < b.subCategory.name.toLowerCase()) ? -1 : 1;
       } else if (sortProperty == 'subCategory' && sortDirection == 'desc') {
-        return (a.subCategory.name > b.subCategory.name) ? -1 : 1;
+        return (a.subCategory.name.toLowerCase() > b.subCategory.name.toLowerCase()) ? -1 : 1;
       }
     });
     return result;
@@ -135,12 +135,21 @@ class SubCategory extends Component {
   }
 
   _onSearch (event) {
-    console.log('_onSearch');
+    const {categories,filter,sort} = this.props.category;
     const value = event.target.value;
-    let subCategories = this._getSubCategories(this.props.category.categories);
+    let subCategories = this._getSubCategories(categories);
     subCategories = subCategories.filter(sc => sc.subCategory.name.toLowerCase().includes(value.toLowerCase()));
-    console.log(subCategories);
-    this.setState({searchText: value, subCategories});
+    this.setState({searchText: value});
+    if (value.length == 0) {
+      this._loadSubCategory(subCategories,filter,sort,1);
+    } else {
+      this._loadSubCategory(subCategories,{},sort,1);
+    }
+  }
+
+  _onMore () {
+    const {categories,filter,sort} = this.props.category;
+    this._loadSubCategory(this._getSubCategories(categories),filter,sort,this.state.page+1);
   }
 
   _onFilter (event) {
@@ -231,6 +240,10 @@ class SubCategory extends Component {
         </TableRow>
       );
     });
+    let onMore;
+    if (subCategories.length > 0 && subCategories.length < filteredCount) {
+      onMore = this._onMore;
+    }
 
     const cItems = categories.map(c => c.name);
 
@@ -275,11 +288,11 @@ class SubCategory extends Component {
       <Box>
         <AppHeader/>
 
-        <Header size='large' pad={{ horizontal: 'medium' }}>
+        <Header fixed={true} size='large' pad={{ horizontal: 'medium' }}>
           <Title responsive={false}>
             <span>{this.localeData.label_sub_category}</span>
           </Title>
-          <Search inline={true} fill={true} size='medium' placeHolder='Search'
+          <Search inline={true} fill={true} size='medium' placeHolder='search sub category name'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           <Button icon={<Add />} onClick={this._onAddClick.bind(this)}/>
           <FilterControl filteredTotal={filteredCount}
@@ -290,7 +303,7 @@ class SubCategory extends Component {
 
         <Section direction="column" pad={{vertical: 'large', horizontal:'small'}}>
           <Box size="large" alignSelf="center" >
-            <Table>
+            <Table onMore={onMore}>
               <thead>
                 <tr>
                   <th>Category</th>
