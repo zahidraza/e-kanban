@@ -11,7 +11,7 @@
 
     <modules>
         <module>ekanban-web</module>
-        <module>ekanban-test</module>
+        <module>ekanban-web-test</module>
     </modules>
 
 
