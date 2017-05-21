@@ -103,8 +103,6 @@ class Supplier extends Component {
   _onSearch (event) {
     let {suppliers,filter,sort} = this.props.supplier;
     const value = event.target.value;
-    console.log(suppliers[0].products);
-    console.log(suppliers[0].products.find(p => p.includes('abc')));
     suppliers = suppliers.filter(s => s.name.toLowerCase().includes(value.toLowerCase()) || s.products.map(p => p.toLowerCase()).find(p => p.includes(value.toLowerCase())) != undefined);
     this.setState({searchText: value});
     if (value.length == 0) {

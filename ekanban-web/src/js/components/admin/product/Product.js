@@ -52,6 +52,7 @@ class Product extends Component {
     this._loadProduct = this._loadProduct.bind(this);
     this._productSort = this._productSort.bind(this);
     this._renderProducts = this._renderProducts.bind(this);
+    this._onMore = this._onMore.bind(this);
   }
 
   componentWillMount () {
@@ -60,8 +61,8 @@ class Product extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }else{
-      const {categories,filter,sort} = this.props.category;
-      this._loadProduct(categories,filter,sort,this.state.page);
+      const {products,filter,sort} = this.props.category;
+      this._loadProduct(products,filter,sort,this.state.page);
     }
   }
 
@@ -71,43 +72,34 @@ class Product extends Component {
     }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
-      const {categories,filter,sort} = nextProps.category;
-      this._loadProduct(categories,filter,sort,this.state.page);
+      const {products,filter,sort} = nextProps.category;
+      this._loadProduct(products,filter,sort,this.state.page);
     }
     if (this.props.misc.initialized && !nextProps.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }
     if (this.props.category.toggleStatus != nextProps.category.toggleStatus) {
-      const {categories,filter,sort} = nextProps.category;
-      this._loadProduct(categories,filter,sort,this.state.page);
+      const {products,filter,sort} = nextProps.category;
+      this._loadProduct(products,filter,sort,this.state.page);
     }
     if (!this.state.syncing && nextProps.category.uploaded) {
-      console.log('syncFirst');
       this.setState({syncing: true});
       this.props.dispatch(syncProduct());
     }
   }
 
-  _onMoreProducts () {
-    let {page,searching} = this.state;
-    if (!searching) {
-      const {categories,filter,sort} = this.props.category;
-      page = page+1;
-      this._loadProduct(categories,filter,sort,page);
-    }
+  _onMore () {
+    const {products,filter,sort} = this.props.category;
+    this._loadProduct(products,filter,sort,this.state.page+1);
   }
 
-  _loadProduct (categories,filter,sort,page) {
-    console.log("_loadProduct()");
-    let products = this.props.category.products;
+  _loadProduct (products,filter,sort,page) {
     const unfilteredCount = products.length;
     if ('class' in filter) {
       const classFilter = filter.class;
-      console.log(classFilter);
       products = products.filter(p => classFilter.includes(p.classType));
     }
-
     if ('category' in filter) {
       const categoryFilter = filter.category;
       products = products.filter(p => categoryFilter.includes(p.category.name));
@@ -133,12 +125,10 @@ class Product extends Component {
       p.consumptions.forEach(c => {
         p[getMonth(c.month)] = c.value;
       });
-
       productsDownload.push(getItemMasterBody(p));
     });
 
     products = products.slice(0,20*page);
-    //products = this._productSort(products,sort);
     this.setState({products,productsDownload, filteredCount, unfilteredCount, page, productNotAvailable});
   }
 
@@ -155,13 +145,14 @@ class Product extends Component {
   }
 
   _onSearch (event) {
-    console.log('_onSearch');
+    let {products,filter,sort} = this.props.category;
     let value = event.target.value;
-    if (value.length > 1) {
-      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.itemCode.toLowerCase().includes(value.toLowerCase()));
-      this.setState({searchText: value,products, searching: true});
+    products = products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.itemCode.toLowerCase().includes(value.toLowerCase()));
+    this.setState({searchText: value});
+    if (value.length > 0) {
+      this._loadProduct(products,filter,sort,1);
     }else{
-      this.setState({searchText: value,searching: false});
+      this._loadProduct(products,{},sort,1);
     }
   }
 
@@ -258,13 +249,16 @@ class Product extends Component {
     }
 
     const loading = refreshing ? (<Spinning />) : null;
-
-    const items = this._renderProducts(products);
-
     const layerFilter = filterActive ? <ProductFilter onClose={this._onFilterDeactivate.bind(this)}/> : null;
 
+    const items = this._renderProducts(products);
+    let onMore;
+    if (products.length > 0 && products.length < filteredCount) {
+      onMore = this._onMore;
+    }
+
     let productItem = productNotAvailable ? <Box size="medium" alignSelf="center" pad={{horizontal:'medium'}}><h3>No Product available</h3></Box>: (
-      <Table onMore={this._onMoreProducts.bind(this)}>
+      <Table onMore={onMore}>
         <TableHeader labels={['ItemCode','Product Name','Category','Sub Category','Section','No. of Bins', 'Bin Size', 'Price', 'Class Type','ACTION']} />
 
         <tbody>{items}</tbody>

@@ -1,9 +1,6 @@
 package com.example.ekanban.dto;
 
-import com.example.ekanban.entity.Category;
-import com.example.ekanban.entity.Section;
-import com.example.ekanban.entity.SubCategory;
-import com.example.ekanban.entity.Supplier;
+import com.example.ekanban.entity.*;
 import com.example.ekanban.enums.ClassType;
 import com.example.ekanban.enums.KanbanType;
 import com.example.ekanban.enums.StringEnum;
@@ -102,6 +99,8 @@ public class ProductDto {
     private List<Section> sectionList ;
     
     private List<Supplier> supplierList;
+
+    private List<Consumption> consumptions;
 
     private Boolean ignoreSync;
 
@@ -303,6 +302,14 @@ public class ProductDto {
 
     public void setSuppliers(List<String> suppliers) {
         this.suppliers = suppliers;
+    }
+
+    public List<Consumption> getConsumptions() {
+        return consumptions;
+    }
+
+    public void setConsumptions(List<Consumption> consumptions) {
+        this.consumptions = consumptions;
     }
 
     public Date getLastUpdated() {

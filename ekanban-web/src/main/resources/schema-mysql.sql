@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`)
+  UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`),
+  KEY `IDX74n2jqngo3nmhsehk0q32453n` (`username`,`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `category` (
@@ -38,10 +39,11 @@ CREATE TABLE IF NOT EXISTS `product` (
   `demand` bigint(20) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `ignore_sync` bit(1) DEFAULT NULL,
-  `is_new` bit(1) DEFAULT NULL,
   `is_freezed` bit(1) DEFAULT NULL,
-  `item_code` varchar(255) DEFAULT NULL,
+  `is_new` bit(1) DEFAULT NULL,
+  `item_code` varchar(255) NOT NULL,
   `kanban_type` varchar(255) DEFAULT NULL,
+  `last_scanned` datetime NOT NULL,
   `last_updated` datetime DEFAULT NULL,
   `min_order_qty` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -59,7 +61,9 @@ CREATE TABLE IF NOT EXISTS `product` (
   `uom_purchase` varchar(255) NOT NULL,
   `sub_category_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKd9gfnsjgfwjtaxl57udrbocsp` (`sub_category_id`),
+  UNIQUE KEY `UK_dwkrbwrix0sj0eqgqs7yfjdw7` (`item_code`),
+  UNIQUE KEY `UK_jmivyxk9rmgysrmsqw15lqr5b` (`name`),
+  KEY `IDXnt3y9ijcn5f3590d4kga31voe` (`sub_category_id`),
   CONSTRAINT `FKd9gfnsjgfwjtaxl57udrbocsp` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -82,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `last_updated` datetime DEFAULT NULL,
   `product_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKp7gj4l80fx8v0uap3b2crjwp5` (`product_id`),
+  KEY `IDX10yua77dg3b1juk7teyv1rpd2` (`product_id`),
   CONSTRAINT `FKp7gj4l80fx8v0uap3b2crjwp5` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -96,8 +100,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `ordered_by` bigint(20) DEFAULT NULL,
   `product_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `IDXdwwii2qtm20ymro9ltbgls8k4` (`product_id`),
   KEY `FKnqxvs3gblolqvfbqk35psmp0q` (`ordered_by`),
-  KEY `FK787ibr3guwp6xobrpbofnv7le` (`product_id`),
   CONSTRAINT `FK787ibr3guwp6xobrpbofnv7le` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   CONSTRAINT `FKnqxvs3gblolqvfbqk35psmp0q` FOREIGN KEY (`ordered_by`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -123,7 +127,8 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `name` varchar(255) NOT NULL,
   `supplier_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_c3fclhmodftxk4d0judiafwi3` (`name`)
+  UNIQUE KEY `UK_c3fclhmodftxk4d0judiafwi3` (`name`),
+  KEY `IDXstghp18gbnxpsn5xpugwbyb4b` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `product_section` (

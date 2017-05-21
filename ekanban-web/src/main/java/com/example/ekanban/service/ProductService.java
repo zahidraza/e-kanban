@@ -151,6 +151,7 @@ public class ProductService {
         product.setIgnoreSync(false);
         product.setNew(true);
         product.setFreezed(false);
+        product.setLastScanned(new Date());
         product = productRepository.save(product);
         return mapper.map(product, ProductDto.class);
     }
@@ -269,64 +270,6 @@ public class ProductService {
         products.forEach(product -> {
             updateInventory(product);
         });
-//
-//        if (firstSync){
-//            User application = userRepository.findOne(1L);
-//            products.forEach(product -> {
-//                int noOfBins = product.getNoOfBins();
-//                int binInStock = getNoOfBins(product.getStkOnFloor(),product.getBinQty());
-//                Inventory inv = null;
-//
-//                if (binInStock <= noOfBins){ //binInStock is less than NoOfBins, So add that number of bins in Stock
-//                    for (int i = 0; i < binInStock; i++){
-//                        product.addInventory(new Inventory(i+1, BinState.STORE));
-//                    }
-//                    int binInOrder = getNoOfBins(product.getOrderedQty(),product.getBinQty());
-//                    if (binInStock + binInOrder <= noOfBins) { //binInStock+binInOrder is less than NoOfBins, So add binInOrder Bins in Ordered state
-//                        StringBuilder builder = new StringBuilder();
-//                        for (int i = binInStock; i < binInStock + binInOrder; i++){
-//                            inv = new Inventory(i+1, BinState.ORDERED);
-//                            product.addInventory(inv);
-//                            builder.append((i+1)).append(",");
-//                        }
-//                        if (builder.length() >= 2) {
-//                            builder.setLength(builder.length()-1);
-//                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
-//                        }
-//                        if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
-//                            for (int i = binInStock + binInOrder; i < noOfBins; i++){
-//                                product.addInventory(new Inventory(i+1, BinState.PURCHASE));
-//                            }
-//                        }
-//                    }else { //binInStock+binInOrder is greater than NoOfBins, So add (noOfBins - binInStock) Bins in Ordered state, and stop furhter processing
-//                        StringBuilder builder = new StringBuilder();
-//                        for (int i = binInStock; i < noOfBins; i++){
-//                            product.addInventory(new Inventory(i+1, BinState.ORDERED));
-//                            builder.append((i+1)).append(",");
-//                        }
-//                        if (builder.length() >= 2) {
-//                            builder.setLength(builder.length()-1);
-//                            orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
-//                        }
-//                    }
-//                }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
-//                    for (int i = 0; i < noOfBins; i++){
-//                        product.addInventory(new Inventory(i+1, BinState.STORE));
-//                    }
-//                }
-//            });
-//
-//        }else { //There may either be decrease or increase in noOfBins. No action required for decrease
-//            products.forEach(product -> {
-//                int noOfInventory = product.getInventorySet().size();
-//                //if inventory size for a product is less than no of bins, then no of bins got increased after sync.
-//                if (noOfInventory < product.getNoOfBins()){
-//                    for (int i = noOfInventory+1; i <= product.getNoOfBins(); i++){
-//                        product.addInventory(new Inventory(i, BinState.PURCHASE));
-//                    }
-//                }
-//            });
-//        }
     }
 
     private void updateInventory(Product product) {
@@ -590,6 +533,7 @@ public class ProductService {
                 product.setIgnoreSync(false);
                 product.setNew(true);
                 product.setFreezed(false);
+                product.setLastScanned(new Date());
                 products.add(product);
             }
             i++;

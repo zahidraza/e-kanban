@@ -127,6 +127,9 @@ public class Product {
     @Column(name = "IS_FREEZED")
     private Boolean isFreezed;
 
+    @Column(name = "LAST_SCANNED", nullable = false)
+    private Date lastScanned;
+
     @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_UPDATED")
@@ -396,6 +399,14 @@ public class Product {
 
     public void setFreezed(Boolean freezed) {
         isFreezed = freezed;
+    }
+
+    public Date getLastScanned() {
+        return lastScanned;
+    }
+
+    public void setLastScanned(Date lastScanned) {
+        this.lastScanned = lastScanned;
     }
 
     @Override

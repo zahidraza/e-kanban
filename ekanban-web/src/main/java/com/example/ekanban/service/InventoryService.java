@@ -57,6 +57,7 @@ public class InventoryService {
             int binsInStock = stockList.size();
             long binQty = product.getBinQty();
             product.setStkOnFloor(binQty*(binsInStock-1));
+            product.setLastScanned(new Date());  //Set Last scanned value to now. used for aging calculation
             Consumption consumption = consumptionRepository.findByProductAndYearAndMonth(product, MiscUtil.getCurrentYear(),MiscUtil.getCurrentMonth());
             consumption.setValue(consumption.getValue()+binQty);
         }
