@@ -44,3 +44,28 @@
 01:05:28.038 [main] INFO  c.e.e.Application - Started Application in 27.767 seconds (JVM running for 28.872)
 01:05:39.566 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
 01:33:33.448 [http-nio-8000-exec-3] DEBUG c.e.e.Application - home page
+01:44:08.568 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 2802 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+01:44:08.568 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+01:44:08.569 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+01:44:19.483 [main] INFO  c.e.e.s.BarcodeService - init()
+01:44:19.512 [main] DEBUG c.e.e.s.UserService - count()
+01:44:19.784 [main] INFO  c.e.e.Application - Started Application in 26.786 seconds (JVM running for 27.807)
+01:44:41.173 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+15:21:11.296 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 1658 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+15:21:11.298 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+15:21:11.298 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+15:21:22.107 [main] INFO  c.e.e.s.BarcodeService - init()
+15:21:22.140 [main] DEBUG c.e.e.s.UserService - count()
+15:21:22.375 [main] INFO  c.e.e.Application - Started Application in 26.692 seconds (JVM running for 27.743)
+15:21:32.838 [http-nio-8000-exec-1] DEBUG c.e.e.Application - home page
+15:21:33.460 [http-nio-8000-exec-5] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+15:21:33.461 [http-nio-8000-exec-4] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+15:21:33.471 [http-nio-8000-exec-8] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+15:21:33.482 [http-nio-8000-exec-5] DEBUG c.e.e.s.SectionService - findAll()
+15:21:33.486 [http-nio-8000-exec-4] DEBUG c.e.e.s.SupplierService - findAll()
+15:21:33.494 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+15:21:33.497 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+15:21:33.497 [http-nio-8000-exec-7] DEBUG c.e.e.s.InventoryService - findAllAfter
+15:21:33.501 [http-nio-8000-exec-8] DEBUG c.e.e.s.OrderService - findAll()
+15:21:33.515 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+15:21:33.555 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
