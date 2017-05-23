@@ -69,3 +69,473 @@
 15:21:33.501 [http-nio-8000-exec-8] DEBUG c.e.e.s.OrderService - findAll()
 15:21:33.515 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
 15:21:33.555 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:09:40.842 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 4655 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+23:09:40.844 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+23:09:40.845 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+23:09:54.418 [main] INFO  c.e.e.s.BarcodeService - init()
+23:09:54.453 [main] DEBUG c.e.e.s.UserService - count()
+23:09:54.824 [main] INFO  c.e.e.Application - Initializing root user: username = Md Zahid Raza, email = zahid7292@gmail.com , mobile = 8987525008, role = ADMIN
+23:09:54.824 [main] INFO  c.e.e.Application - Initializing app user: username = Application, email = app@gmail.com , mobile = 8987525008, role = PURCHASE
+23:09:54.826 [main] DEBUG c.e.e.s.UserService - save()
+23:09:55.606 [main] DEBUG c.e.e.s.UserService - save()
+23:09:55.737 [main] INFO  c.e.e.Application - Started Application in 30.718 seconds (JVM running for 32.364)
+23:16:09.930 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 4673 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+23:16:09.930 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+23:16:09.931 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+23:16:19.923 [main] INFO  c.e.e.s.BarcodeService - init()
+23:16:19.948 [main] DEBUG c.e.e.s.UserService - count()
+23:16:20.168 [main] INFO  c.e.e.Application - Started Application in 25.847 seconds (JVM running for 27.366)
+23:17:44.087 [http-nio-8000-exec-5] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:17:44.087 [http-nio-8000-exec-6] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:17:44.096 [http-nio-8000-exec-1] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:17:44.120 [http-nio-8000-exec-1] DEBUG c.e.e.s.OrderService - findAll()
+23:17:44.124 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:17:44.128 [http-nio-8000-exec-6] DEBUG c.e.e.s.SupplierService - findAll()
+23:17:44.133 [http-nio-8000-exec-5] DEBUG c.e.e.s.SectionService - findAll()
+23:17:44.185 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:17:44.186 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:17:44.219 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+23:17:44.237 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:24:05.956 [http-nio-8000-exec-1] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:24:05.956 [http-nio-8000-exec-9] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:24:05.957 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:24:05.958 [http-nio-8000-exec-10] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:24:05.960 [http-nio-8000-exec-5] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:24:05.963 [http-nio-8000-exec-1] DEBUG c.e.e.s.OrderService - findAll()
+23:24:05.967 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+23:24:05.971 [http-nio-8000-exec-5] DEBUG c.e.e.s.SupplierService - findAll()
+23:24:05.972 [http-nio-8000-exec-9] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:24:05.973 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:24:05.976 [http-nio-8000-exec-10] DEBUG c.e.e.s.SectionService - findAll()
+23:24:23.102 [http-nio-8000-exec-3] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = zahid7292@gmail.com
+23:24:42.164 [http-nio-8000-exec-4] DEBUG c.e.e.r.UploadRestController - uploadProducts()
+23:24:42.188 [http-nio-8000-exec-4] DEBUG c.e.e.s.ProductService - addProductsBatch
+23:24:42.192 [http-nio-8000-exec-4] DEBUG c.e.e.u.CsvUtils - fromXlsx()
+23:24:44.219 [http-nio-8000-exec-4] DEBUG c.e.e.s.ProductService - validating 269 products ...
+23:24:50.694 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:24:50.702 [http-nio-8000-exec-9] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:24:50.705 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:24:50.706 [http-nio-8000-exec-9] DEBUG c.e.e.s.SectionService - findAll()
+23:24:50.708 [http-nio-8000-exec-10] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:24:50.712 [http-nio-8000-exec-2] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:24:50.715 [http-nio-8000-exec-10] DEBUG c.e.e.s.SupplierService - findAll()
+23:24:50.715 [http-nio-8000-exec-2] DEBUG c.e.e.s.UserService - findAllByPage()
+23:24:50.715 [http-nio-8000-exec-5] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:24:50.719 [http-nio-8000-exec-1] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:24:50.731 [http-nio-8000-exec-1] DEBUG c.e.e.s.OrderService - findAll()
+23:25:18.373 [http-nio-8000-exec-6] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+23:26:01.789 [http-nio-8000-exec-1] DEBUG c.e.e.r.CategoryRestController - createCategorySubCategoryProduct(): categoryId= 1 , subCategoryId = 12, ProductDto{category=null, subCategory=null, id=null, name='Test Product', description='null', price=100, itemCode='RM000123', timeOrdering=1, timeProcurement=2, timeTransporation=3, timeBuffer=2, totalLeadTime=null, uomPurchase='KG', uomConsumption='KG', conversionFactor=1, minOrderQty=1000, packetSize=25, classType='null', kanbanType='null', demand=null, noOfBins=null, binQty=null, lastUpdated=null, sections=[], suppliers=[], sectionList=null, supplierList=null, ignoreSync=null}
+23:26:01.794 [http-nio-8000-exec-1] DEBUG c.e.e.s.CategoryService - findOne(): id = 1
+23:26:01.811 [http-nio-8000-exec-1] DEBUG c.e.e.s.ProductService - save()
+23:26:34.233 [http-nio-8000-exec-7] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:26:34.235 [http-nio-8000-exec-5] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:26:34.235 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:26:34.235 [http-nio-8000-exec-10] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:26:34.238 [http-nio-8000-exec-7] DEBUG c.e.e.s.SectionService - findAll()
+23:26:34.238 [http-nio-8000-exec-5] DEBUG c.e.e.s.SupplierService - findAll()
+23:26:34.238 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+23:26:34.238 [http-nio-8000-exec-10] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:26:34.243 [http-nio-8000-exec-3] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:26:34.268 [http-nio-8000-exec-8] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:26:34.273 [http-nio-8000-exec-8] DEBUG c.e.e.s.OrderService - findAll()
+23:27:07.644 [http-nio-8000-exec-9] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:27:07.645 [http-nio-8000-exec-4] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:27:07.646 [http-nio-8000-exec-9] DEBUG c.e.e.s.SectionService - findAll()
+23:27:07.646 [http-nio-8000-exec-4] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:27:07.663 [http-nio-8000-exec-2] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:27:07.669 [http-nio-8000-exec-2] DEBUG c.e.e.s.SupplierService - findAll()
+23:27:07.679 [http-nio-8000-exec-1] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:27:07.682 [http-nio-8000-exec-1] DEBUG c.e.e.s.UserService - findAllByPage()
+23:27:07.683 [http-nio-8000-exec-7] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:27:07.687 [http-nio-8000-exec-6] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:27:07.689 [http-nio-8000-exec-7] DEBUG c.e.e.s.OrderService - findAll()
+23:28:29.473 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - createCategorySubCategoryProduct(): categoryId= 1 , subCategoryId = 12, ProductDto{category=null, subCategory=null, id=null, name='Test Product2', description='null', price=20, itemCode='RM001234', timeOrdering=1, timeProcurement=2, timeTransporation=3, timeBuffer=2, totalLeadTime=null, uomPurchase='KG', uomConsumption='KG', conversionFactor=1, minOrderQty=1000, packetSize=20, classType='null', kanbanType='null', demand=null, noOfBins=null, binQty=null, lastUpdated=null, sections=[], suppliers=[], sectionList=null, supplierList=null, ignoreSync=null}
+23:28:29.477 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findOne(): id = 1
+23:28:29.490 [http-nio-8000-exec-7] DEBUG c.e.e.s.ProductService - save()
+23:37:39.551 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 4835 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+23:37:39.552 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+23:37:39.553 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+23:37:49.798 [main] INFO  c.e.e.s.BarcodeService - init()
+23:37:49.830 [main] DEBUG c.e.e.s.UserService - count()
+23:37:50.053 [main] INFO  c.e.e.Application - Started Application in 26.014 seconds (JVM running for 27.111)
+23:38:05.883 [http-nio-8000-exec-6] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:38:05.889 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:38:05.883 [http-nio-8000-exec-2] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:38:05.905 [http-nio-8000-exec-6] DEBUG c.e.e.s.SupplierService - findAll()
+23:38:05.911 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+23:38:05.927 [http-nio-8000-exec-2] DEBUG c.e.e.s.SectionService - findAll()
+23:38:05.941 [http-nio-8000-exec-5] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:38:05.967 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:38:05.969 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+23:38:05.972 [http-nio-8000-exec-1] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:38:06.026 [http-nio-8000-exec-1] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:38:20.728 [http-nio-8000-exec-8] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:38:20.730 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:38:20.730 [http-nio-8000-exec-9] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:38:20.732 [http-nio-8000-exec-8] DEBUG c.e.e.s.SectionService - findAll()
+23:38:20.733 [http-nio-8000-exec-9] DEBUG c.e.e.s.SupplierService - findAll()
+23:38:20.733 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:38:20.762 [http-nio-8000-exec-10] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:38:20.764 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:38:20.769 [http-nio-8000-exec-10] DEBUG c.e.e.s.UserService - findAllByPage()
+23:38:20.788 [http-nio-8000-exec-4] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:38:20.790 [http-nio-8000-exec-4] DEBUG c.e.e.s.OrderService - findAll()
+23:38:26.379 [http-nio-8000-exec-6] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:38:26.379 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:38:26.380 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:38:26.380 [http-nio-8000-exec-6] DEBUG c.e.e.s.SectionService - findAll()
+23:38:26.425 [http-nio-8000-exec-5] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:38:26.426 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:38:26.429 [http-nio-8000-exec-5] DEBUG c.e.e.s.UserService - findAllByPage()
+23:38:26.432 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+23:38:26.448 [http-nio-8000-exec-10] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:38:26.449 [http-nio-8000-exec-8] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:38:26.450 [http-nio-8000-exec-8] DEBUG c.e.e.s.OrderService - findAll()
+23:38:26.546 [http-nio-8000-exec-9] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:38:26.548 [http-nio-8000-exec-9] DEBUG c.e.e.s.SectionService - findAll()
+23:38:26.564 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:38:26.632 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+23:38:26.669 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:38:26.670 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:38:26.732 [http-nio-8000-exec-2] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:38:26.733 [http-nio-8000-exec-2] DEBUG c.e.e.s.OrderService - findAll()
+23:38:26.897 [http-nio-8000-exec-6] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:38:26.898 [http-nio-8000-exec-6] DEBUG c.e.e.s.SupplierService - findAll()
+23:38:27.778 [http-nio-8000-exec-5] DEBUG c.e.e.s.InventoryService - findAllAfter
+23:39:15.293 [http-nio-8000-exec-9] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = zahid7292@gmail.com
+23:40:32.696 [http-nio-8000-exec-10] DEBUG c.e.e.r.CategoryRestController - createCategorySubCategoryProduct(): categoryId= 1 , subCategoryId = 12, ProductDto{category=null, subCategory=null, id=null, name='Test Product3', description='null', price=100, itemCode='RM001230', timeOrdering=1, timeProcurement=2, timeTransporation=3, timeBuffer=1, totalLeadTime=null, uomPurchase='KG', uomConsumption='KG', conversionFactor=1, minOrderQty=1000, packetSize=20, classType='null', kanbanType='null', demand=null, noOfBins=null, binQty=null, lastUpdated=null, sections=[], suppliers=[], sectionList=null, supplierList=null, ignoreSync=null}
+23:40:32.705 [http-nio-8000-exec-10] DEBUG c.e.e.s.CategoryService - findOne(): id = 1
+23:40:32.735 [http-nio-8000-exec-10] DEBUG c.e.e.s.ProductService - save()
+23:41:22.762 [http-nio-8000-exec-4] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+23:41:22.765 [http-nio-8000-exec-9] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+23:41:22.767 [http-nio-8000-exec-8] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+23:41:22.768 [http-nio-8000-exec-2] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+23:41:22.770 [http-nio-8000-exec-1] DEBUG c.e.e.r.UserRestController - listAllUsers()
+23:41:22.772 [http-nio-8000-exec-4] DEBUG c.e.e.s.CategoryService - findAllByPage()
+23:41:22.775 [http-nio-8000-exec-9] DEBUG c.e.e.s.SectionService - findAll()
+23:41:22.778 [http-nio-8000-exec-8] DEBUG c.e.e.s.SupplierService - findAll()
+23:41:22.778 [http-nio-8000-exec-2] DEBUG c.e.e.s.OrderService - findAll()
+23:41:22.779 [http-nio-8000-exec-1] DEBUG c.e.e.s.UserService - findAllByPage()
+23:41:22.781 [http-nio-8000-exec-6] DEBUG c.e.e.s.InventoryService - findAllAfter
+00:00:26.449 [http-nio-8000-exec-2] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+00:00:26.450 [http-nio-8000-exec-8] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+00:00:26.453 [http-nio-8000-exec-2] DEBUG c.e.e.s.CategoryService - findAllByPage()
+00:00:26.453 [http-nio-8000-exec-8] DEBUG c.e.e.s.SectionService - findAll()
+00:00:26.491 [http-nio-8000-exec-4] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+00:00:26.493 [http-nio-8000-exec-4] DEBUG c.e.e.s.SupplierService - findAll()
+00:00:26.503 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+00:00:26.504 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+00:00:26.516 [http-nio-8000-exec-10] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+00:00:26.516 [http-nio-8000-exec-3] DEBUG c.e.e.s.InventoryService - findAllAfter
+00:00:26.516 [http-nio-8000-exec-10] DEBUG c.e.e.s.OrderService - findAll()
+00:01:41.070 [http-nio-8000-exec-8] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+00:01:41.073 [http-nio-8000-exec-8] DEBUG c.e.e.s.CategoryService - findAllByPage()
+00:01:41.078 [http-nio-8000-exec-6] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+00:01:41.079 [http-nio-8000-exec-6] DEBUG c.e.e.s.SectionService - findAll()
+00:01:41.204 [http-nio-8000-exec-10] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+00:01:41.205 [http-nio-8000-exec-10] DEBUG c.e.e.s.SupplierService - findAll()
+00:01:41.256 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+00:01:41.257 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+00:01:41.258 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+00:01:41.258 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+00:01:41.260 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+02:16:04.511 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 5308 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+02:16:04.513 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+02:16:04.513 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+02:16:17.111 [main] INFO  c.e.e.s.BarcodeService - init()
+02:16:17.144 [main] DEBUG c.e.e.s.UserService - count()
+02:16:17.376 [main] INFO  c.e.e.Application - Started Application in 28.411 seconds (JVM running for 29.625)
+02:17:20.175 [http-nio-8000-exec-5] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:17:20.176 [http-nio-8000-exec-1] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:17:20.183 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:17:20.214 [http-nio-8000-exec-5] DEBUG c.e.e.s.SupplierService - findAll()
+02:17:20.218 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:17:20.219 [http-nio-8000-exec-2] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:17:20.220 [http-nio-8000-exec-6] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:17:20.224 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+02:17:20.269 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+02:17:20.298 [http-nio-8000-exec-2] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:17:20.304 [http-nio-8000-exec-1] DEBUG c.e.e.s.SectionService - findAll()
+02:17:46.160 [http-nio-8000-exec-7] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = zahid7292@gmail.com
+02:18:01.340 [http-nio-8000-exec-3] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:19:04.465 [http-nio-8000-exec-6] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:19:04.466 [http-nio-8000-exec-10] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:19:04.469 [http-nio-8000-exec-5] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:19:04.466 [http-nio-8000-exec-2] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:19:04.470 [http-nio-8000-exec-9] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:19:04.475 [http-nio-8000-exec-6] DEBUG c.e.e.s.SupplierService - findAll()
+02:19:04.476 [http-nio-8000-exec-7] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:19:04.477 [http-nio-8000-exec-5] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:19:04.477 [http-nio-8000-exec-2] DEBUG c.e.e.s.SectionService - findAll()
+02:19:04.477 [http-nio-8000-exec-10] DEBUG c.e.e.s.OrderService - findAll()
+02:19:04.479 [http-nio-8000-exec-9] DEBUG c.e.e.s.UserService - findAllByPage()
+02:19:05.032 [http-nio-8000-exec-5] DEBUG c.e.e.GenericExceptionHandler - handleException: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Broken pipe 
+ java.io.IOException: Broken pipe
+02:19:05.049 [http-nio-8000-exec-6] DEBUG c.e.e.GenericExceptionHandler - handleException: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Broken pipe 
+ java.io.IOException: Broken pipe
+02:19:05.667 [http-nio-8000-exec-7] DEBUG c.e.e.GenericExceptionHandler - handleException: org.apache.catalina.connector.ClientAbortException: java.io.IOException: Broken pipe 
+ java.io.IOException: Broken pipe
+02:19:27.074 [http-nio-8000-exec-6] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:19:27.074 [http-nio-8000-exec-7] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:19:27.074 [http-nio-8000-exec-8] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:19:27.078 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:19:27.082 [http-nio-8000-exec-1] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:19:27.085 [http-nio-8000-exec-6] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:19:27.085 [http-nio-8000-exec-7] DEBUG c.e.e.s.SectionService - findAll()
+02:19:27.085 [http-nio-8000-exec-8] DEBUG c.e.e.s.SupplierService - findAll()
+02:19:27.086 [http-nio-8000-exec-3] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:19:27.085 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+02:19:27.087 [http-nio-8000-exec-1] DEBUG c.e.e.s.OrderService - findAll()
+02:19:32.742 [http-nio-8000-exec-2] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = zahid7292@gmail.com
+02:19:55.416 [http-nio-8000-exec-9] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:22:46.089 [http-nio-8000-exec-1] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:22:46.089 [http-nio-8000-exec-6] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:22:46.091 [http-nio-8000-exec-6] DEBUG c.e.e.s.SectionService - findAll()
+02:22:46.091 [http-nio-8000-exec-1] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:22:46.094 [http-nio-8000-exec-3] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:22:46.096 [http-nio-8000-exec-3] DEBUG c.e.e.s.SupplierService - findAll()
+02:22:46.195 [http-nio-8000-exec-2] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:22:46.196 [http-nio-8000-exec-2] DEBUG c.e.e.s.UserService - findAllByPage()
+02:22:46.214 [http-nio-8000-exec-9] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:22:46.227 [http-nio-8000-exec-10] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:22:46.228 [http-nio-8000-exec-10] DEBUG c.e.e.s.OrderService - findAll()
+02:22:54.497 [http-nio-8000-exec-4] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:31:50.637 [http-nio-8000-exec-2] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:33:43.005 [http-nio-8000-exec-10] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:33:43.007 [http-nio-8000-exec-10] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:33:43.007 [http-nio-8000-exec-3] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:33:43.008 [http-nio-8000-exec-3] DEBUG c.e.e.s.SectionService - findAll()
+02:33:43.046 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:33:43.047 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+02:33:43.065 [http-nio-8000-exec-9] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:33:43.066 [http-nio-8000-exec-9] DEBUG c.e.e.s.UserService - findAllByPage()
+02:33:43.103 [http-nio-8000-exec-4] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:33:43.132 [http-nio-8000-exec-8] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:33:43.133 [http-nio-8000-exec-8] DEBUG c.e.e.s.SectionService - findAll()
+02:33:43.135 [http-nio-8000-exec-5] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:33:43.136 [http-nio-8000-exec-6] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:33:43.136 [http-nio-8000-exec-5] DEBUG c.e.e.s.OrderService - findAll()
+02:33:43.137 [http-nio-8000-exec-6] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:33:43.183 [http-nio-8000-exec-7] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:33:43.184 [http-nio-8000-exec-7] DEBUG c.e.e.s.UserService - findAllByPage()
+02:33:43.428 [http-nio-8000-exec-2] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:33:43.429 [http-nio-8000-exec-2] DEBUG c.e.e.s.SupplierService - findAll()
+02:33:43.480 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:33:43.481 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+02:33:44.316 [http-nio-8000-exec-9] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:33:48.620 [http-nio-8000-exec-8] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:33:48.628 [http-nio-8000-exec-7] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:33:48.630 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:33:48.638 [http-nio-8000-exec-5] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:33:48.634 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:33:48.642 [http-nio-8000-exec-8] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:33:48.648 [http-nio-8000-exec-7] DEBUG c.e.e.s.SectionService - findAll()
+02:33:48.650 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:33:48.650 [http-nio-8000-exec-5] DEBUG c.e.e.s.UserService - findAllByPage()
+02:33:48.650 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+02:33:48.650 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+02:34:04.472 [http-nio-8000-exec-10] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:39:10.290 [http-nio-8000-exec-1] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:39:10.291 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:39:10.295 [http-nio-8000-exec-2] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:39:10.297 [http-nio-8000-exec-1] DEBUG c.e.e.s.SectionService - findAll()
+02:39:10.297 [http-nio-8000-exec-8] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:39:10.298 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:39:10.300 [http-nio-8000-exec-2] DEBUG c.e.e.s.SupplierService - findAll()
+02:39:10.304 [http-nio-8000-exec-8] DEBUG c.e.e.s.UserService - findAllByPage()
+02:39:10.338 [http-nio-8000-exec-10] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:39:10.348 [http-nio-8000-exec-4] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:39:10.349 [http-nio-8000-exec-4] DEBUG c.e.e.s.OrderService - findAll()
+02:39:10.413 [http-nio-8000-exec-6] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:39:10.414 [http-nio-8000-exec-6] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:39:10.449 [http-nio-8000-exec-9] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:39:10.450 [http-nio-8000-exec-9] DEBUG c.e.e.s.SectionService - findAll()
+02:39:10.483 [http-nio-8000-exec-5] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:39:10.484 [http-nio-8000-exec-5] DEBUG c.e.e.s.UserService - findAllByPage()
+02:39:10.574 [http-nio-8000-exec-7] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:39:10.576 [http-nio-8000-exec-7] DEBUG c.e.e.s.OrderService - findAll()
+02:39:10.774 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:39:10.775 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+02:39:11.418 [http-nio-8000-exec-8] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:39:23.133 [http-nio-8000-exec-9] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:42:29.510 [http-nio-8000-exec-6] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:42:29.510 [http-nio-8000-exec-10] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:42:29.513 [http-nio-8000-exec-3] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:42:29.525 [http-nio-8000-exec-8] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:42:29.539 [http-nio-8000-exec-5] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:42:29.542 [http-nio-8000-exec-6] DEBUG c.e.e.s.SectionService - findAll()
+02:42:29.543 [http-nio-8000-exec-10] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:42:29.545 [http-nio-8000-exec-3] DEBUG c.e.e.s.SupplierService - findAll()
+02:42:29.564 [http-nio-8000-exec-8] DEBUG c.e.e.s.UserService - findAllByPage()
+02:42:29.565 [http-nio-8000-exec-9] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:42:29.571 [http-nio-8000-exec-5] DEBUG c.e.e.s.UserService - findAllByPage()
+02:42:29.780 [http-nio-8000-exec-7] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:42:29.831 [http-nio-8000-exec-2] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:42:29.831 [http-nio-8000-exec-4] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:42:29.832 [http-nio-8000-exec-2] DEBUG c.e.e.s.OrderService - findAll()
+02:42:29.832 [http-nio-8000-exec-4] DEBUG c.e.e.s.OrderService - findAll()
+02:42:29.914 [http-nio-8000-exec-1] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:42:29.915 [http-nio-8000-exec-1] DEBUG c.e.e.s.SectionService - findAll()
+02:42:29.926 [http-nio-8000-exec-8] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:42:29.926 [http-nio-8000-exec-6] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:42:29.927 [http-nio-8000-exec-8] DEBUG c.e.e.s.SupplierService - findAll()
+02:42:29.927 [http-nio-8000-exec-6] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:42:46.324 [http-nio-8000-exec-5] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:43:44.814 [http-nio-8000-exec-10] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:43:44.814 [http-nio-8000-exec-9] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:43:44.816 [http-nio-8000-exec-10] DEBUG c.e.e.s.SectionService - findAll()
+02:43:44.816 [http-nio-8000-exec-9] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:43:44.816 [http-nio-8000-exec-7] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:43:44.817 [http-nio-8000-exec-7] DEBUG c.e.e.s.SupplierService - findAll()
+02:43:44.831 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:43:44.840 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+02:43:44.840 [http-nio-8000-exec-5] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:43:44.901 [http-nio-8000-exec-3] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:43:44.902 [http-nio-8000-exec-3] DEBUG c.e.e.s.OrderService - findAll()
+02:43:54.422 [http-nio-8000-exec-2] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:47:05.806 [http-nio-8000-exec-6] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:49:44.360 [http-nio-8000-exec-3] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:49:44.360 [http-nio-8000-exec-7] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:49:44.362 [http-nio-8000-exec-2] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:49:44.363 [http-nio-8000-exec-5] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:49:44.365 [http-nio-8000-exec-7] DEBUG c.e.e.s.SectionService - findAll()
+02:49:44.366 [http-nio-8000-exec-3] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:49:44.368 [http-nio-8000-exec-2] DEBUG c.e.e.s.UserService - findAllByPage()
+02:49:44.371 [http-nio-8000-exec-4] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:49:44.371 [http-nio-8000-exec-9] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:49:44.371 [http-nio-8000-exec-5] DEBUG c.e.e.s.SupplierService - findAll()
+02:49:44.379 [http-nio-8000-exec-4] DEBUG c.e.e.s.OrderService - findAll()
+02:50:00.684 [http-nio-8000-exec-1] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:53:20.268 [http-nio-8000-exec-4] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:53:59.232 [http-nio-8000-exec-5] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+02:57:49.623 [http-nio-8000-exec-3] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+02:57:49.623 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+02:57:49.624 [http-nio-8000-exec-10] DEBUG c.e.e.r.UserRestController - listAllUsers()
+02:57:49.624 [http-nio-8000-exec-9] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+02:57:49.624 [http-nio-8000-exec-3] DEBUG c.e.e.s.SectionService - findAll()
+02:57:49.624 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+02:57:49.625 [http-nio-8000-exec-10] DEBUG c.e.e.s.UserService - findAllByPage()
+02:57:49.625 [http-nio-8000-exec-9] DEBUG c.e.e.s.CategoryService - findAllByPage()
+02:57:49.650 [http-nio-8000-exec-6] DEBUG c.e.e.s.InventoryService - findAllAfter
+02:57:49.708 [http-nio-8000-exec-8] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+02:57:49.712 [http-nio-8000-exec-8] DEBUG c.e.e.s.OrderService - findAll()
+02:57:59.455 [http-nio-8000-exec-7] DEBUG c.e.e.GenericExceptionHandler - processValidationError()
+21:08:05.541 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 589 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+21:08:05.541 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+21:08:05.542 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+21:08:20.114 [main] INFO  c.e.e.s.BarcodeService - init()
+21:08:20.139 [main] DEBUG c.e.e.s.UserService - count()
+21:08:20.492 [main] INFO  c.e.e.Application - Initializing root user: username = Pavan Kumar, email = pavan.k@gembaconcepts.com , mobile = 9743977125, role = ADMIN
+21:08:20.493 [main] INFO  c.e.e.Application - Initializing app user: username = Application, email = app@gmail.com , mobile = 9743977125, role = PURCHASE
+21:08:20.495 [main] DEBUG c.e.e.s.UserService - save()
+21:08:21.313 [main] DEBUG c.e.e.s.UserService - save()
+21:08:21.433 [main] INFO  c.e.e.Application - Started Application in 31.765 seconds (JVM running for 33.452)
+21:08:31.812 [http-nio-8000-exec-1] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:08:31.812 [http-nio-8000-exec-2] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:08:31.822 [http-nio-8000-exec-6] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:08:31.831 [http-nio-8000-exec-1] DEBUG c.e.e.s.SectionService - findAll()
+21:08:31.835 [http-nio-8000-exec-2] DEBUG c.e.e.s.SupplierService - findAll()
+21:08:31.848 [http-nio-8000-exec-3] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:08:31.853 [http-nio-8000-exec-6] DEBUG c.e.e.s.OrderService - findAll()
+21:08:31.859 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:08:31.859 [http-nio-8000-exec-5] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:08:31.864 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+21:08:31.876 [http-nio-8000-exec-5] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:09:02.544 [http-nio-8000-exec-7] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = pavan.k@gembaconcepts.com
+21:12:53.493 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 595 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+21:12:53.493 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+21:12:53.494 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+21:13:04.183 [main] INFO  c.e.e.s.BarcodeService - init()
+21:13:04.228 [main] DEBUG c.e.e.s.UserService - count()
+21:13:04.789 [main] INFO  c.e.e.Application - Started Application in 26.841 seconds (JVM running for 27.892)
+21:13:21.880 [http-nio-8000-exec-2] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:13:21.880 [http-nio-8000-exec-6] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:13:21.894 [http-nio-8000-exec-1] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:13:21.913 [http-nio-8000-exec-6] DEBUG c.e.e.s.SectionService - findAll()
+21:13:21.917 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:13:21.920 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+21:13:21.921 [http-nio-8000-exec-2] DEBUG c.e.e.s.SupplierService - findAll()
+21:13:21.924 [http-nio-8000-exec-5] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:13:21.927 [http-nio-8000-exec-1] DEBUG c.e.e.s.OrderService - findAll()
+21:13:21.975 [http-nio-8000-exec-3] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:13:22.040 [http-nio-8000-exec-5] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:14:05.430 [http-nio-8000-exec-2] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = pavan.k@gembaconcepts.com
+21:15:07.512 [http-nio-8000-exec-3] DEBUG c.e.e.r.UploadRestController - uploadProducts()
+21:15:07.525 [http-nio-8000-exec-3] DEBUG c.e.e.s.ProductService - addProductsBatch
+21:15:07.527 [http-nio-8000-exec-3] DEBUG c.e.e.u.CsvUtils - fromXlsx()
+21:15:08.779 [http-nio-8000-exec-3] DEBUG c.e.e.s.ProductService - validating 21 products ...
+21:15:08.785 [http-nio-8000-exec-3] DEBUG c.e.e.GenericExceptionHandler - processProductError: Product details has errors.
+21:17:06.563 [http-nio-8000-exec-5] DEBUG c.e.e.r.UploadRestController - uploadProducts()
+21:17:06.565 [http-nio-8000-exec-5] DEBUG c.e.e.s.ProductService - addProductsBatch
+21:17:06.565 [http-nio-8000-exec-5] DEBUG c.e.e.u.CsvUtils - fromXlsx()
+21:17:06.774 [http-nio-8000-exec-5] DEBUG c.e.e.s.ProductService - validating 21 products ...
+21:17:08.181 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:17:08.183 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:17:08.185 [http-nio-8000-exec-8] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:17:08.185 [http-nio-8000-exec-10] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:17:08.186 [http-nio-8000-exec-9] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:17:08.188 [http-nio-8000-exec-8] DEBUG c.e.e.s.SupplierService - findAll()
+21:17:08.188 [http-nio-8000-exec-6] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:17:08.188 [http-nio-8000-exec-10] DEBUG c.e.e.s.SectionService - findAll()
+21:17:08.189 [http-nio-8000-exec-9] DEBUG c.e.e.s.OrderService - findAll()
+21:17:08.192 [http-nio-8000-exec-2] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:17:08.194 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findAllByPage()
+21:27:03.288 [http-nio-8000-exec-8] DEBUG c.e.e.r.UserRestController - createUser():
+ UserDto{id=null, name='Test Store', email='test_store@gmail.com', password='null', role='STORE', mobile='8987525008', active=null}
+21:27:03.290 [http-nio-8000-exec-8] DEBUG c.e.e.s.UserService - save()
+21:27:19.102 [http-nio-8000-exec-9] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = test_store@gmail.com
+21:28:08.831 [http-nio-8000-exec-7] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:28:08.832 [http-nio-8000-exec-3] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:28:08.833 [http-nio-8000-exec-4] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:28:08.834 [http-nio-8000-exec-1] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:28:08.836 [http-nio-8000-exec-5] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:28:08.838 [http-nio-8000-exec-7] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:28:08.839 [http-nio-8000-exec-3] DEBUG c.e.e.s.UserService - findAllByPage()
+21:28:08.840 [http-nio-8000-exec-4] DEBUG c.e.e.s.SectionService - findAll()
+21:28:08.840 [http-nio-8000-exec-1] DEBUG c.e.e.s.SupplierService - findAll()
+21:28:08.842 [http-nio-8000-exec-10] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:28:08.843 [http-nio-8000-exec-5] DEBUG c.e.e.s.OrderService - findAll()
+21:28:12.485 [http-nio-8000-exec-6] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = test_store@gmail.com
+21:44:30.044 [main] INFO  c.e.e.Application - Starting Application on Mds-MacBook-Air.local with PID 741 (/Users/mdzahidraza/projects/local-repo/ekanban/ekanban-web/target/classes started by mdzahidraza in /Users/mdzahidraza/projects/local-repo/ekanban)
+21:44:30.044 [main] DEBUG c.e.e.Application - Running with Spring Boot v1.5.2.RELEASE, Spring v4.3.7.RELEASE
+21:44:30.045 [main] INFO  c.e.e.Application - No active profile set, falling back to default profiles: default
+21:44:40.351 [main] INFO  c.e.e.s.BarcodeService - init()
+21:44:40.381 [main] DEBUG c.e.e.s.UserService - count()
+21:44:40.612 [main] INFO  c.e.e.Application - Initializing root user: username = Pavan Kumar, email = pavan.k@gembaconcepts.com , mobile = 9743977125, role = ADMIN
+21:44:40.612 [main] INFO  c.e.e.Application - Initializing app user: username = Application, email = app@gmail.com , mobile = 9743977125, role = PURCHASE
+21:44:40.614 [main] DEBUG c.e.e.s.UserService - save()
+21:44:41.188 [main] DEBUG c.e.e.s.UserService - save()
+21:44:41.325 [main] INFO  c.e.e.Application - Started Application in 26.871 seconds (JVM running for 28.007)
+21:45:29.407 [http-nio-8000-exec-1] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = pavan.k@gembaconcepts.com
+21:45:36.085 [http-nio-8000-exec-3] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:45:36.086 [http-nio-8000-exec-4] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:45:36.105 [http-nio-8000-exec-3] DEBUG c.e.e.s.SectionService - findAll()
+21:45:36.111 [http-nio-8000-exec-7] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:45:36.116 [http-nio-8000-exec-4] DEBUG c.e.e.s.SupplierService - findAll()
+21:45:36.129 [http-nio-8000-exec-2] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:45:36.129 [http-nio-8000-exec-5] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:45:36.132 [http-nio-8000-exec-6] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:45:36.141 [http-nio-8000-exec-5] DEBUG c.e.e.s.UserService - findAllByPage()
+21:45:36.143 [http-nio-8000-exec-7] DEBUG c.e.e.s.OrderService - findAll()
+21:45:36.162 [http-nio-8000-exec-2] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:45:57.304 [http-nio-8000-exec-8] DEBUG c.e.e.r.UploadRestController - uploadProducts()
+21:45:57.321 [http-nio-8000-exec-8] DEBUG c.e.e.s.ProductService - addProductsBatch
+21:45:57.326 [http-nio-8000-exec-8] DEBUG c.e.e.u.CsvUtils - fromXlsx()
+21:45:58.822 [http-nio-8000-exec-8] DEBUG c.e.e.s.ProductService - validating 269 products ...
+21:46:05.558 [http-nio-8000-exec-1] DEBUG c.e.e.r.SectionRestController - loadAllSections()
+21:46:05.559 [http-nio-8000-exec-3] DEBUG c.e.e.r.SupplierRestController - listAllSuppliers()
+21:46:05.559 [http-nio-8000-exec-10] DEBUG c.e.e.r.CategoryRestController - getCategories(): expand = true
+21:46:05.560 [http-nio-8000-exec-3] DEBUG c.e.e.s.SupplierService - findAll()
+21:46:05.560 [http-nio-8000-exec-1] DEBUG c.e.e.s.SectionService - findAll()
+21:46:05.562 [http-nio-8000-exec-10] DEBUG c.e.e.s.CategoryService - findAllByPage()
+21:46:05.572 [http-nio-8000-exec-7] DEBUG c.e.e.s.InventoryService - findAllAfter
+21:46:05.573 [http-nio-8000-exec-6] DEBUG c.e.e.r.OrderRestController - loadAllOrders()
+21:46:05.582 [http-nio-8000-exec-4] DEBUG c.e.e.r.UserRestController - listAllUsers()
+21:46:05.582 [http-nio-8000-exec-6] DEBUG c.e.e.s.OrderService - findAll()
+21:46:05.585 [http-nio-8000-exec-4] DEBUG c.e.e.s.UserService - findAllByPage()
+23:32:26.555 [http-nio-8000-exec-3] DEBUG c.e.e.s.UserService - findByEmailIgnoreCase(): email = pavan.k@gembaconcepts.com
+23:32:37.438 [http-nio-8000-exec-10] DEBUG c.e.e.r.UploadRestController - uploadProducts()
+23:32:37.439 [http-nio-8000-exec-10] DEBUG c.e.e.s.ProductService - addProductsBatch
+23:32:37.439 [http-nio-8000-exec-10] DEBUG c.e.e.u.CsvUtils - fromXlsx()
+23:32:37.601 [http-nio-8000-exec-10] DEBUG c.e.e.s.ProductService - validating 21 products ...
+23:32:37.817 [http-nio-8000-exec-10] DEBUG c.e.e.GenericExceptionHandler - processProductError: Product Details has errors

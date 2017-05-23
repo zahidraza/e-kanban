@@ -8,15 +8,15 @@ difference in dev and production mode:
     : production
         (function () {
           const baseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-          window.baseUrl = baseUrl + '/e-kanban';
-          window.serviceHost = baseUrl + "/e-kanban/api";
+          window.baseUrl = baseUrl + '/ekanban';
+          window.serviceHost = baseUrl + "/ekanban/api";
         })();
 
 2.  src/main/webapp/WEB-INF/index.html
     dev:
         <script src="/static/index.js"></script>
     production:
-        <script src="/e-kanban/static/index.js"></script>
+        <script src="/ekanban/static/index.js"></script>
 
 3.  src/main/resources/application.properties
     //Change accordingly to match your system credential

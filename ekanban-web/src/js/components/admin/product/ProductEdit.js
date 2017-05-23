@@ -52,7 +52,7 @@ class ProductEdit extends Component {
           selectedItems: []                     //Selected Items
         }
       }
-      
+
     };
 
     this.localeData = localeData();
@@ -90,7 +90,7 @@ class ProductEdit extends Component {
     let {product,layer} = this.state;
 
     let url = window.serviceHost + '/categories/' + product.category.id + '/subCategories/' + product.subCategory.id + '/products/' + product.id;
-    
+
     product.sections = layer.section.selectedItems.map(s => s.links[0].href);
     product.suppliers = layer.supplier.selectedItems.map(s => s.links[0].href);
 
@@ -104,9 +104,6 @@ class ProductEdit extends Component {
     delete product.subCategory;
     delete product.sectionList;
     delete product.supplierList;
-
-    console.log(url);
-    console.log(product);
 
     this.props.dispatch(updateProduct(url,product));
   }
@@ -142,7 +139,7 @@ class ProductEdit extends Component {
     let {layer} = this.state;
     const {section: {sections}, supplier: {suppliers}} = this.props;
 
-    if (! layer.section.filterValue.includes('Select')) {   
+    if (! layer.section.filterValue.includes('Select')) {
       layer.section.filterItems = layer.section.filterItems.filter(s => s != layer.section.filterValue);
       layer.section.selectedItems = sections.filter(s => !layer.section.filterItems.includes(s.name));
     }
@@ -199,7 +196,7 @@ class ProductEdit extends Component {
       result = (
         <Layer align="right" closer={true} onClose={this._onLayerClose.bind(this)}
           a11yTitle={layer[name].title}>
-          
+
           <Form onSubmit={this._onLayerSubmit.bind(this)} compact={false}>
             <Header>
               <Heading tag="h2" margin='none'>{layer[name].title}</Heading>
@@ -302,7 +299,7 @@ class ProductEdit extends Component {
                   <FormField label="Packet Size" error={errors.packetSize}>
                     <input type="text" name="packetSize" value={product.packetSize} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  
+
                 </fieldset>
 
                 <fieldset>
@@ -353,7 +350,7 @@ class ProductEdit extends Component {
           {layerControl}
         </Section>
       </Box>
-      
+
     );
   }
 }
@@ -383,4 +380,3 @@ export default connect(select)(ProductEdit);
     </fieldset>
   </LayerForm>
 );*/
-

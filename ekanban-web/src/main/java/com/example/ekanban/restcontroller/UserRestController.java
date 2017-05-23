@@ -1,6 +1,7 @@
 package com.example.ekanban.restcontroller;
 
 import com.example.ekanban.assembler.UserAssembler;
+import com.example.ekanban.dto.RestError;
 import com.example.ekanban.dto.UserDto;
 import com.example.ekanban.service.UserService;
 import com.example.ekanban.util.ApiUrls;
@@ -76,8 +77,11 @@ public class UserRestController{
     }
   
     @DeleteMapping(ApiUrls.URL_USERS_USER)
-    public ResponseEntity<Void> deleteUser(@PathVariable("userId") long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") long userId) {
         logger.debug("deleteUser(): id = {}",userId);
+        if (userId == 1L || userId == 2L) {
+            return new ResponseEntity<>(new RestError(409,409,"Restricted deletetion this user.","",""),HttpStatus.CONFLICT);
+        }
         if (!userService.exists(userId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

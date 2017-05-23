@@ -29,12 +29,6 @@ import Section from 'grommet/components/Section';
 
 class Report extends Component {
   render () {
-
-    const items = [];
-    for (var i = 0; i < 100; i++) {
-      var e = (<tr><td>Hello</td></tr>);
-      items.push(e);
-    }
     return (
       <Box>
         <AppHeader />
@@ -44,9 +38,6 @@ class Report extends Component {
             <Box align='center' alignSelf='center' pad={{vertical: 'large'}}>
               Coming soon ...
             </Box>
-            <table>
-              {items}
-            </table>
             {/*<Box size='medium' >
               <Form>
                 <table style={{align: 'center'}}>

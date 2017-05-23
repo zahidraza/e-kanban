@@ -32,8 +32,7 @@ public class ProductDto {
     @NotNull @Digits(integer = 10,fraction = 2)
     private BigDecimal price;
      
-    @Size(max = 255)
-    @NotNull
+    @NotEmpty
     private String itemCode;
     
     @NotNull

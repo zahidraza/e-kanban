@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     public Page<Product> findBySubCategory(SubCategory subCategory, Pageable pageable);
     
     public Product findByNameIgnoreCase(String name);
+
+    Product findByItemCodeIgnoreCase(String itemCode);
 }

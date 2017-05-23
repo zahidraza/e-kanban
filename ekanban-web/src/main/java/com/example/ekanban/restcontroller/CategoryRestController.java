@@ -302,7 +302,12 @@ public class CategoryRestController {
             @Valid @RequestBody ProductDto productDto
     ) {
         logger.debug("createCategorySubCategoryProduct(): categoryId= {} , subCategoryId = {}, {}", categoryId, subCategoryId, productDto);
-
+        /*///////Checking for Duplicate ItemCode///////*/
+        if (productService.exists(productDto.getItemCode().trim())) {
+            String msg = "Duplicate Item Code.";
+            RestError error = new RestError(409, 409, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        }
         /*//////////////Validating resources/////////////////*/
         List<String> invalidSections = MiscUtil.findInvalidResources(productDto.getSections(), SectionRestController.class);
         List<String> invalidSuppliers = MiscUtil.findInvalidResources(productDto.getSuppliers(), SupplierRestController.class);
@@ -316,7 +321,6 @@ public class CategoryRestController {
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        /*////////////////////////////////////////////////////////////////////////*/
         /*///////////////////checking if category and sub category exist ////////////*/
         Category category = categoryService.findOne(categoryId, true, false);
         RestError error;
@@ -333,7 +337,7 @@ public class CategoryRestController {
             error = new RestError(404, 404, msg, "", "");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-        /*///////////////////////////////////////////////////////*/
+
         /*////////////checking if section resources got in ProductDto object exist in db /////// */
         List<String> sectionsNotFound = null;
         if (productDto.getSections() != null) {
@@ -433,6 +437,12 @@ public class CategoryRestController {
             String msg = "Product with id = " + productId + " not found in SubCategory:  " + subCategory.getName() + ", Category: " + category.getName();
             error = new RestError(404, 404, msg, "", "");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        if (productService.exists(productDto.getItemCode().trim())) {
+            String msg = "Duplicate Item Code.";
+            error = new RestError(409, 409, msg, "", "");
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
         }
 
         /*///////////////////////////////////////////////////////*/

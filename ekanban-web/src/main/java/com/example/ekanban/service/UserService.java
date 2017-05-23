@@ -100,7 +100,7 @@ public class UserService {
         if(userDto.getName() != null)   user.setName(userDto.getName());
         if(userDto.getEmail() != null)   user.setEmail(userDto.getEmail());
         if(userDto.getMobile() != null)   user.setMobile(userDto.getMobile());
-        if(userDto.getRole() != null)   user.setRole(Role.parse("ROLE_" + userDto.getRole()));
+        if(userDto.getRole() != null && userDto.getId() != 1L && userDto.getId() != 2L)   user.setRole(Role.parse("ROLE_" + userDto.getRole()));
         return mapper.map(user, UserDto.class);
     }
 

@@ -121,6 +121,11 @@ public class ProductService {
         return productRepository.exists(id);
     }
 
+    public Boolean exists(String itemCode){
+        Product product = productRepository.findByItemCodeIgnoreCase(itemCode);
+        return product == null ? false : true;
+    }
+
     public Long count() {
         logger.debug("count()");
         return productRepository.count();
@@ -468,7 +473,7 @@ public class ProductService {
                 errors.add(new ProductError("PRICE", i, "Packet Size cannot be zero."));
             }
             /*check for duplicate itemCode*/
-            if (itemCodeList.contains(productCsv.getItemCode())){
+            if (itemCodeList.contains(productCsv.getItemCode()) || productRepository.findByItemCodeIgnoreCase(productCsv.getItemCode()) != null){
                 errors.add(new ProductError("ITEM_CODE", i, productCsv.getItemCode() + " is duplicate Item Code."));
             }
             /*Check for Duplicate product*/

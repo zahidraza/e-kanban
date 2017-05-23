@@ -44,10 +44,9 @@ export function updateProduct (url,product) {
     }).catch( (err) => {
       if (err.response.status == 409) {
         alert(err.response.data.message);
-      }
-      if (err.response.status == 400) {
+      }else if (err.response.status == 400) {
         dispatch({type: c.PRODUCT_BAD_REQUEST, payload: {errors: err.response.data}});
-      }else {
+      } else {
         dispatch({type: c.PRODUCT_EDIT_FAIL});
       }
     });

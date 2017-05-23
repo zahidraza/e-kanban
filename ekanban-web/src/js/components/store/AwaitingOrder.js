@@ -77,7 +77,7 @@ class AwaitingOrder extends Component {
       const p = products.find(prod => prod.id == o.productId);
       if (p != undefined) {
         awaitingInv.push({productId: p.productId,itemCode: p.itemCode,prodId: p.id, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,
-          createdAt: o.createdAt, tat: p.timeOrdering + p.timeProcurement + p.timeTransportation + p.timeBuffer});
+          createdAt: o.createdAt, tat: p.timeProcurement + p.timeTransporation});
       }
     });
     return awaitingInv;
@@ -126,7 +126,6 @@ class AwaitingOrder extends Component {
 
   _renderAwaiting () {
     let {awaitingInv} = this.state;
-    console.log(awaitingInv[0]);
 
     if (awaitingInv.length > 0) {
       let items = awaitingInv.map((inv,i) => {
