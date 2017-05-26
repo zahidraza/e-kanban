@@ -18,36 +18,39 @@ import javax.persistence.*;
  * @author razamd
  */
 @Entity
-@Table(name = "ORDERS",indexes = @Index(columnList = "PRODUCT_ID"))
+@Table(name = "orders",indexes = @Index(columnList = "product_id"))
 public class Order implements Serializable{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "BINS", nullable = false)
+    @Column(name = "bins", nullable = false)
     private String bins;
 
-    @Column(name = "ORDERED_AT", nullable = true)
+    @Column(name = "ordered_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderedAt;
     
-    @Column(name = "COMPLETED_AT", nullable = true)
+    @Column(name = "completed_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "ORDERED_BY")
+    @JoinColumn(name = "ordered_by")
     private User orderedBy;
 
-    @JoinColumn(name = "ORDER_STATE")
+    @JoinColumn(name = "order_state")
     private String orderState;
+
+    @Column(name = "is_followed_up")
+    private Boolean isFollowedUp;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public Order() {
@@ -123,6 +126,14 @@ public class Order implements Serializable{
 
     public void setBins(String bins) {
         this.bins = bins;
+    }
+
+    public Boolean getFollowedUp() {
+        return isFollowedUp;
+    }
+
+    public void setFollowedUp(Boolean followedUp) {
+        isFollowedUp = followedUp;
     }
 
     @Override

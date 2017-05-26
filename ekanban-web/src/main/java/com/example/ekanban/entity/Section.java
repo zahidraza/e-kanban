@@ -32,7 +32,7 @@ public class Section {
     private Long id;
     
     @NotEmpty
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     
     @JsonIgnore
@@ -41,7 +41,7 @@ public class Section {
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public Section() {

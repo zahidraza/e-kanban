@@ -98,7 +98,7 @@ class Tracking extends Component {
 
       if (p != undefined) {
         orderedInv.push({productId: p.productId, itemCode: p.itemCode, productName: p.name, binSize: p.binQty + ' ' + p.uomPurchase, bins: o.bins, orderedAt: o.orderedAt,orderedBy,
-          tat: p.timeProcurement + p.timeTransporation});
+          tat: p.timeProduction + p.timeTransportation});
       }
     });
     return orderedInv;

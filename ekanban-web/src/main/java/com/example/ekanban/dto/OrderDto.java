@@ -31,6 +31,8 @@ public class OrderDto {
     @StringEnum(enumClass = OrderState.class)
     private String orderState;
 
+    private Boolean isFollowedUp;
+
     private Long lastUpdated;
 
     public OrderDto() {
@@ -100,6 +102,14 @@ public class OrderDto {
         this.lastUpdated = lastUpdated;
     }
 
+    public Boolean getFollowedUp() {
+        return isFollowedUp;
+    }
+
+    public void setFollowedUp(Boolean followedUp) {
+        isFollowedUp = followedUp;
+    }
+
     @Override
     public String toString() {
         return "OrderDto{" +
@@ -110,6 +120,7 @@ public class OrderDto {
                 ", completedAt=" + completedAt +
                 ", orderedBy=" + orderedBy +
                 ", orderState='" + orderState + '\'' +
+                ", isFollowedUp=" + isFollowedUp +
                 ", lastUpdated=" + lastUpdated +
                 '}';
     }

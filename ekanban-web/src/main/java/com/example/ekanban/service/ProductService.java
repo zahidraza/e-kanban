@@ -266,7 +266,7 @@ public class ProductService {
             product.setBinQty(binQty);
             int noOfBins = 2;
             if (classType != ClassType.CLASS_C) {
-                int tat = product.getTimeOrdering() + product.getTimeProcurement() + product.getTimeTransporation() + product.getTimeBuffer();
+                int tat = product.getTimeOrdering() + product.getTimeProduction() + product.getTimeTransportation() + product.getTimeBuffer();
                 noOfBins = (int)(product.getDemand()*tat /binQty + 2);
             }
             product.setNoOfBins(noOfBins);
@@ -401,10 +401,10 @@ public class ProductService {
                 if (p.getTimeOrdering() == null) {
                     errors.add(new ProductError("ORDERING_TIME", i, "Product Ordering time cannot be blank."));
                 }
-                if (p.getTimeProcurement() == null) {
+                if (p.getTimeProduction() == null) {
                     errors.add(new ProductError("PRODUCTION_TIME", i, "Product Production time cannot be blank."));
                 }
-                if (p.getTimeTransporation() == null) {
+                if (p.getTimeTransportation() == null) {
                     errors.add(new ProductError("TRANSPORTATION_TIME", i, "Product Transportation time cannot be blank."));
                 }
                 if (p.getTimeBuffer() == null) {
@@ -513,7 +513,7 @@ public class ProductService {
                     product.setSupplierList(suppliers);
                 }
                 /*Set Total Lead Time*/
-                product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProcurement()+product.getTimeTransporation()+product.getTimeBuffer());
+                product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProduction()+product.getTimeTransportation()+product.getTimeBuffer());
 
                 /*/////Adding Consumptions//////////*/
                 Consumption consumption;
@@ -597,8 +597,8 @@ public class ProductService {
         if (src.getPrice() != null) dest.setPrice(src.getPrice());
         if (src.getItemCode() != null) dest.setItemCode(src.getItemCode());
         if (src.getTimeOrdering() != null) dest.setTimeOrdering(src.getTimeOrdering());
-        if (src.getTimeProcurement() != null) dest.setTimeProcurement(src.getTimeProcurement());
-        if (src.getTimeTransporation() != null) dest.setTimeTransporation(src.getTimeTransporation());
+        if (src.getTimeProduction() != null) dest.setTimeProduction(src.getTimeProduction());
+        if (src.getTimeTransportation() != null) dest.setTimeTransportation(src.getTimeTransportation());
         if (src.getTimeBuffer() != null) dest.setTimeBuffer(src.getTimeBuffer());
         if (src.getUomPurchase() != null) dest.setUomPurchase(src.getUomPurchase());
         if (src.getUomConsumption() != null) dest.setUomConsumption(src.getUomConsumption());

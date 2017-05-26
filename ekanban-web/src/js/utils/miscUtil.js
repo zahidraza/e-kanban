@@ -143,8 +143,8 @@ export function getItemMasterBody(p) {
   p.sectionList.forEach(s => sections += s.name + ', ');
   sections = sections.substring(0,sections.length-2).trim();
 
-  let body = [p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProcurement,
-    p.timeTransporation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
+  let body = [p.productId,p.itemCode,p.name,p.category.name,p.subCategory.name,sections,p.price,p.timeOrdering,p.timeProduction,
+    p.timeTransportation,p.timeBuffer,p.uomPurchase,p.uomConsumption,p.conversionFactor,
     p.minOrderQty,p.packetSize];
   let sum = 0, max = 0, count = 0,value;
   for (var i = 0, j = getCurrMonth() + 1; i < 12; i++) {

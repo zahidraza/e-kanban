@@ -159,6 +159,26 @@ public class OrderService {
         return mapper.map(order2,OrderDto.class);
     }
 
+    /**
+     * Batch update of Order. called for followup of orders
+     * @param orderDtoList
+     * @return
+     */
+    @Transactional
+    public List<OrderDto> updateBatch(List<OrderDto> orderDtoList){
+        List<Long> orderIdList = orderDtoList.stream().map(orderDto -> orderDto.getId()).collect(Collectors.toList());
+
+        List<Order> orders = orderRepository.findAll(orderIdList);
+        OrderDto orderDto = null;
+        Order order = null;
+        for (int i = 0; i < orderDtoList.size(); i++){
+            orderDto = orderDtoList.get(i);
+            order = orders.get(i);
+            if (orderDto.getFollowedUp() != null) order.setFollowedUp(orderDto.getFollowedUp());
+        }
+        return orders.stream().map(o -> mapper.map(o,OrderDto.class)).collect(Collectors.toList());
+    }
+
     @Transactional
     public void delete(Long id) {
         logger.debug("delete(): id = {}",id);

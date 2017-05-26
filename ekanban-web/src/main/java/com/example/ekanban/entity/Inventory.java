@@ -17,7 +17,7 @@ import javax.persistence.*;
  * @author razamd
  */
 @Entity
-@Table(indexes = @Index(columnList = "PRODUCT_ID"))
+@Table(indexes = @Index(columnList = "product_id"))
 public class Inventory implements Serializable{
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +25,17 @@ public class Inventory implements Serializable{
 
     @JsonIgnore
     @ManyToOne(optional = false)
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "product_id")
     private Product product;
     
-    @Column(name = "BIN_NO", nullable = false)
+    @Column(name = "bin_no", nullable = false)
     private Integer binNo;
     
-    @Column(name = "BIN_STATE", nullable = false)
+    @Column(name = "bin_state", nullable = false)
     private String binState;
 
     @Version
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 

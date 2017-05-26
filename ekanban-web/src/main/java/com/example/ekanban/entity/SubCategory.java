@@ -20,19 +20,19 @@ import javax.persistence.*;
  * @author razamd
  */
 @Entity
-@Table(indexes = @Index(columnList = "CATEGORY_ID"))
+@Table(indexes = @Index(columnList = "category_id"))
 public class SubCategory implements Serializable{
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotEmpty
-    @Column(name = "NAME",nullable = false, unique = true)
+    @Column(name = "name",nullable = false, unique = true)
     private String name;
     
     @JsonIgnore
     @ManyToOne(optional = false)
-    @JoinColumn(name = "CATEGORY_ID")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
@@ -40,7 +40,7 @@ public class SubCategory implements Serializable{
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public SubCategory() {

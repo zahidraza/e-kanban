@@ -22,26 +22,26 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Embeddable @Access(AccessType.FIELD)
 public class Address implements Serializable{
     
-    @Column(name = "STREET")
+    @Column(name = "street")
     @NotEmpty
     private String street;
     
-    @Column(name = "LANDMARK")
+    @Column(name = "landmark")
     private String landmark;
     
-    @Column(name = "CITY")
+    @Column(name = "city")
     @NotEmpty
     private String city;
     
-    @Column(name = "STATE")
+    @Column(name = "state")
     @NotEmpty
     private String state;
     
-    @Column(name = "ZIP_CODE")
+    @Column(name = "zip_code")
     @NotNull @Pattern(regexp="[0-9]{6}")
     private String zip;
     
-    @Column(name = "COUNTRY")
+    @Column(name = "country")
     @NotEmpty
     private String country;
 

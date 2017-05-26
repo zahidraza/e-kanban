@@ -4,7 +4,8 @@
   "description": "Inventory Control System (frontend)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "flow": "flow"
   },
   "author": "Md Zahid Raza",
   "license": "ISC",
@@ -26,9 +27,12 @@
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.3.13",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.5.2",
+    "flow-bin": "^0.47.0",
     "grommet-toolbox": "^0.4.5",
     "gulp": "^3.9.0"
   }

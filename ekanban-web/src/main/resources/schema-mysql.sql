@@ -4,12 +4,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(255) DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,
   `mobile` varchar(255) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
+  `user_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`),
-  KEY `IDX74n2jqngo3nmhsehk0q32453n` (`username`,`email`)
+  KEY `IDX74n2jqngo3nmhsehk0q32453n` (`user_name`,`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `category` (
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `product` (
   `stk_on_floor` bigint(20) NOT NULL,
   `time_buffer` int(11) NOT NULL,
   `time_ordering` int(11) NOT NULL,
-  `time_procurement` int(11) NOT NULL,
-  `time_transportion` int(11) NOT NULL,
+  `time_production` int(11) NOT NULL,
+  `time_transportation` int(11) NOT NULL,
   `total_lead_time` int(11) DEFAULT NULL,
   `uom_consumption` varchar(255) NOT NULL,
   `uom_purchase` varchar(255) NOT NULL,
@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `bins` varchar(255) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
+  `is_followed_up` bit(1) DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,
   `order_state` varchar(255) DEFAULT NULL,
   `ordered_at` datetime DEFAULT NULL,

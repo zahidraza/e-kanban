@@ -14,21 +14,21 @@ import javax.validation.Valid;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(indexes = @Index(columnList = "NAME"))
+@Table(indexes = @Index(columnList = "name"))
 public class Supplier implements Serializable{
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotEmpty
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "CONTACT_PERSON")
+    @Column(name = "contact_person")
     private String contactPerson;
     
     @StringEnum(enumClass = SupplierType.class)
-    @Column(name = "SUPPLIER_TYPE")
+    @Column(name = "supplier_type")
     private String supplierType;   //Local | NonLocal
     
     @Embedded
@@ -41,7 +41,7 @@ public class Supplier implements Serializable{
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
     
     public Supplier() {

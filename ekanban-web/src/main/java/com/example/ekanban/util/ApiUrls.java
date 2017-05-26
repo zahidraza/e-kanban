@@ -50,6 +50,8 @@ public class ApiUrls {
     /*Section Resource*/
     public static final String ROOT_URL_ORDERS = "/api/orders";
     public static final String URL_ORDERS_ORDER = "/{orderId}";
+    public static final String URL_ORDERS_FOLLOWUP = "/followup";
+
 
     /*Miscellaneous Resource*/
     public static final String ROOT_URL_MISCELLANEOUS = "/api/misc";

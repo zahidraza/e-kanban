@@ -65,3 +65,22 @@ export function updateOrder (order) {
     });
   };
 }
+
+export function followupOrders (orders) {
+  return function (dispatch) {
+    dispatch({type: c.ORDER_BUSY, payload: {busy: true}});
+    axios.patch(window.serviceHost + '/orders', JSON.stringify(orders),{headers: getHeaders()})
+    .then((response) => {
+      console.log(response);
+      if (response.status == 200) {
+        dispatch({type: c.ORDER_FOLLOWUP_SUCCESS, payload: {orders: response.data}});
+      }
+    }).catch( (err) => {
+      console.log(err);
+      if (err.response.status == 409) {
+        alert(err.response.data.message);
+      }
+      dispatch({type: c.ORDER_FOLLOWUP_FAIL});
+    });
+  };
+}

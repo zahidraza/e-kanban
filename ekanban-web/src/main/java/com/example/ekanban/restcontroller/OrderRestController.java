@@ -118,4 +118,11 @@ public class OrderRestController {
         orderService.delete(orderId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PatchMapping
+    public ResponseEntity<?> updateOrders(@RequestBody List<OrderDto> orders){
+        //orders.forEach(orderDto -> System.out.println(orderDto));
+        orders = orderService.updateBatch(orders);
+        return new ResponseEntity<>(orderAssembler.toResources(orders), HttpStatus.OK);
+    }
 }

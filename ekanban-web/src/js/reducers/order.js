@@ -8,7 +8,7 @@ const initialState = {
   toggleStatus: true
 };
 
-const handlers = { 
+const handlers = {
   [c.INITIALIZE_ORDER]: (_, action) => {
     const resp = action.payload.orders;
     sessionStorage.orderSync = resp.orderSync;
@@ -44,7 +44,18 @@ const handlers = {
     alert('Bin Inward Scan done successfully.');
     return ({busy: false, toggleStatus: !_.toggleStatus, orders: orders});
   },
-  [c.ORDER_EDIT_FAIL]: (_, action) => ({busy: false})
+  [c.ORDER_EDIT_FAIL]: (_, action) => ({busy: false}),
+  [c.ORDER_FOLLOWUP_SUCCESS]: (_, action) => {
+    let orders = _.orders;
+    const odrs = action.payload.orders;
+    let odr;
+    odrs.forEach((o,i) => {
+      odr = orders.find(order => order.id == o.id);
+      odr.followedUp = o.followedUp;
+    });
+    return ({busy: false, toggleStatus: !_.toggleStatus, orders: orders});
+  },
+  [c.ORDER_FOLLOWUP_FAIL]: (_, action) => ({busy: false})
 };
 
 export default function order (state = initialState, action) {

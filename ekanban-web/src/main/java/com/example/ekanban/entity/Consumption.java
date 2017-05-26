@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(indexes = @Index(columnList = "PRODUCT_ID"))
+@Table(indexes = @Index(columnList = "product_id"))
 public class Consumption {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,21 +24,21 @@ public class Consumption {
 
     @JsonIgnore
     @ManyToOne(optional = false)
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "product_id")
     private Product product;
     
-    @Column(name = "YEAR")
+    @Column(name = "year")
     private Integer year;
     
-    @Column(name = "MONTH")
+    @Column(name = "month")
     private Integer month;
     
-    @Column(name = "VALUE")
+    @Column(name = "value")
     private Long value;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public Consumption() {

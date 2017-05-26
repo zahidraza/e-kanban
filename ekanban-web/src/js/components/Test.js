@@ -10,7 +10,7 @@ import Section from 'grommet/components/Section';
 import Spinning from 'grommet/components/icons/Spinning';
 
 class Test extends Component {
-  
+
   constructor () {
     super();
     this.state = {
@@ -25,7 +25,9 @@ class Test extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }
-    console.log(moment.duration(2, 'days'));
+    let x = moment('26 May, 17','DD MMM, YY');
+
+    console.log(x.toDate().getTime());
   }
 
   componentWillReceiveProps (nextProps) {
@@ -53,6 +55,7 @@ class Test extends Component {
         <Section>
           <h1>Test Navigation page1</h1>
           {moment(new Date()).add(3,'days').utcOffset('+05:30').format('DD MMM, YY')}
+
         </Section>
       </Box>
     );

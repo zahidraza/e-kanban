@@ -22,7 +22,7 @@ import javax.persistence.*;
  * @author razamd
  */
 @Entity
-@Table(indexes = @Index(columnList = "SUB_CATEGORY_ID"))
+@Table(indexes = @Index(columnList = "sub_category_id"))
 public class Product {
 
     @Id
@@ -31,20 +31,20 @@ public class Product {
 
     @JsonIgnore
     @ManyToOne(optional = false)
-    @JoinColumn(name = "SUB_CATEGORY_ID")
+    @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "PRODUCT_SECTION",
-            joinColumns = @JoinColumn(name = "PRODUCT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SECTION_ID")
+    @JoinTable(name = "product_section",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "section_id")
     )
     private Set<Section> sectionList = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "PRODUCT_SUPPLIER",
-            joinColumns = @JoinColumn(name = "PRODUCT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SUPPLIER_ID")
+    @JoinTable(name = "product_supplier",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "supplier_id")
     )
     private Set<Supplier> supplierList = new HashSet<>();
 
@@ -55,84 +55,84 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Inventory> inventorySet = new HashSet<>();
 
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "DESCRIPTION", nullable = true, length = 500)
+    @Column(name = "description", nullable = true, length = 500)
     private String description;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "ITEM_CODE", nullable = false, unique = true)
+    @Column(name = "item_code", nullable = false, unique = true)
     private String itemCode;
 
-    @Column(name = "TIME_ORDERING", nullable = false)
+    @Column(name = "time_ordering", nullable = false)
     private Integer timeOrdering;
 
-    @Column(name = "TIME_PROCUREMENT", nullable = false)
-    private Integer timeProcurement;
+    @Column(name = "time_production", nullable = false)
+    private Integer timeProduction;
 
-    @Column(name = "TIME_TRANSPORTION", nullable = false)
-    private Integer timeTransporation;
+    @Column(name = "time_transportation", nullable = false)
+    private Integer timeTransportation;
 
-    @Column(name = "TIME_BUFFER", nullable = false)
+    @Column(name = "time_buffer", nullable = false)
     private Integer timeBuffer;
 
-    @Column(name = "TOTAL_LEAD_TIME")
+    @Column(name = "total_lead_time")
     private Integer totalLeadTime;
 
-    @Column(name = "UOM_PURCHASE", nullable = false)
+    @Column(name = "uom_purchase", nullable = false)
     private String uomPurchase; //Unit of Measurment Purchase
 
-    @Column(name = "UOM_CONSUMPTION", nullable = false)
+    @Column(name = "uom_consumption", nullable = false)
     private String uomConsumption;
 
-    @Column(name = "CONVERSION_FACTOR", nullable = false)
+    @Column(name = "conversion_factor", nullable = false)
     private BigDecimal conversionFactor;
 
-    @Column(name = "MIN_ORDER_QTY", nullable = false)
+    @Column(name = "min_order_qty", nullable = false)
     private Long minOrderQty;
 
-    @Column(name = "PACKET_SIZE", nullable = false)
+    @Column(name = "packet_size", nullable = false)
     private BigDecimal packetSize;
 
-    @Column(name = "CLASS_TYPE", nullable = true)
+    @Column(name = "class_type", nullable = true)
     private String classType;
 
-    @Column(name = "KANBAN_TYPE", nullable = true)
+    @Column(name = "kanban_type", nullable = true)
     private String kanbanType;
 
-    @Column(name = "DEMAND", nullable = true)
+    @Column(name = "demand", nullable = true)
     private Long demand;
 
-    @Column(name = "NO_OF_BINS", nullable = true)
+    @Column(name = "no_of_bins", nullable = true)
     private Integer noOfBins;
 
-    @Column(name = "BIN_QTY", nullable = true)
+    @Column(name = "bin_qty", nullable = true)
     private Long binQty;
 
-    @Column(name = "STK_ON_FLOOR", nullable = false)
+    @Column(name = "stk_on_floor", nullable = false)
     private Long stkOnFloor;
 
-    @Column(name = "ORDERED_QTY", nullable = false)
+    @Column(name = "ordered_qty", nullable = false)
     private Long orderedQty;
 
-    @Column(name = "IGNORE_SYNC")
+    @Column(name = "ignore_sync")
     private Boolean ignoreSync;
 
-    @Column(name = "IS_NEW")
+    @Column(name = "is_new")
     private Boolean isNew;
 
-    @Column(name = "IS_FREEZED")
+    @Column(name = "is_freezed")
     private Boolean isFreezed;
 
-    @Column(name = "LAST_SCANNED", nullable = false)
+    @Column(name = "last_scanned", nullable = false)
     private Date lastScanned;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public Product() {
@@ -217,20 +217,20 @@ public class Product {
         this.timeOrdering = timeOrdering;
     }
 
-    public Integer getTimeProcurement() {
-        return timeProcurement;
+    public Integer getTimeProduction() {
+        return timeProduction;
     }
 
-    public void setTimeProcurement(Integer timeProcurement) {
-        this.timeProcurement = timeProcurement;
+    public void setTimeProduction(Integer timeProduction) {
+        this.timeProduction = timeProduction;
     }
 
-    public Integer getTimeTransporation() {
-        return timeTransporation;
+    public Integer getTimeTransportation() {
+        return timeTransportation;
     }
 
-    public void setTimeTransporation(Integer timeTransporation) {
-        this.timeTransporation = timeTransporation;
+    public void setTimeTransportation(Integer timeTransportation) {
+        this.timeTransportation = timeTransportation;
     }
 
     public Integer getTimeBuffer() {

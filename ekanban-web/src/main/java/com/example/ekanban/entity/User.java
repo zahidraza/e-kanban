@@ -10,34 +10,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
-@Table(indexes = @Index(columnList = "USERNAME,EMAIL"))
+@Table(indexes = @Index(columnList = "user_name,email"))
 public class User implements Serializable{
     @Id
-    @Column(name = "USER_ID", nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USERNAME", nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String name;
 
-    @Column(name = "EMAIL", nullable = true, unique = true)
+    @Column(name = "email", nullable = true, unique = true)
     private String email;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "MOBILE", nullable = true)
+    @Column(name = "mobile", nullable = true)
     private String mobile;
     
-    @Column(name = "ROLE", nullable = false)
+    @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "ACTIVE", nullable = false)
+    @Column(name = "active", nullable = false)
     private Boolean active;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public User() {

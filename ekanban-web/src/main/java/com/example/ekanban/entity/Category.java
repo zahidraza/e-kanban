@@ -37,7 +37,7 @@ public class Category implements Serializable{
     private Long id;
     
     @NotEmpty
-    @Column(name = "NAME",nullable = false, unique = true)
+    @Column(name = "name",nullable = false, unique = true)
     private String name;
     
     @JsonInclude(Include.NON_NULL)
@@ -46,7 +46,7 @@ public class Category implements Serializable{
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_UPDATED")
+    @Column(name = "last_updated")
     private Date lastUpdated;
 
     public Category() {

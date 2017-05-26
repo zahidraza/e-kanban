@@ -41,11 +41,11 @@ public class ProductDto {
     
     @NotNull
     @Digits(integer = 3,fraction = 0)
-    private Integer timeProcurement;
+    private Integer timeProduction;
     
     @NotNull
     @Digits(integer = 3,fraction = 0)
-    private Integer timeTransporation;
+    private Integer timeTransportation;
     
     @NotNull
     @Digits(integer = 3,fraction = 0)
@@ -167,20 +167,20 @@ public class ProductDto {
         this.timeOrdering = timeOrdering;
     }
 
-    public Integer getTimeProcurement() {
-        return timeProcurement;
+    public Integer getTimeProduction() {
+        return timeProduction;
     }
 
-    public void setTimeProcurement(Integer timeProcurement) {
-        this.timeProcurement = timeProcurement;
+    public void setTimeProduction(Integer timeProduction) {
+        this.timeProduction = timeProduction;
     }
 
-    public Integer getTimeTransporation() {
-        return timeTransporation;
+    public Integer getTimeTransportation() {
+        return timeTransportation;
     }
 
-    public void setTimeTransporation(Integer timeTransporation) {
-        this.timeTransporation = timeTransporation;
+    public void setTimeTransportation(Integer timeTransportation) {
+        this.timeTransportation = timeTransportation;
     }
 
     public Integer getTimeBuffer() {
@@ -346,8 +346,8 @@ public class ProductDto {
                 ", price=" + price +
                 ", itemCode='" + itemCode + '\'' +
                 ", timeOrdering=" + timeOrdering +
-                ", timeProcurement=" + timeProcurement +
-                ", timeTransporation=" + timeTransporation +
+                ", timeProduction=" + timeProduction +
+                ", timeTransportation=" + timeTransportation +
                 ", timeBuffer=" + timeBuffer +
                 ", totalLeadTime=" + totalLeadTime +
                 ", uomPurchase='" + uomPurchase + '\'' +

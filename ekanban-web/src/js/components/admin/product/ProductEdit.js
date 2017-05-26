@@ -309,11 +309,11 @@ class ProductEdit extends Component {
                   <FormField label="Ordering time" error={errors.timeOrdering}>
                     <input type="text" name="timeOrdering" value={product.timeOrdering} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Procurement Time" error={errors.timeProcurement}>
-                    <input type="text" name="timeProcurement" value={product.timeProcurement} onChange={this._onInputChange.bind(this)} />
+                  <FormField label="Production Time" error={errors.timeProduction}>
+                    <input type="text" name="timeProduction" value={product.timeProduction} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Transportation Time" error={errors.timeTransporation}>
-                    <input type="text" name="timeTransporation" value={product.timeTransporation} onChange={this._onInputChange.bind(this)} />
+                  <FormField label="Transportation Time" error={errors.timeTransportation}>
+                    <input type="text" name="timeTransportation" value={product.timeTransportation} onChange={this._onInputChange.bind(this)} />
                   </FormField>
                   <FormField label="Buffer Time" error={errors.timeBuffer}>
                     <input type="text" name="timeBuffer" value={product.timeBuffer} onChange={this._onInputChange.bind(this)} />

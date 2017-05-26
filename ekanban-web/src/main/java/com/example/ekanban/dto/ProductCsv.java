@@ -32,10 +32,10 @@ public class ProductCsv {
     private Double timeOrdering;
 
     @CsvBindByName(column = "PRODUCTION_TIME")
-    private Double timeProcurement;
+    private Double timeProduction;
 
     @CsvBindByName(column = "TRANSPORTATION_TIME")
-    private Double timeTransporation;
+    private Double timeTransportation;
 
     @CsvBindByName(column = "BUFFER_TIME")
     private Double timeBuffer;
@@ -110,7 +110,7 @@ public class ProductCsv {
     }
 
     public ProductCsv(String name, String category, String subCategory, String description, String sections, Double
-            price, String itemCode, Double timeOrdering, Double timeProcurement, Double timeTransporation, Double
+            price, String itemCode, Double timeOrdering, Double timeProduction, Double timeTransportation, Double
             timeBuffer, String uomPurchase, String uomConsumption, Double conversionFactor, String supplier, String
             contactPerson, String supplierType, Double minOrderQty, Double packetSize) {
         this.name = name;
@@ -121,8 +121,8 @@ public class ProductCsv {
         this.price = price;
         this.itemCode = itemCode;
         this.timeOrdering = timeOrdering;
-        this.timeProcurement = timeProcurement;
-        this.timeTransporation = timeTransporation;
+        this.timeProduction = timeProduction;
+        this.timeTransportation = timeTransportation;
         this.timeBuffer = timeBuffer;
         this.uomPurchase = uomPurchase;
         this.uomConsumption = uomConsumption;
@@ -198,20 +198,20 @@ public class ProductCsv {
         this.timeOrdering = timeOrdering;
     }
 
-    public Double getTimeProcurement() {
-        return timeProcurement;
+    public Double getTimeProduction() {
+        return timeProduction;
     }
 
-    public void setTimeProcurement(Double timeProcurement) {
-        this.timeProcurement = timeProcurement;
+    public void setTimeProduction(Double timeProduction) {
+        this.timeProduction = timeProduction;
     }
 
-    public Double getTimeTransporation() {
-        return timeTransporation;
+    public Double getTimeTransportation() {
+        return timeTransportation;
     }
 
-    public void setTimeTransporation(Double timeTransporation) {
-        this.timeTransporation = timeTransporation;
+    public void setTimeTransportation(Double timeTransportation) {
+        this.timeTransportation = timeTransportation;
     }
 
     public Double getTimeBuffer() {
@@ -409,8 +409,8 @@ public class ProductCsv {
                 ", price=" + price +
                 ", itemCode='" + itemCode + '\'' +
                 ", timeOrdering=" + timeOrdering +
-                ", timeProcurement=" + timeProcurement +
-                ", timeTransporation=" + timeTransporation +
+                ", timeProduction=" + timeProduction +
+                ", timeTransportation=" + timeTransportation +
                 ", timeBuffer=" + timeBuffer +
                 ", uomPurchase='" + uomPurchase + '\'' +
                 ", uomConsumption='" + uomConsumption + '\'' +
