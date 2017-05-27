@@ -41,7 +41,8 @@ class Supplier extends Component {
       searchText: '',
       filterActive: false,
       filteredCount: 0,
-      unfilteredCount: 0
+      unfilteredCount: 0,
+      viewing: false
     };
     this.localeData = localeData();
     this._loadSupplier = this._loadSupplier.bind(this);

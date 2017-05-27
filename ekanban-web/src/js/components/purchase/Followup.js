@@ -114,6 +114,7 @@ class Followup extends Component {
       const followupDateFilter = filter.followupDate;
       orderedInv = orderedInv.filter(o => followupDateFilter.includes(o.followupDate));
     }
+    //////////////////////////////////////////////////////
     let checked = new Array(orderedInv.length).fill(false);
     let filteredCount = orderedInv.length;
     orderedInv.sort((o1,o2) => {
