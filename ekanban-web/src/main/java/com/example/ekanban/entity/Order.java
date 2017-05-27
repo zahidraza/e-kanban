@@ -27,8 +27,16 @@ public class Order implements Serializable{
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+
     @Column(name = "bins", nullable = false)
     private String bins;
+
+    @Column(name = "bins_scanned")
+    private String binsScanned;
 
     @Column(name = "ordered_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -134,6 +142,22 @@ public class Order implements Serializable{
 
     public void setFollowedUp(Boolean followedUp) {
         isFollowedUp = followedUp;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getBinsScanned() {
+        return binsScanned;
+    }
+
+    public void setBinsScanned(String binsScanned) {
+        this.binsScanned = binsScanned;
     }
 
     @Override
