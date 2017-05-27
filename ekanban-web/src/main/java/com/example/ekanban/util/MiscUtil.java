@@ -1,6 +1,8 @@
 package com.example.ekanban.util;
 
+import com.example.ekanban.entity.Inventory;
 import com.example.ekanban.entity.Product;
+import com.example.ekanban.enums.BinState;
 import com.example.ekanban.enums.ClassType;
 import com.example.ekanban.enums.KanbanType;
 import com.example.ekanban.exception.MailException;
@@ -150,6 +152,50 @@ public class MiscUtil {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
+
+    public static Resource generateBarcodeAllPdf(List<Product> productList) {
+        try {
+            StorageProperties properties = ApplicationContextUtil.getApplicationContext().getBean(StorageProperties.class);
+            BarcodeService barcodeService = ApplicationContextUtil.getApplicationContext().getBean(BarcodeService.class);
+            Path root = Paths.get(properties.getLocation());
+            Document document = new Document(PageSize.A4);
+            PdfWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(root.resolve("temp.pdf").toFile()));
+            document.open();
+            PdfPTable mainTable = new PdfPTable(2);
+            mainTable.setWidthPercentage(100f);
+            PdfPCell cell = null;
+            for (Product product : productList) {
+                //Get Ordered inventory/bins
+                Set<Inventory> inventorySet = product.getInventorySet();
+                List<Integer> binList = inventorySet.stream()
+                        .filter(inventory -> inventory.getBinState() == BinState.ORDERED)
+                        .map(inventory -> inventory.getBinNo())
+                        .collect(Collectors.toList());
+
+                for (int i = 0; i < binList.size(); i++) {
+                    int bin = binList.get(i);
+                    cell = new PdfPCell();
+                    cell.addElement(getTable(docWriter, product, bin));
+                    cell.setBorder(PdfPCell.NO_BORDER);
+                    cell.setPadding(15f);
+                    cell.setPaddingBottom(40f);
+                    mainTable.addCell(cell);
+
+                }
+                if (binList.size() % 2 == 1) {
+                    cell = new PdfPCell();
+                    cell.setBorder(PdfPCell.NO_BORDER);
+                    mainTable.addCell(cell);
+                }
+            }
+            document.add(mainTable);
+            document.close();
+            return barcodeService.loadAsResource("temp.pdf");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Resource generateBarcodePdf(Product product){

@@ -65,7 +65,7 @@ class BarcodeGenerate extends Component {
   }
 
   _onPrint (productId) {
-    window.open(window.serviceHost + "/products/" + productId ,"_blank","fullscreen=yes");
+    window.open(window.serviceHost + "/products/prints/" + productId ,"_blank","fullscreen=yes");
   }
 
   _renderProducts () {

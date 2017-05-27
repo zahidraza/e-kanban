@@ -94,7 +94,12 @@ class AwaitingOrder extends Component {
       const arrTomOrder = this._getArrTomOrder(nextProps);
       this._loadOrder(awaitingOrder,arrTomOrder,filter,page1,page2,activeTab);
     }
-    //this._loadOrder(this.state.page1);
+    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus || this.props.order.toggleStatus != nextProps.order.toggleStatus) {
+      const {page1, page2, filter, activeTab} = this.state;
+      const awaitingOrder = this._getAwaitingOrder(nextProps);
+      const arrTomOrder = this._getArrTomOrder(nextProps);
+      this._loadOrder(awaitingOrder,arrTomOrder,filter,page1,page2,activeTab);
+    }
   }
 
   _loadFilterItems (props) {
@@ -204,11 +209,19 @@ class AwaitingOrder extends Component {
   _onPrint (index) {
     const {awaitingOrder} = this.state;
     let inv = awaitingOrder[index];
-    window.open(window.serviceHost + "/products/" + inv.prodId + "?bins=" + inv.bins,"_blank","fullscreen=yes");
+    window.open(window.serviceHost + "/products/prints/" + inv.prodId + "?bins=" + inv.bins,"_blank","fullscreen=yes");
   }
 
   _onPrintAll () {
-
+    const {arrTomOrder} = this.state;
+    if (arrTomOrder.length == 0) {
+      alert('No orders to print');
+      return;
+    }
+    let productIds = "";
+    arrTomOrder.forEach(o => productIds = productIds + o.prodId + ',');
+    productIds = productIds.substr(0,productIds.length-1);
+    window.open(window.serviceHost + "/products/prints?productIds=" + productIds,"_blank","fullscreen=yes");
   }
 
   _onSearch (event) {
@@ -530,7 +543,7 @@ AwaitingOrder.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, supplier: store.supplier, order: store.order, user: store.user};
+  return {misc: store.misc, category: store.category,inventory: store.inventory, supplier: store.supplier, order: store.order, user: store.user};
 };
 
 export default connect(select)(AwaitingOrder);

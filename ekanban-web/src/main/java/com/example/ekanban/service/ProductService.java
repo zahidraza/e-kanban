@@ -641,4 +641,21 @@ public class ProductService {
         return MiscUtil.generateBarcodePdf(product);
     }
 
+    /**
+     * Print bar code of bins(inventory) in ordered state for all the products.
+     * @param productIds
+     * @return
+     */
+    public Resource printAllBarcode(String productIds) {
+        String[] ids = productIds.split(",");
+        List<Long> idList = new ArrayList<>();
+        for (String id: ids) {
+            if (id.trim().length() != 0) {
+                idList.add(Long.parseLong(id));
+            }
+        }
+        List<Product> productList = productRepository.findAll(idList);
+        return MiscUtil.generateBarcodeAllPdf(productList);
+    }
+
 }

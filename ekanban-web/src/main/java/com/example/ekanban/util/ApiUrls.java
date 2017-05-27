@@ -40,6 +40,8 @@ public class ApiUrls {
 
     /*Product Resource*/
     public static final String ROOT_URL_PRODUCTS = "/api/products";
+    public static final String URL_PRODUCTS_PRINTS = "/prints";
+    public static final String URL_PRODUCTS_PRINTS_PRODUCT = "/prints/{productId}";
     public static final String URL_PRODUCTS_PRODUCT = "{productId}";
     public static final String URL_PRODUCTS_SYNC = "/sync";
 
