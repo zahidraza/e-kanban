@@ -280,7 +280,7 @@ class Product extends Component {
 
 
     return (
-      <Box horizontal='full'>
+      <Box full='horizontal'>
         <AppHeader/>
 
         <Header size='large' pad={{ horizontal: 'medium' }}>

@@ -68,7 +68,6 @@ export function getNoOfBins(bins) {
 export function getAgeing (createdAt) {
   const today = new Date().getTime();
   const durationHours = Math.ceil((today - createdAt)/(60*60*1000));
-  console.log(durationHours);
   const daySuffix = (durationHours < 36) ? ' day' : ' days';
   let durationDays = Math.floor(durationHours/24);
   if (durationHours%24 > 12) {
@@ -81,29 +80,17 @@ export function getMonth(month) {
 
   switch (month) {
     case 1: return 'jan';
-      break;
     case 2: return 'feb';
-      break;
     case 3: return 'mar';
-      break;
     case 4: return 'apr';
-      break;
     case 5: return 'may';
-      break;
     case 6: return 'jun';
-      break;
     case 7: return 'jul';
-      break;
     case 8: return 'aug';
-      break;
     case 9: return 'sep';
-      break;
     case 10: return 'oct';
-      break;
     case 11: return 'nov';
-      break;
     case 12: return 'dec';
-      break;
   }
 }
 

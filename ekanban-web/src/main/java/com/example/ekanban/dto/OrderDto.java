@@ -19,6 +19,11 @@ public class OrderDto {
     @Pattern(regexp="^([0-9]+)|([0-9]+[0-9,]*[0-9]+)$")  //Regex for comma separated bins
     private String bins;
 
+    @Pattern(regexp="^([0-9]+)|([0-9]+[0-9,]*[0-9]+)$")  //Regex for comma separated bins
+    private String binsScanned;
+
+    private Long supplierId;
+
     @Digits(integer = 14,fraction = 0)
     private Long orderedAt;
 
@@ -110,12 +115,30 @@ public class OrderDto {
         isFollowedUp = followedUp;
     }
 
+    public String getBinsScanned() {
+        return binsScanned;
+    }
+
+    public void setBinsScanned(String binsScanned) {
+        this.binsScanned = binsScanned;
+    }
+
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
     @Override
     public String toString() {
         return "OrderDto{" +
                 "id=" + id +
                 ", productId=" + productId +
                 ", bins='" + bins + '\'' +
+                ", binsScanned='" + binsScanned + '\'' +
+                ", supplierId=" + supplierId +
                 ", orderedAt=" + orderedAt +
                 ", completedAt=" + completedAt +
                 ", orderedBy=" + orderedBy +

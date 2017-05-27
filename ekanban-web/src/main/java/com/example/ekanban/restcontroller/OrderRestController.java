@@ -101,7 +101,7 @@ public class OrderRestController {
         }
         if (order.getBins() == null || !order.getBins().trim().matches("^\\d+$")) {
             List<FieldError> errors = new ArrayList<>();
-            errors.add(new FieldError("bins",order.getBins(),"bins should be one integer value."));
+            errors.add(new FieldError("bins",order.getBins(),"bins should be an integer value."));
             return new ResponseEntity<Object>(errors,HttpStatus.BAD_REQUEST);
         }
         order.setId(orderId);
@@ -119,9 +119,13 @@ public class OrderRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Called for updating followup.
+     * @param orders
+     * @return
+     */
     @PatchMapping
     public ResponseEntity<?> updateOrders(@RequestBody List<OrderDto> orders){
-        //orders.forEach(orderDto -> System.out.println(orderDto));
         orders = orderService.updateBatch(orders);
         return new ResponseEntity<>(orderAssembler.toResources(orders), HttpStatus.OK);
     }

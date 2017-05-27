@@ -1,6 +1,6 @@
 import axios from "axios";
 import {getHeaders} from  '../utils/restUtil';
-import {ORDER_CONSTANTS as c, INVENTORY_CONSTANTS as ic} from  '../utils/constants';
+import {ORDER_CONSTANTS as c} from  '../utils/constants';
 
 axios.interceptors.response.use(function (response) {
   return response;
@@ -36,7 +36,7 @@ export function generateOrder (order) {
       console.log(response);
       if (response.status == 201) {
         dispatch({type: c.ORDER_ADD_SUCCESS, payload: {order: response.data}});
-        dispatch({type: ic.INVENTORY_REFRESH, payload: {order}});
+        //dispatch({type: ic.INVENTORY_REFRESH, payload: {order}});
       }
     }).catch( (err) => {
       console.log(err);

@@ -34,12 +34,12 @@ const handlers = {
       } else if (inv.binState === bs.PURCHASE) {
         let value = pendingMap.get(productId);
         if (value == undefined) {
-          pendingMap.set(productId,{bins: String(inv.binNo), createdAt: inv.lastUpdated});
+          value = [{binNo: inv.binNo, createdAt: inv.lastUpdated}];
         }else{
-          let bins = value.bins + "," + String(inv.binNo);
-          let createdAt = value.lastUpdated > inv.lastUpdated ? value.lastUpdated: inv.lastUpdated;
-          pendingMap.set(productId,{bins, createdAt});
+          value.push({binNo: inv.binNo, createdAt: inv.lastUpdated});
         }
+        value.sort((inv1,inv2) => inv1.createdAt - inv2.createdAt);
+        pendingMap.set(productId,value);
       }
       return {...inv, prodId: productId, binId};
     });
@@ -85,15 +85,14 @@ const handlers = {
       } else if (b.binState === bs.PURCHASE) {
         let value = pendingMap.get(productId);
         if (value == undefined) {
-          pendingMap.set(productId,{bins: String(b.binNo), createdAt: b.lastUpdated});
+          value = [{binNo: inv.binNo, createdAt: inv.lastUpdated}];
         }else{
-          let bins = value.bins + "," + String(b.binNo);
-          let createdAt = value.lastUpdated > b.lastUpdated ? value.lastUpdated: b.lastUpdated;
-          pendingMap.set(productId,{bins, createdAt});
+          value.push({binNo: inv.binNo, createdAt: inv.lastUpdated});
         }
+        value.sort((inv1,inv2) => inv1.createdAt - inv2.createdAt);
+        pendingMap.set(productId,value);
       }
     });
-    // const message = "Bin Scanned Successfully";
     alert('Bin Outward Scan done successfully.');
     return ({toggleStatus: !_.toggleStatus, inventory,stockMap,pendingMap});
   },

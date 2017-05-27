@@ -75,6 +75,11 @@
             <b>productId</b>
         </field>
 
+        <field type="one-way" custom-converter="com.example.ekanban.dozer.converter.SupplierLongConverter">
+            <a>supplier</a>
+            <b>supplierId</b>
+        </field>
+
         <field custom-converter="com.example.ekanban.dozer.converter.LongDateConverter">
             <a>orderedAt</a>
             <b>orderedAt</b>

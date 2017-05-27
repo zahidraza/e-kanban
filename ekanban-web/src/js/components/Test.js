@@ -25,9 +25,6 @@ class Test extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }
-    let x = moment('26 May, 17','DD MMM, YY');
-
-    console.log(x.toDate().getTime());
   }
 
   componentWillReceiveProps (nextProps) {

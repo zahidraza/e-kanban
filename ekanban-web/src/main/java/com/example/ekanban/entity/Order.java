@@ -46,7 +46,7 @@ public class Order implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ordered_by")
     private User orderedBy;
 
@@ -66,6 +66,15 @@ public class Order implements Serializable{
 
     public Order(Product product, String bins, Date orderedAt, User orderedBy, String orderState) {
         this.product = product;
+        this.bins = bins;
+        this.orderedAt = orderedAt;
+        this.orderedBy = orderedBy;
+        this.orderState = orderState;
+    }
+
+    public Order(Product product, Supplier supplier, String bins, Date orderedAt, User orderedBy, String orderState) {
+        this.product = product;
+        this.supplier = supplier;
         this.bins = bins;
         this.orderedAt = orderedAt;
         this.orderedBy = orderedBy;

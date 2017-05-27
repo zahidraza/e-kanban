@@ -4,13 +4,11 @@ import com.example.ekanban.dto.OrderDto;
 import com.example.ekanban.entity.Inventory;
 import com.example.ekanban.entity.Order;
 import com.example.ekanban.entity.Product;
+import com.example.ekanban.entity.Supplier;
 import com.example.ekanban.enums.BinState;
 import com.example.ekanban.enums.OrderState;
 import com.example.ekanban.exception.ScanException;
-import com.example.ekanban.respository.InventoryRepository;
-import com.example.ekanban.respository.OrderRepository;
-import com.example.ekanban.respository.ProductRepository;
-import com.example.ekanban.respository.UserRepository;
+import com.example.ekanban.respository.*;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +30,7 @@ public class OrderService {
     @Autowired private ProductRepository productRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private InventoryRepository inventoryRepository;
+    @Autowired private SupplierRepository supplierRepository;
     private final Mapper mapper;
 
     @Autowired
@@ -78,6 +77,10 @@ public class OrderService {
 
         Order order = mapper.map(orderDto,Order.class);
         Product product = productRepository.findOne(orderDto.getProductId());
+        if (orderDto.getSupplierId() != null) {
+            Supplier supplier = supplierRepository.findOne(orderDto.getSupplierId());
+            order.setSupplier(supplier);
+        }
         order.setProduct(product);
         order.setOrderedBy(userRepository.findOne(orderDto.getOrderedBy()));
         order.setOrderState(OrderState.ORDERED);
@@ -95,7 +98,7 @@ public class OrderService {
     }
 
     /**
-     * Only one Update Case. When order is completed
+     * Only one Update Case. When Inward Scan is done
      * @param orderDto
      * @return
      */
@@ -112,7 +115,6 @@ public class OrderService {
             return null;
         }
         Product product = productRepository.findOne(order2.getProduct().getId());
-
         //Check whether InwardScan is possible
         if (!isInwardScanPossible(product)) {
             throw new ScanException("Inward Scan cannot be done. Maximum bins in stock cannot be greater than " + product.getNoOfBins());
@@ -128,7 +130,7 @@ public class OrderService {
             throw new ScanException("Invalid card. This card is freezed.");
         }
 
-        //find all inventory for this product and update the inevntory matching incoming bins
+        //find all inventory for this product and update the inventory matching incoming bins
         List<Inventory> inventoryList = inventoryRepository.findByProduct(order2.getProduct());
         inventoryList.forEach(inventory -> {
             if (inventory.getBinNo() == binNo) {
@@ -136,6 +138,13 @@ public class OrderService {
                 product.setStkOnFloor(product.getStkOnFloor()+product.getBinQty());
             }
         });
+
+        //Update bins_scanned value
+        String bins_scanned = order2.getBinsScanned();
+        if (bins_scanned == null) bins_scanned = String.valueOf(binNo);
+        else bins_scanned = bins_scanned + "," + binNo;
+        System.out.println(bins_scanned);
+        order2.setBinsScanned(bins_scanned);
 
         //create a list of bins in this order
         String[] bins2 = order2.getBins().split(",");

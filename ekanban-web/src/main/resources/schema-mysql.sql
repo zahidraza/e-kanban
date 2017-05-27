@@ -67,6 +67,23 @@ CREATE TABLE IF NOT EXISTS `product` (
   CONSTRAINT `FKd9gfnsjgfwjtaxl57udrbocsp` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `supplier` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `city` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `landmark` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `zip_code` varchar(255) DEFAULT NULL,
+  `contact_person` varchar(255) DEFAULT NULL,
+  `last_updated` datetime DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `supplier_type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_c3fclhmodftxk4d0judiafwi3` (`name`),
+  KEY `IDXstghp18gbnxpsn5xpugwbyb4b` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `consumption` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `last_updated` datetime DEFAULT NULL,
@@ -93,18 +110,22 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `bins` varchar(255) NOT NULL,
+  `bins_scanned` varchar(255) DEFAULT NULL,
   `completed_at` datetime DEFAULT NULL,
   `is_followed_up` bit(1) DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,
   `order_state` varchar(255) DEFAULT NULL,
   `ordered_at` datetime DEFAULT NULL,
-  `ordered_by` bigint(20) DEFAULT NULL,
+  `ordered_by` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
+  `supplier_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDXdwwii2qtm20ymro9ltbgls8k4` (`product_id`),
   KEY `FKnqxvs3gblolqvfbqk35psmp0q` (`ordered_by`),
+  KEY `FKsx1o6ggef2tp2583ohnvomxj5` (`supplier_id`),
   CONSTRAINT `FK787ibr3guwp6xobrpbofnv7le` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  CONSTRAINT `FKnqxvs3gblolqvfbqk35psmp0q` FOREIGN KEY (`ordered_by`) REFERENCES `user` (`user_id`)
+  CONSTRAINT `FKnqxvs3gblolqvfbqk35psmp0q` FOREIGN KEY (`ordered_by`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `FKsx1o6ggef2tp2583ohnvomxj5` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `section` (
@@ -115,22 +136,7 @@ CREATE TABLE IF NOT EXISTS `section` (
   UNIQUE KEY `UK_rwqtt5x96oahjdtqt20vxu4um` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `supplier` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `city` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `landmark` varchar(255) DEFAULT NULL,
-  `state` varchar(255) DEFAULT NULL,
-  `street` varchar(255) DEFAULT NULL,
-  `zip_code` varchar(255) DEFAULT NULL,
-  `contact_person` varchar(255) DEFAULT NULL,
-  `last_updated` datetime DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `supplier_type` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_c3fclhmodftxk4d0judiafwi3` (`name`),
-  KEY `IDXstghp18gbnxpsn5xpugwbyb4b` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `product_section` (
   `product_id` bigint(20) NOT NULL,

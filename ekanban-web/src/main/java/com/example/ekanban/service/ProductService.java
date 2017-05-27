@@ -304,7 +304,11 @@ public class ProductService {
                     }
                     if (builder.length() >= 2) {
                         builder.setLength(builder.length()-1);
-                        orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                        Supplier supplier = null;
+                        if (product.getSectionList().size() == 1){
+                            supplier = product.getSupplierList().iterator().next();
+                        }
+                        orderRepository.save(new Order(product,supplier,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
                     }
                     if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
                         for (int i = binInStock + binInOrder; i < noOfBins; i++){
@@ -319,7 +323,11 @@ public class ProductService {
                     }
                     if (builder.length() >= 2) {
                         builder.setLength(builder.length()-1);
-                        orderRepository.save(new Order(product,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                        Supplier supplier = null;
+                        if (product.getSectionList().size() == 1){
+                            supplier = product.getSupplierList().iterator().next();
+                        }
+                        orderRepository.save(new Order(product,supplier,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
                     }
                 }
             }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
