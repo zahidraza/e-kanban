@@ -42,7 +42,7 @@ module.exports = {
   "supplier_add_btn": "Add",
   "supplier_edit_btn": "Update",
 
-     /////////////////////// Product ////////////////////////
+  /////////////////////// Product ////////////////////////
   "label_product_add": "Add Product",
   "label_product_edit": "Update Product",
   "label_product_upload": "Upload Product",

@@ -50,7 +50,6 @@ class BarcodeGenerate extends Component {
   }
 
   _onSearch (event) {
-    console.log('_onSearch');
     let value = event.target.value;
     if (value.length > 1) {
       let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.productId.toLowerCase().includes(value.toLowerCase()));
@@ -66,14 +65,11 @@ class BarcodeGenerate extends Component {
   }
 
   _onPrint (productId) {
-    console.log(productId);
     window.open(window.serviceHost + "/products/" + productId ,"_blank","fullscreen=yes");
   }
 
   _renderProducts () {
     const {searching,available,searchText,products} = this.state;
-    console.log(available);
-    console.log(products.length);
 
     if (searching) {
       if (available) {

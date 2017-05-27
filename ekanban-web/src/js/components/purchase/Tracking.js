@@ -88,12 +88,12 @@ class Tracking extends Component {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
     }else{
+      this._loadFilterItems(this.props);
       const {page1,page2,page3,filter} = this.state;
-      const pendingInv = this._getPendingInv();
-      const orderedInv = this._getOrderedInv();
-      const delayedInv = this._getDelayedInv();
+      const pendingInv = this._getPendingInv(this.props);
+      const orderedInv = this._getOrderedInv(this.props);
+      const delayedInv = this._getDelayedInv(this.props);
       this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3,0);
-      this._loadFilterItems();
     }
   }
 
@@ -103,18 +103,24 @@ class Tracking extends Component {
     }
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
+      this._loadFilterItems(nextProps);
       const {page1,page2,page3,filter} = this.state;
-      const pendingInv = this._getPendingInv();
-      const orderedInv = this._getOrderedInv();
-      const delayedInv = this._getDelayedInv();
+      const pendingInv = this._getPendingInv(nextProps);
+      const orderedInv = this._getOrderedInv(nextProps);
+      const delayedInv = this._getDelayedInv(nextProps);
       this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3,0);
-      this._loadFilterItems();
     }
-    //this._loadInventory(this.state.page1, this.state.page2, this.state.page3);
+    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus || this.props.order.toggleStatus != nextProps.order.toggleStatus) {
+      const {page1,page2,page3,filter} = this.state;
+      const pendingInv = this._getPendingInv(nextProps);
+      const orderedInv = this._getOrderedInv(nextProps);
+      const delayedInv = this._getDelayedInv(nextProps);
+      this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3,0);
+    }
   }
 
-  _loadFilterItems () {
-    const {category: {categories}} = this.props;
+  _loadFilterItems (props) {
+    const {category: {categories}} = props;
     let classFilterItems = [
       {label: 'All', value: undefined},
       {label: 'CLASS_A', value: 'CLASS_A'},
@@ -126,8 +132,8 @@ class Tracking extends Component {
     this.setState({classFilterItems, categoryFilterItems}); 
   }
 
-  _getPendingInv () {
-    const {inventory: {pendingMap}, category: {products}} = this.props;
+  _getPendingInv (props) {
+    const {inventory: {pendingMap}, category: {products}} = props;
     let pendingInv = [];
     for (var [key, value] of pendingMap) {
       const p = products.find(prod => prod.productId == key);
@@ -147,33 +153,34 @@ class Tracking extends Component {
     return pendingInv;
   }
 
-  _getOrderedInv () {
-    const {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = this.props;
+  _getOrderedInv (props) {
+    const {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = props;
     let orderedInv = [];
     orders.forEach(o => {
       const p = products.find(prod => prod.id == o.productId);
       const s = suppliers.find(s => s.id == o.supplierId);
-      const supplierName = (s == undefined) ? '' : s.name;
+      const supplierName = (s == undefined) ? 'Blank' : s.name;
       const u = users.find(user => user.id == o.orderedBy);
       let orderedBy = (u == undefined) ? '' : u.name;
 
       if (p != undefined) {
         orderedInv.push({productId: p.productId, itemCode: p.itemCode, productName: p.name, supplierName, binSize: p.binQty + ' ' + p.uomPurchase,
-          bins: o.bins, noOfBins: getNoOfBins(o.bins), orderedAt: o.orderedAt,orderedBy,tat: p.timeProduction + p.timeTransportation, classType: p.classType, category: p.category.name});
+          bins: o.bins, noOfBins: getNoOfBins(o.bins), orderedAt: o.orderedAt,orderedBy,tat: p.timeProduction + p.timeTransportation, 
+          classType: p.classType, category: p.category.name});
       }
     });
     return orderedInv;
   }
 
-  _getDelayedInv () {
-    let {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = this.props;
+  _getDelayedInv (props) {
+    let {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = props;
     let delayedInv = [];
     let todayMillis = new Date().getTime();
     let oneDayMillis = 24*60*60*1000;
     orders.forEach(o => {
       const p = products.find(prod => prod.id == o.productId);
       const s = suppliers.find(s => s.id == o.supplierId);
-      const supplierName = (s == undefined) ? '' : s.name;
+      const supplierName = (s == undefined) ? 'Blank' : s.name;
       const u = users.find(user => user.id == o.orderedBy);
       let orderedBy = (u == undefined) ? '' : u.name;
       let delay = moment(todayMillis).diff(o.orderedAt + (p.timeProduction + p.timeTransportation)*oneDayMillis, 'days');
@@ -252,9 +259,9 @@ class Tracking extends Component {
     if (activeTab == 0) page1++;
     else if (activeTab == 1) page2++;
     else if (activeTab == 2) page3++;
-    const pendingInv = this._getPendingInv();
-    const orderedInv = this._getOrderedInv();
-    const delayedInv = this._getDelayedInv();
+    const pendingInv = this._getPendingInv(this.props);
+    const orderedInv = this._getOrderedInv(this.props);
+    const delayedInv = this._getDelayedInv(this.props);
     this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3,activeTab);
   }
 
@@ -309,18 +316,17 @@ class Tracking extends Component {
   }
 
   _onSearch (event) {
-    console.log('_onSearch');
     let value = event.target.value;
-    let pendingInv = this._getPendingInv();
-    let orderedInv = this._getOrderedInv();
-    let delayedInv = this._getDelayedInv();
+    let pendingInv = this._getPendingInv(this.props);
+    let orderedInv = this._getOrderedInv(this.props);
+    let delayedInv = this._getDelayedInv(this.props);
     const activeTab = this.state.activeTab;
     if (activeTab == 0) {
-      pendingInv = pendingInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
+      pendingInv = pendingInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.itemCode.toLowerCase().includes(value.toLowerCase()));
     } else if (activeTab == 1) {
-      orderedInv = orderedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
+      orderedInv = orderedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.itemCode.toLowerCase().includes(value.toLowerCase()));
     } else if (activeTab == 2) {
-      delayedInv = delayedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
+      delayedInv = delayedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.itemCode.toLowerCase().includes(value.toLowerCase()));
     }
     this.setState({searchText: value});
     if (value.length == 0) {
@@ -377,9 +383,9 @@ class Tracking extends Component {
     }
     this.setState({filter});
 
-    const pendingInv = this._getPendingInv();
-    const orderedInv = this._getOrderedInv();
-    const delayedInv = this._getDelayedInv();
+    const pendingInv = this._getPendingInv(this.props);
+    const orderedInv = this._getOrderedInv(this.props);
+    const delayedInv = this._getDelayedInv(this.props);
     this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3, activeTab);
   }
 
@@ -402,9 +408,9 @@ class Tracking extends Component {
 
   _onTabChange(index) {
     const {page1,page2,page3} = this.state;
-    const pendingInv = this._getPendingInv();
-    const orderedInv = this._getOrderedInv();
-    const delayedInv = this._getDelayedInv();
+    const pendingInv = this._getPendingInv(this.props);
+    const orderedInv = this._getOrderedInv(this.props);
+    const delayedInv = this._getDelayedInv(this.props);
     //load supplier filter items here
     let supplierFilterItems = [{label: 'All', value: undefined}];
     let supplierSet = new Set();
