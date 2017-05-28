@@ -190,9 +190,11 @@ public class ProductService {
         if (product.getKanbanType() == KanbanType.TWO_BIN) {
             product2.setKanbanType(KanbanType.TWO_BIN);
             updateBin(product2,2);
+            product2.setNoOfBins(2);
         }else {
             product2.setKanbanType(KanbanType.N_BIN);
             updateBin(product2,product.getNoOfBins());
+            product2.setNoOfBins(product.getNoOfBins());
         }
 
         Set<Section> sectionList = product2.getSectionList();
