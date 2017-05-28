@@ -396,7 +396,7 @@ public class CategoryRestController {
             @PathVariable("productId") Long productId,
             @Valid @RequestBody ProductDto productDto) {
 
-        logger.debug("createCategorySubCategoryProduct(): categoryId= {} , subCategoryId = {}, productId = {}, {}", categoryId, subCategoryId,productId, productDto);
+        logger.debug("updateCategorySubCategoryProduct(): categoryId= {} , subCategoryId = {}, productId = {}, {}", categoryId, subCategoryId,productId, productDto);
 
         /*//////////////Validating resources/////////////////*/
         List<String> invalidSections = MiscUtil.findInvalidResources(productDto.getSections(), SectionRestController.class);
@@ -439,11 +439,11 @@ public class CategoryRestController {
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
-        if (productService.exists(productDto.getItemCode().trim())) {
-            String msg = "Duplicate Item Code.";
-            error = new RestError(409, 409, msg, "", "");
-            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-        }
+//        if (productService.exists(productDto.getItemCode().trim())) {
+//            String msg = "Duplicate Item Code.";
+//            error = new RestError(409, 409, msg, "", "");
+//            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+//        }
 
         /*///////////////////////////////////////////////////////*/
         /*////////////checking if section resources got in ProductDto object exist in db /////// */

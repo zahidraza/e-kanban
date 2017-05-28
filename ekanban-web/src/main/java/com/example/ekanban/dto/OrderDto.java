@@ -4,6 +4,7 @@ import com.example.ekanban.enums.OrderState;
 import com.example.ekanban.enums.StringEnum;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -13,14 +14,19 @@ public class OrderDto {
 
     private Long id;
 
-    @Digits(integer = 5,fraction = 0)
+    //@Digits(integer = 5,fraction = 0)
+    //@NotNull
     private Long productId;
 
+    //@NotNull
     @Pattern(regexp="^([0-9]+)|([0-9]+[0-9,]*[0-9]+)$")  //Regex for comma separated bins
     private String bins;
 
     @Pattern(regexp="^([0-9]+)|([0-9]+[0-9,]*[0-9]+)$")  //Regex for comma separated bins
     private String binsScanned;
+
+    //@NotNull
+    private Long binQty;
 
     private Long supplierId;
 
@@ -30,6 +36,7 @@ public class OrderDto {
     @Digits(integer = 14,fraction = 0)
     private Long completedAt;
 
+    //@NotNull
     @Digits(integer = 5,fraction = 0)
     private Long orderedBy;
 
@@ -129,6 +136,14 @@ public class OrderDto {
 
     public void setSupplierId(Long supplierId) {
         this.supplierId = supplierId;
+    }
+
+    public Long getBinQty() {
+        return binQty;
+    }
+
+    public void setBinQty(Long binQty) {
+        this.binQty = binQty;
     }
 
     @Override

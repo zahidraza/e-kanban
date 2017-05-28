@@ -27,13 +27,10 @@ export function syncOrder() {
 }
 
 export function generateOrder (order) {
-  console.log('generateOrder');
   return function (dispatch) {
     dispatch({type: c.ORDER_ADD_PROGRESS});
-    console.log(order);
     axios.post(window.serviceHost + '/orders', JSON.stringify(order),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 201) {
         dispatch({type: c.ORDER_ADD_SUCCESS, payload: {order: response.data}});
         //dispatch({type: ic.INVENTORY_REFRESH, payload: {order}});
@@ -46,15 +43,12 @@ export function generateOrder (order) {
 }
 
 export function updateOrder (order) {
-  console.log('updateOrder');
   return function (dispatch) {
     dispatch({type: c.ORDER_BUSY, payload: {busy: true}});
-    console.log(order);
     axios.put(window.serviceHost + '/orders/' + order.orderId, JSON.stringify(order),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
-        dispatch({type: c.ORDER_EDIT_SUCCESS, payload: {order: response.data}});
+        dispatch({type: c.ORDER_EDIT_SUCCESS, payload: {order: response.data, bin: order.bins}});
       }
     }).catch( (err) => {
       console.log(err);
@@ -71,7 +65,6 @@ export function followupOrders (orders) {
     dispatch({type: c.ORDER_BUSY, payload: {busy: true}});
     axios.patch(window.serviceHost + '/orders', JSON.stringify(orders),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.ORDER_FOLLOWUP_SUCCESS, payload: {orders: response.data}});
       }

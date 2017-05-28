@@ -13,7 +13,6 @@ axios.interceptors.response.use(function (response) {
 });
 
 export function authenticate (username, password) {
-  console.log('authenticate');
 
   return function (dispatch) {
     dispatch({type: u.USER_AUTH_PROGRESS});
@@ -48,7 +47,6 @@ export function changePassword (credential) {
     dispatch({type: u.USER_BUSY, payload: {busy: true}});
     axios.put(window.serviceHost + '/misc/change_password?email=' +  credential.email + "&oldPassword=" + credential.oldPassword + "&newPassword=" + credential.newPassword, null, {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         if (response.data.status == "SUCCESS") {
           //dispatch({type: u.USER_CHANGE_PASSWD, payload: {message: 'Password changed successfully.'}});
@@ -74,7 +72,6 @@ export function addUser (user) {
     dispatch({type: u.USER_ADD_PROGRESS});
     axios.post(window.serviceHost + '/users', JSON.stringify(user), {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 201) {
         dispatch({type: u.USER_ADD_SUCCESS, payload: {user: response.data}});
       }
@@ -96,7 +93,6 @@ export function updateUser (user) {
     dispatch({type: u.USER_EDIT_PROGRESS});
     axios.put(window.serviceHost + '/users/' + user.id, JSON.stringify(user), {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: u.USER_EDIT_SUCCESS, payload: {user: response.data}});
         alert('User details updated successfully.');

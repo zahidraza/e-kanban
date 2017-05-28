@@ -33,12 +33,10 @@ class SupplierEdit extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.context.router.push('/supplier');
     }
     let {supplier} = this.props.supplier;
-    console.log(supplier);
     if (!('address' in supplier) || supplier.address == null || supplier.address == 'null') {
       supplier.address = {};
     }

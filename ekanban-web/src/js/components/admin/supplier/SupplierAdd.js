@@ -65,7 +65,6 @@ class SupplierAdd extends Component {
     if (Object.getOwnPropertyNames(supplier.address).length === 0) {
       delete supplier.address;
     }
-    console.log(supplier);
     this.props.dispatch(addSupplier(supplier));
   }
 

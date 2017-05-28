@@ -26,7 +26,6 @@ import Title from 'grommet/components/Title';
 import SyncIcon from 'grommet/components/icons/base/Sync';
 import PrintIcon from 'grommet/components/icons/base/Print';
 import Layer from 'grommet/components/Layer';
-import Footer from 'grommet/components/Footer';
 import Sidebar from 'grommet/components/Sidebar';
 import FilterControl from 'grommet-addons/components/FilterControl';
 import CloseIcon from 'grommet/components/icons/base/Close';
@@ -94,7 +93,7 @@ class AwaitingOrder extends Component {
       const arrTomOrder = this._getArrTomOrder(nextProps);
       this._loadOrder(awaitingOrder,arrTomOrder,filter,page1,page2,activeTab);
     }
-    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus || this.props.order.toggleStatus != nextProps.order.toggleStatus) {
+    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus) {
       const {page1, page2, filter, activeTab} = this.state;
       const awaitingOrder = this._getAwaitingOrder(nextProps);
       const arrTomOrder = this._getArrTomOrder(nextProps);
@@ -116,7 +115,7 @@ class AwaitingOrder extends Component {
   }
 
   _getAwaitingOrder (props) {
-    const {category: {products}, supplier: {suppliers}, order: {orders}} = props;
+    const {category: {products}, supplier: {suppliers}, inventory: {orders}} = props;
     let awaitingOrder = [];
     let awaitingOrders = orders.filter(o => o.orderState == 'ORDERED');
     awaitingOrders.forEach(o => {
@@ -133,10 +132,9 @@ class AwaitingOrder extends Component {
   }
 
   _getArrTomOrder (props) {
-    const {category: {products}, supplier: {suppliers}, order: {orders}} = props;
+    const {category: {products}, supplier: {suppliers}, inventory: {orders}} = props;
     let arrTomOrder = [];
     let arrTomOrders = orders.filter(o => o.orderState == 'ORDERED');
-    let oneDayMillis = 24*60*60*1000;
     arrTomOrders.forEach(o => {
       const p = products.find(prod => prod.id == o.productId);
       const s = suppliers.find(s => s.id == o.supplierId);
@@ -496,7 +494,7 @@ class AwaitingOrder extends Component {
       );
     }
 
-    const syncingIcon = this.props.order.syncing ? <Spinning /> : null;
+    const syncingIcon = this.props.inventory.syncing ? <Spinning /> : null;
 
     const awating = this._renderAwaiting();
     const arrTom = this._renderArrTom();
@@ -510,7 +508,7 @@ class AwaitingOrder extends Component {
           <Title responsive={false}>
             <span>{this.localeData.label_tracking}</span>
           </Title>
-          <Search inline={true} fill={true} size='medium' placeHolder='Search'
+          <Search inline={true} fill={true} size='medium' placeHolder='search product name, item code'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           <Button icon={<SyncIcon />}  onClick={this._onSyncClick.bind(this)}/>
           <FilterControl filteredTotal={filteredCount}
@@ -543,7 +541,7 @@ AwaitingOrder.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category,inventory: store.inventory, supplier: store.supplier, order: store.order, user: store.user};
+  return {misc: store.misc, category: store.category,inventory: store.inventory, supplier: store.supplier, user: store.user};
 };
 
 export default connect(select)(AwaitingOrder);

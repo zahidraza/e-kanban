@@ -123,13 +123,11 @@ class SubCategory extends Component {
   }
 
   _addSubCategory () {
-    console.log('_addSubCategory');
     const category = this.props.category.categories.find(c => c.name === this.state.cFilter);
     this.props.dispatch(addSubCategory(category._links.subCategoryList.href,this.state.subCategory));
   }
 
   _updateSubCategory () {
-    console.log('_updateSubCategory');
     const category = this.props.category.categories.find(c => c.name === this.state.cFilter);
     this.props.dispatch(updateSubCategory(category._links.subCategoryList.href + '/' + this.state.subCategory.id ,this.state.subCategory));
   }
@@ -157,8 +155,6 @@ class SubCategory extends Component {
   }
 
   _onFilterActivate () {
-    console.log(this.props.category.filter);
-    console.log(this.props.category.sort);
     this.setState({filterActive: true});
   }
 
@@ -173,13 +169,11 @@ class SubCategory extends Component {
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
     this.setState({subCategory: {}});
     this.props.dispatch({type: c.SUB_CATEGORY_ADD_FORM_TOGGLE,payload: {adding: true}});
   }
 
   _onRemoveClick (scId,scName, cName) {
-    console.log('_onRemoveClick');
     const category = this.props.category.categories.find(c => c.name === cName);
     let subCategory = {
       id: scId,
@@ -193,7 +187,6 @@ class SubCategory extends Component {
   }
 
   _onEditClick (scId,scName, cName) {
-    console.log('_onEditClick');
     this.setState({subCategory: {id: scId, name: scName}, cFilter: cName});
     this.props.dispatch({type: c.SUB_CATEGORY_EDIT_FORM_TOGGLE, payload:{editing: true}});
   }
@@ -204,7 +197,6 @@ class SubCategory extends Component {
   }
 
   _onCloseLayer (layer) {
-    console.log('_onCloseLayer');
     if ( layer == 'add') {
       this.props.dispatch({type: c.SUB_CATEGORY_ADD_FORM_TOGGLE,payload: {adding: false}});
     } else if (layer == 'edit') {

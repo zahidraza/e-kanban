@@ -8,6 +8,7 @@ import com.example.ekanban.enums.StringEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -87,6 +88,14 @@ public class ProductDto {
     @Digits(integer = 10,fraction = 0)
     private Long binQty;
 
+    private Long stkOnFloor;
+
+    private Long orderedQty;
+
+    private Boolean ignoreSync;
+
+    private Boolean isFreezed;
+
     private Date lastUpdated;
 
     @JsonInclude(Include.NON_NULL)
@@ -100,8 +109,6 @@ public class ProductDto {
     private List<Supplier> supplierList;
 
     private List<Consumption> consumptions;
-
-    private Boolean ignoreSync;
 
     public Category getCategory() {
         return category;
@@ -335,6 +342,30 @@ public class ProductDto {
         this.ignoreSync = ignoreSync;
     }
 
+    public Long getStkOnFloor() {
+        return stkOnFloor;
+    }
+
+    public void setStkOnFloor(Long stkOnFloor) {
+        this.stkOnFloor = stkOnFloor;
+    }
+
+    public Long getOrderedQty() {
+        return orderedQty;
+    }
+
+    public void setOrderedQty(Long orderedQty) {
+        this.orderedQty = orderedQty;
+    }
+
+    public Boolean getFreezed() {
+        return isFreezed;
+    }
+
+    public void setFreezed(Boolean freezed) {
+        isFreezed = freezed;
+    }
+
     @Override
     public String toString() {
         return "ProductDto{" +
@@ -360,12 +391,13 @@ public class ProductDto {
                 ", demand=" + demand +
                 ", noOfBins=" + noOfBins +
                 ", binQty=" + binQty +
+                ", stkOnFloor=" + stkOnFloor +
+                ", orderedQty=" + orderedQty +
+                ", ignoreSync=" + ignoreSync +
+                ", isFreezed=" + isFreezed +
                 ", lastUpdated=" + lastUpdated +
                 ", sections=" + sections +
                 ", suppliers=" + suppliers +
-                ", sectionList=" + sectionList +
-                ", supplierList=" + supplierList +
-                ", ignoreSync=" + ignoreSync +
                 '}';
     }
 }

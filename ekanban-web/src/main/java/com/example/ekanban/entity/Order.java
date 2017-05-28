@@ -31,12 +31,14 @@ public class Order implements Serializable{
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-
     @Column(name = "bins", nullable = false)
     private String bins;
 
     @Column(name = "bins_scanned")
     private String binsScanned;
+
+    @Column(name = "bin_qty")
+    private Long binQty;
 
     @Column(name = "ordered_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -72,10 +74,20 @@ public class Order implements Serializable{
         this.orderState = orderState;
     }
 
-    public Order(Product product, Supplier supplier, String bins, Date orderedAt, User orderedBy, String orderState) {
+//    public Order(Product product, Supplier supplier, String bins, Date orderedAt, User orderedBy, String orderState) {
+//        this.product = product;
+//        this.supplier = supplier;
+//        this.bins = bins;
+//        this.orderedAt = orderedAt;
+//        this.orderedBy = orderedBy;
+//        this.orderState = orderState;
+//    }
+
+    public Order(Product product, Supplier supplier, String bins, Long binQty, Date orderedAt, User orderedBy, String orderState) {
         this.product = product;
         this.supplier = supplier;
         this.bins = bins;
+        this.binQty = binQty;
         this.orderedAt = orderedAt;
         this.orderedBy = orderedBy;
         this.orderState = orderState;
@@ -167,6 +179,14 @@ public class Order implements Serializable{
 
     public void setBinsScanned(String binsScanned) {
         this.binsScanned = binsScanned;
+    }
+
+    public Long getBinQty() {
+        return binQty;
+    }
+
+    public void setBinQty(Long binQty) {
+        this.binQty = binQty;
     }
 
     @Override

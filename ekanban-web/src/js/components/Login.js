@@ -36,7 +36,6 @@ class Login extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     this.props.dispatch(navActivate(false));
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
@@ -46,7 +45,6 @@ class Login extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('componentWillReceiveProps');
     if (nextProps.misc.initialized) {
       this.setState({initializing: false});
     }

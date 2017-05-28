@@ -16,7 +16,6 @@ export function addSection (section) {
     dispatch({type: c.SECTION_ADD_PROGRESS});
     axios.post(window.serviceHost + '/sections', JSON.stringify(section), {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 201) {
         dispatch({type: c.SECTION_ADD_SUCCESS, payload: {section: response.data}});
       }
@@ -38,7 +37,6 @@ export function updateSection (section) {
     dispatch({type: c.SECTION_EDIT_PROGRESS});
     axios.put(window.serviceHost + '/sections/' + section.id, JSON.stringify(section),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.SECTION_EDIT_SUCCESS, payload: {section: response.data}});
       }
@@ -56,11 +54,9 @@ export function updateSection (section) {
 }
 
 export function removeSection (section) {
-  console.log(section);
   return function (dispatch) {
     axios.delete(window.serviceHost + '/sections/' + section.id, {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       dispatch({type: c.SECTION_REMOVE_SUCCESS, payload: {section: section}});
     }).catch( (err) => {
       if (err.response.status == 409) {

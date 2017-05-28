@@ -26,7 +26,6 @@ class Dashboard extends Component {
   }
 
   componentWillMount () {
-    console.log("componentWillMount");
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -37,7 +36,6 @@ class Dashboard extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log("componentWillReceiveProps");
     if (!this.props.misc.initialized && nextProps.misc.initialized) {
       this.setState({initializing: false});
       this._loadReport(nextProps.category.products);

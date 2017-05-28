@@ -101,7 +101,7 @@ class InwardScan extends Component {
     console.log("_scan()");
     const bin = this.state.bin;
 
-    const orders = this.props.order.orders.filter(o => o.productId == bin.productId);
+    const orders = this.props.inventory.orders.filter(o => o.productId == bin.productId);
     console.log(orders);
     let x = -2,i,order;
     for (i = 0; i < orders.length; i++) {
@@ -110,7 +110,6 @@ class InwardScan extends Component {
       x = bins.findIndex( b => b == String(bin.binNo));
       if (x != -1) break;
     }
-    console.log(order);
 
     if (x >= 0) {
       const inv = {orderId: order.id, bins: String(bin.binNo)};
@@ -229,7 +228,7 @@ InwardScan.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, inventory: store.inventory, order: store.order};
+  return {misc: store.misc, category: store.category, inventory: store.inventory};
 };
 
 export default connect(select)(InwardScan);

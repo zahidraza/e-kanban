@@ -45,7 +45,6 @@ class Sections extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -84,7 +83,6 @@ class Sections extends Component {
   }
 
   _onSearch (event) {
-    console.log('_onSearch');
     const value = event.target.value;
     const sections = this.props.section.sections.filter(s => s.name.toLowerCase().includes(value.toLowerCase()));
     this.setState({searchText: value});
@@ -121,7 +119,6 @@ class Sections extends Component {
   }
 
   _onCloseLayer (layer) {
-    console.log('_onCloseLayer');
     if ( layer == 'add') {
       this.props.dispatch({type: c.SECTION_ADD_FORM_TOGGLE, payload: {adding: false}});
     } else if (layer == 'edit') {

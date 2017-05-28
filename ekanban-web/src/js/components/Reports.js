@@ -83,7 +83,7 @@ Report.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, inventory: store.inventory, order: store.order, user: store.user};
+  return {misc: store.misc, category: store.category, inventory: store.inventory, user: store.user};
 };
 
 export default connect(select)(Report);

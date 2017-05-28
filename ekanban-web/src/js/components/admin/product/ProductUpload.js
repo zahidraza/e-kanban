@@ -38,7 +38,6 @@ class ProductUpload extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount upload');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());

@@ -27,13 +27,10 @@ export function syncInventory() {
 }
 
 export function updateInventory (inventory) {
-  console.log('updateInventory');
   return function (dispatch) {
     dispatch({type: c.INVENTORY_EDIT_PROGRESS});
-    console.log(inventory);
     axios.patch(inventory.url, JSON.stringify(inventory),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.INVENTORY_EDIT_SUCCESS, payload: {inventory: response.data}});
       }

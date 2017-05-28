@@ -12,7 +12,6 @@ axios.interceptors.response.use(function (response) {
 });
 
 export function addSupplier (supplier) {
-  console.log(supplier);
   return function (dispatch) {
     dispatch({type: c.SUPPLIER_ADD_PROGRESS});
     axios.post(window.serviceHost + '/suppliers', JSON.stringify(supplier), {headers: getHeaders()})
@@ -34,7 +33,6 @@ export function addSupplier (supplier) {
 }
 
 export function updateSupplier (supplier) {
-  console.log(supplier);
   return function (dispatch) {
     dispatch({type: c.SUPPLIER_EDIT_PROGRESS});
     axios.put(window.serviceHost + '/suppliers/' + supplier.id, JSON.stringify(supplier),{headers: getHeaders()})

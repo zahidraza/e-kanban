@@ -4,8 +4,7 @@ import {MISC_CONSTANTS as m, USER_CONSTANTS as u, CATEGORY_CONSTANTS as c,SECTIO
   INVENTORY_CONSTANTS as i,ORDER_CONSTANTS as o,NAV_ACTIVATE} from  '../utils/constants';
 
 export function initialize () {
-  console.log("initialize()");
-
+  
   return function (dispatch) {
 
     axios.all([

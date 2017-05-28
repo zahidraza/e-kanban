@@ -25,6 +25,7 @@ import Layer from 'grommet/components/Layer';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Spinning from 'grommet/components/icons/Spinning';
+import CheckBox from 'grommet/components/CheckBox';
 
 
 class ProductAdd extends Component {
@@ -34,11 +35,14 @@ class ProductAdd extends Component {
 
     this.state = {
       initializing: false,
-      product: {},
+      product: {ignoreSync: false},
       categories: [],                         //category select items 
+
       category: 'Select Category', 
       subCategories: [],                      //sub category select items 
       subCategory: 'Select Sub Category',
+      classTypes: [],
+      classValue: 'Select Class',
       errors: [],
       layer: {
         name: '',                             // name of layer under operation [section|supplier]
@@ -73,10 +77,12 @@ class ProductAdd extends Component {
     let {layer} = this.state;
 
     const list = categories.map(c => c.name);
+    let classTypes = ['Select Class','CLASS_A','CLASS_B','CLASS_C'];
+
     layer.section.filterItems = sections.map(s => s.name);
     layer.supplier.filterItems = suppliers.map(s => s.name);
 
-    this.setState({categories: list, layer: layer});
+    this.setState({categories: list, layer, classTypes});
   }
 
   componentWillReceiveProps (nextProps) {
@@ -93,10 +99,14 @@ class ProductAdd extends Component {
 
   _onSubmit (event) {     //Main Form Submit
     event.preventDefault();
-    let {product, category, subCategory, layer} = this.state;
-
+    let {product, category, subCategory, classValue, layer} = this.state;
+    //console.log(product);
     if (category.includes('Select') || subCategory.includes('Select')) {
       alert('Category or Sub Category not selected.');
+      return;
+    }
+    if (classValue.includes('Select')) {
+      alert('Class not selected.');
       return;
     }
 
@@ -110,6 +120,7 @@ class ProductAdd extends Component {
     
     product.sections = layer.section.selectedItems.map(s => s.links[0].href);
     product.suppliers = layer.supplier.selectedItems.map(s => s.links[0].href);
+    product.classType = classValue;
 
     if (Object.getOwnPropertyNames(product.sections).length === 0) {
       delete product.sections;
@@ -127,6 +138,12 @@ class ProductAdd extends Component {
     this.setState({product: product});
   }
 
+  _onChangeCheckbox (event) {
+    let product = this.state.product;
+    product.ignoreSync = !product.ignoreSync;
+    this.setState({product});
+  }
+
   _cFilter (event) {  //Category Filter
     let {category} = this.state;
     category = event.value;
@@ -137,10 +154,13 @@ class ProductAdd extends Component {
     this.setState({category: category, subCategories: subCategories, subCategory: 'Select Sub Category'});
   }
 
-  _scFilter (event) { //Sub Category Filter
-    let {subCategory} = this.state;
-    subCategory = event.value;
-    this.setState({subCategory: subCategory});
+  _onChangeSelect (name,event) { 
+    let {subCategory, classValue} = this.state;
+    if (name == 'subCategory')
+      subCategory = event.value;
+    else if (name == 'class')
+      classValue = event.value;
+    this.setState({subCategory,classValue});
   }
 
   _onClose (event) {  //Main form close
@@ -269,7 +289,7 @@ class ProductAdd extends Component {
   }
 
   render () {
-    const {product,categories,category,subCategories,subCategory,layer,initializing} = this.state;
+    const {product,categories,category,subCategories,subCategory,layer,initializing, classTypes, classValue} = this.state;
     const {errorProduct: errors, busy} = this.props.category;
 
     if (initializing) {
@@ -309,7 +329,7 @@ class ProductAdd extends Component {
                   </FormField>
                   <FormField label="Sub Category*" htmlFor="sType" >
                     <Select id="sType" name="sType" options={subCategories}
-                      value={subCategory}  onChange={this._scFilter.bind(this)} />
+                      value={subCategory}  onChange={this._onChangeSelect.bind(this,'subCategory')} />
                   </FormField>
 
                   <FormField label="Product Name*" error={errors.name}>
@@ -330,7 +350,24 @@ class ProductAdd extends Component {
                   <FormField label="Packet Size*" error={errors.packetSize}>
                     <input type="text" name="packetSize" value={product.packetSize} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  
+                </fieldset>
+                <fieldset>
+                  <FormField label="Class" htmlFor="class">
+                    <Select id="class" name="class" options={classTypes}
+                      value={classValue}  onChange={this._onChangeSelect.bind(this,'class')} />
+                  </FormField>
+                  <FormField label="Demand" error={errors.demand}>
+                    <input type="text" name="demand" value={product.demand} onChange={this._onInputChange.bind(this)} />
+                  </FormField>
+                  <FormField label="Stock on Floor" error={errors.stkOnFloor}>
+                    <input type="text" name="stkOnFloor" value={product.stkOnFloor} onChange={this._onInputChange.bind(this)} />
+                  </FormField>
+                  <FormField label="Ordered Qty" error={errors.orderedQty}>
+                    <input type="text" name="orderedQty" value={product.orderedQty} onChange={this._onInputChange.bind(this)} />
+                  </FormField>
+                  <FormField label="Lock" error={errors.ignoreSync}>
+                    <CheckBox toggle={true}  checked={product.ignoreSync} onChange={this._onChangeCheckbox.bind(this)}/>
+                  </FormField>
                 </fieldset>
 
                 <fieldset>

@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { localeData } from '../../../reducers/localization';
-import {removeProduct,syncProduct}  from '../../../actions/product';
+import {removeProduct,syncProduct,syncOneProduct}  from '../../../actions/product';
 import {initialize}  from '../../../actions/misc';
 import {getMonth,getItemMasterHeader,getItemMasterBody}  from '../../../utils/miscUtil';
 import {PRODUCT_CONSTANTS as c}  from '../../../utils/constants';
@@ -15,6 +15,7 @@ import Button from 'grommet/components/Button';
 import Edit from "grommet/components/icons/base/Edit";
 import FilterControl from 'grommet-addons/components/FilterControl';
 import Header from 'grommet/components/Header';
+import Heading from 'grommet/components/Heading';
 import HelpIcon from 'grommet/components/icons/base/Help';
 import Search from 'grommet/components/Search';
 import Section from 'grommet/components/Section';
@@ -23,11 +24,15 @@ import ProductFilter from './ProductFilter';
 import Table from 'grommet/components/Table';
 import TableHeader from 'grommet/components/TableHeader';
 import TableRow from 'grommet/components/TableRow';
-import Trash from "grommet/components/icons/base/Trash";
+// import Trash from "grommet/components/icons/base/Trash";
 import Title from 'grommet/components/Title';
 import UploadIcon from 'grommet/components/icons/base/Upload';
 import SyncIcon from 'grommet/components/icons/base/Sync';
 import DownloadIcon from 'grommet/components/icons/base/Download';
+import ViewIcon from "grommet/components/icons/base/View";
+import List from 'grommet/components/List';
+import ListItem from 'grommet/components/ListItem';
+import Layer from 'grommet/components/Layer';
 
 class Product extends Component {
 
@@ -37,6 +42,7 @@ class Product extends Component {
       initializing: false,
       searching: false,
       syncing: false,
+      viewing: false,
       errors: [],
       products: [],
       productsDownload:[],
@@ -52,11 +58,11 @@ class Product extends Component {
     this._loadProduct = this._loadProduct.bind(this);
     this._productSort = this._productSort.bind(this);
     this._renderProducts = this._renderProducts.bind(this);
+    this._renderLayerView = this._renderLayerView.bind(this);
     this._onMore = this._onMore.bind(this);
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -87,6 +93,9 @@ class Product extends Component {
       this.setState({syncing: true});
       this.props.dispatch(syncProduct());
     }
+    if (nextProps.category.productAdded != -1) {
+      this.props.dispatch(syncOneProduct(nextProps.category.productAdded));
+    }
   }
 
   _onMore () {
@@ -96,6 +105,9 @@ class Product extends Component {
 
   _loadProduct (products,filter,sort,page) {
     const unfilteredCount = products.length;
+    //Filter non discontinued product
+    products = products.filter(p => !p.freezed);
+
     if ('class' in filter) {
       const classFilter = filter.class;
       products = products.filter(p => classFilter.includes(p.classType));
@@ -105,15 +117,33 @@ class Product extends Component {
       products = products.filter(p => categoryFilter.includes(p.category.name));
     }
 
-    // const subCategoryFilter = filter.subCategory;
-    // if (!subCategoryFilter.includes('All')) {
-    //   products = products.filter(p => subCategoryFilter.includes(p.subCategory.name));
-    // }
+    if ('subCategory' in filter) {
+      const subCategoryFilter = filter.subCategory;
+      if (!subCategoryFilter.includes('All'))
+        products = products.filter(p => subCategoryFilter.includes(p.subCategory.name));
+    }
 
-    // const sectionFilter = filter.section;
-    // if (!sectionFilter.includes('All')) {
-    //   products = products.filter(p => sectionFilter.includes(p.subCategory.name));
-    // }
+    if ('section' in filter) {
+      const sectionFilter = filter.section;
+      if (!sectionFilter.includes('All'))
+        products = products.filter(p => {
+          for (let i = 0; i < p.sectionList.length; i++) {
+            if (sectionFilter.includes(p.sectionList[i].name)) return true;
+          }
+          return false;
+        });
+    }
+
+    if ('supplier' in filter) {
+      const supplierFilter = filter.supplier;
+      if (!supplierFilter.includes('All'))
+        products = products.filter(p => {
+          for (let i = 0; i < p.supplierList.length; i++) {
+            if (supplierFilter.includes(p.supplierList[i].name)) return true;
+          }
+          return false;
+        });
+    }
 
     const filteredCount = products.length;
     let productNotAvailable = false;
@@ -171,19 +201,22 @@ class Product extends Component {
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
     this.props.dispatch({type: c.PRODUCT_ADD_FORM_TOGGLE,payload: {adding: true}});
   }
 
+  _onViewClick (index) {
+    const {products} = this.state;
+    let product = {...products[index]};
+    this.setState({product,viewing: true});
+  }
+
   _onUploadClick () {
-    console.log('_onUploadClick');
+
     this.props.dispatch({type: c.PRODUCT_UPLOAD_FORM_TOGGLE,payload: {uploading: true}});
   }
 
   _onRemoveClick (index) {
-    console.log('_onRemoveClick');
     const {products} = this.state;
-
     this.props.dispatch(removeProduct(products[index]));
   }
 
@@ -207,6 +240,131 @@ class Product extends Component {
     window.open(helpUrl);
   }
 
+  _onCloseLayer () {
+    this.setState({viewing: false});
+  }
+
+  _renderLayerView () {
+    const {product,viewing} = this.state;
+    console.log(product);
+    if (!viewing) return null;
+
+    const suppliers = product.supplierList.map((s,i) => {
+      return (
+        <ListItem  key={i} justify="end" pad={{vertical:'small',horizontal:'small'}} >
+          {s.name}
+        </ListItem>
+      );
+    });
+    let sections = '  ';
+    product.sectionList.forEach(s => sections += s.name + ', ');
+    sections = sections.substring(0,sections.length-2).trim();
+    
+
+    return (
+      <Layer hidden={!viewing}  onClose={this._onCloseLayer.bind(this)}  closer={true} align="center">
+        <Box size="large"  pad={{vertical: 'none', horizontal:'small'}}>
+          <Header><Heading tag="h3" strong={true} >Product Details</Heading></Header>
+          <List>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> product Name: </span>
+              <span className="secondary">{product.name}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Item Code: </span>
+              <span className="secondary">{product.itemCode}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Category: </span>
+              <span className="secondary">{product.category.name}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Sub Category: </span>
+              <span className="secondary">{product.subCategory.name}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Price: </span>
+              <span className="secondary">{"Rs "+product.price}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Class: </span>
+              <span className="secondary">{product.classType}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Kanban Type: </span>
+              <span className="secondary">{product.kanbanType}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Bin Quantity: </span>
+              <span className="secondary">{product.binQty + " " + product.uomPurchase}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> No. of Bins: </span>
+              <span className="secondary">{product.noOfBins}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Minimum Order Quantity: </span>
+              <span className="secondary">{product.minOrderQty + " " + product.uomPurchase}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Packet Size: </span>
+              <span className="secondary">{product.packetSize + " " + product.uomPurchase}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Demand: </span>
+              <span className="secondary">{product.demand + " " + product.uomPurchase + "/day"}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Stock on Floor: </span>
+              <span className="secondary">{product.stkOnFloor + " " + product.uomPurchase}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Ordered Qty: </span>
+              <span className="secondary">{product.orderedQty + " " + product.uomPurchase}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Is Locked? </span>
+              <span className="secondary">{product.ignoreSync ? 'YES' : 'NO'}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Is Discontinued? </span>
+              <span className="secondary">{product.freezed ? 'YES' : 'NO'}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Ordering time: </span>
+              <span className="secondary">{product.timeOrdering + " days"}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Production time: </span>
+              <span className="secondary">{product.timeProduction + " days"}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Transportation time: </span>
+              <span className="secondary">{product.timeTransportation + " days"}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Buffer time: </span>
+              <span className="secondary">{product.timeBuffer + " days"}</span>
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> Sections: </span>
+              <span className="secondary"/>
+            </ListItem>
+            <ListItem justify="end" pad={{vertical:'small',horizontal:'small'}} >
+              {sections}
+            </ListItem>
+            <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+              <span> suppliers: </span>
+              <span className="secondary"/>
+            </ListItem>
+            {suppliers}
+          </List>
+        </Box>
+        <Box pad={{vertical: 'medium', horizontal:'small'}} />
+      </Layer>
+    );
+  }
+
   _renderProducts (products) {
     const items = products.map((p, index)=>{
       let sections = '  ';
@@ -224,8 +382,8 @@ class Product extends Component {
           <td>{p.price}</td>
           <td>{p.classType}</td>
           <td style={{textAlign: 'right', padding: 0}}>
+            <Button icon={<ViewIcon />} onClick={this._onViewClick.bind(this,index)} />
             <Button icon={<Edit />} onClick={this._onEditClick.bind(this,index)} />
-            <Button icon={<Trash />} onClick={this._onRemoveClick.bind(this,index)} />
           </td>
         </TableRow>
 
@@ -250,6 +408,7 @@ class Product extends Component {
 
     const loading = refreshing ? (<Spinning />) : null;
     const layerFilter = filterActive ? <ProductFilter onClose={this._onFilterDeactivate.bind(this)}/> : null;
+    const layerView = this._renderLayerView();
 
     const items = this._renderProducts(products);
     let onMore;
@@ -306,6 +465,7 @@ class Product extends Component {
           </Box>
         </Section>
         {layerFilter}
+        {layerView}
       </Box>
     );
   }

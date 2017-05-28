@@ -149,14 +149,33 @@ public class ProductService {
         }
         product.setSectionList(sectionList);
         product.setSupplierList(supplierList);
+
         /*//////Setting stkOnFloor and orderedQty to zero if value is null*/
         if (product.getStkOnFloor() == null)    product.setStkOnFloor(0L);
         if (product.getOrderedQty() == null)    product.setOrderedQty(0L);
-        /*//////Setting ignoreSync, isFrrezed and isNew Value/////////////*/
-        product.setIgnoreSync(false);
+        if (product.getDemand() == null)    product.setDemand(0L);
         product.setNew(true);
         product.setFreezed(false);
         product.setLastScanned(new Date());
+        product.setTotalLeadTime(product.getTimeOrdering()+product.getTimeProduction()+product.getTimeTransportation()+product.getTimeBuffer());
+        /*///Setting Dynamic values///*/
+        ClassType classType = product.getClassType();
+        KanbanType kanbanType = classType == ClassType.CLASS_A || classType == ClassType.CLASS_B ? KanbanType.N_BIN : KanbanType.TWO_BIN;
+        product.setKanbanType(kanbanType);
+        ///////////////////
+        long binQty = product.getDemand() > product.getMinOrderQty() ? product.getDemand() : product.getMinOrderQty();
+        if (product.getPacketSize().doubleValue() < 1.0){
+            binQty = (long)((binQty/product.getPacketSize().doubleValue() + 1)*product.getPacketSize().doubleValue());
+        }else {
+            binQty = (binQty/product.getPacketSize().longValue() + 1)*product.getPacketSize().longValue();
+        }
+        product.setBinQty(binQty);
+        int noOfBins = 2;
+        if (classType != ClassType.CLASS_C) {
+            int tat = product.getTimeOrdering() + product.getTimeProduction() + product.getTimeTransportation() + product.getTimeBuffer();
+            noOfBins = (int)(product.getDemand()*tat /binQty + 2);
+        }
+        product.setNoOfBins(noOfBins);
         product = productRepository.save(product);
         return mapper.map(product, ProductDto.class);
     }
@@ -168,6 +187,14 @@ public class ProductService {
 
         map(product, product2);
 
+        if (product.getKanbanType() == KanbanType.TWO_BIN) {
+            product2.setKanbanType(KanbanType.TWO_BIN);
+            updateBin(product2,2);
+        }else {
+            product2.setKanbanType(KanbanType.N_BIN);
+            updateBin(product2,product.getNoOfBins());
+        }
+
         Set<Section> sectionList = product2.getSectionList();
         sectionList.clear();
         sections.forEach(secId -> {
@@ -178,7 +205,65 @@ public class ProductService {
         suppliers.forEach(secId -> {
             supplierList.add(supplierRepository.findOne(secId));
         });
+
+
         return mapper.map(product2, ProductDto.class);
+    }
+
+    private void updateBin(Product product, int bins) {
+        Set<Inventory> inventorySet = product.getInventorySet();
+        Inventory inv = null;
+        int diff = product.getNoOfBins() - bins;  //[curr - updated]
+        if (diff > 0) {         /*//////////bins reduced////////*/
+            List<Inventory> pending = inventorySet.stream().filter(inventory -> inventory.getBinState() == BinState.PURCHASE).collect(Collectors.toList());
+            List<Inventory> stock = inventorySet.stream().filter(inventory -> inventory.getBinState() == BinState.STORE).collect(Collectors.toList());
+            List<Inventory> ordered = inventorySet.stream().filter(inventory -> inventory.getBinState() == BinState.ORDERED).collect(Collectors.toList());
+            //Check pending orders
+            if (pending.size() > diff) {  //update diff inventory to freezed state
+                for (int i = 0; i < diff; i++) {
+                    inv = pending.get(i);
+                    inv.setBinState(BinState.FREEZED);
+                }
+            }else {
+                pending.forEach(inventory -> inventory.setBinState(BinState.FREEZED));
+                int x = diff - pending.size(); //yet surplus
+                if (stock.size() > x) {
+                    for (int i = 0; i < x; i++) {
+                        inv = stock.get(i);
+                        inv.setBinState(BinState.FREEZED);
+                    }
+                }else {
+                    stock.forEach(inventory -> inventory.setBinState(BinState.FREEZED));
+                    int y = x - ordered.size(); //yet surplus
+                    for (int i = 0; i < y; i++) {
+                        inv = ordered.get(i);
+                        inv.setBinState(BinState.FREEZED);
+                    }
+                }
+            }
+        }else {                     /*//////////bins increased////////*/
+            List<Inventory> passiveInvList = inventorySet.stream()
+                    .filter(inventory -> inventory.getBinState() == BinState.FREEZED)
+                    .collect(Collectors.toList());
+            int activeInv = inventorySet.stream()
+                    .filter(inventory -> inventory.getBinState() != BinState.FREEZED)
+                    .collect(Collectors.toList())
+                    .size();
+
+            int passiveInv = passiveInvList.size();
+            if (product.getNoOfBins() - activeInv < passiveInv) {
+                for (int i = 0; i < product.getNoOfBins() - activeInv; i++) {
+                    inv = passiveInvList.get(i);
+                    inv.setBinState(BinState.PURCHASE);
+                }
+            }else {
+                passiveInvList.forEach(inventory -> inventory.setBinState(BinState.PURCHASE));
+                for (int i = activeInv + passiveInv + 1; i <= product.getNoOfBins(); i++) {
+                    product.addInventory(new Inventory(i, BinState.PURCHASE));
+                }
+            }
+        }
+
     }
 
     @Transactional
@@ -226,6 +311,9 @@ public class ProductService {
         totalMonthyConsumption = 0L;
         commulativePercentage = 0.0;
         List<Product> products = productRepository.findAll();
+        //Filter unlocked product
+        products = products.stream().filter(product -> !product.getIgnoreSync()).collect(Collectors.toList());
+
         Map<Long,PConsumption> consumptionMap = new HashedMap();
 
         /*/////////Processing monthly consumption/////////*/
@@ -277,9 +365,13 @@ public class ProductService {
         });
     }
 
-    private void updateInventory(Product product) {
+    @Transactional
+    public void syncOne(Long productId) {
+        Product product = productRepository.findOne(productId);
+        updateInventory(product);
+    }
 
-        if (product.getIgnoreSync()) return;
+    private void updateInventory(Product product) {
 
         /*////For setting ordered by in case bin is ordered by app for first time */
         User application = userRepository.findOne(1L);
@@ -308,7 +400,7 @@ public class ProductService {
                         if (product.getSectionList().size() == 1){
                             supplier = product.getSupplierList().iterator().next();
                         }
-                        orderRepository.save(new Order(product,supplier,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                        orderRepository.save(new Order(product,supplier,builder.toString(),product.getBinQty(),new Date(),application, OrderState.ORDERED.getValue()));
                     }
                     if (noOfBins - (binInStock + binInOrder) > 0){ //noOfBins - (binInStock + binInOrder) > 0, means this diff Bins are pending orders
                         for (int i = binInStock + binInOrder; i < noOfBins; i++){
@@ -327,7 +419,7 @@ public class ProductService {
                         if (product.getSectionList().size() == 1){
                             supplier = product.getSupplierList().iterator().next();
                         }
-                        orderRepository.save(new Order(product,supplier,builder.toString(),new Date(),application, OrderState.ORDERED.getValue()));
+                        orderRepository.save(new Order(product,supplier,builder.toString(),product.getBinQty(),new Date(),application, OrderState.ORDERED.getValue()));
                     }
                 }
             }else { // //binInStock is greater than NoOfBins, So add noOfBins Bin in Stock and stop any further processing Since Stock is full
@@ -344,7 +436,7 @@ public class ProductService {
                     .size();
 
             Inventory inv = null;
-            if (activeInv < product.getNoOfBins()) {
+            if (activeInv < product.getNoOfBins()) {  //bins got increased
                 List<Inventory> passiveInvList = inventoryList.stream()
                         .filter(inventory -> inventory.getBinState() == BinState.FREEZED)
                         .collect(Collectors.toList());
@@ -360,13 +452,34 @@ public class ProductService {
                         product.addInventory(new Inventory(i, BinState.PURCHASE));
                     }
                 }
-            }else {
-                List<Inventory> activeInvList = inventoryList.stream()
-                        .filter(inventory -> inventory.getBinState() != BinState.FREEZED)
-                        .collect(Collectors.toList());
-                for (int i = 0; i < activeInv - product.getNoOfBins(); i++) {
-                    inv = activeInvList.get(i);
-                    inv.setBinState(BinState.FREEZED);
+            }else {     //bins decreased
+                List<Inventory> pending = inventoryList.stream().filter(inventory -> inventory.getBinState() == BinState.PURCHASE).collect(Collectors.toList());
+                List<Inventory> stock = inventoryList.stream().filter(inventory -> inventory.getBinState() == BinState.STORE).collect(Collectors.toList());
+                List<Inventory> ordered = inventoryList.stream().filter(inventory -> inventory.getBinState() == BinState.ORDERED).collect(Collectors.toList());
+
+                int diff = activeInv - product.getNoOfBins();
+                //Check pending orders
+                if (pending.size() > diff) {  //update diff inventory to freezed state
+                    for (int i = 0; i < diff; i++) {
+                        inv = pending.get(i);
+                        inv.setBinState(BinState.FREEZED);
+                    }
+                }else {
+                    pending.forEach(inventory -> inventory.setBinState(BinState.FREEZED));
+                    int x = diff - pending.size(); //yet surplus
+                    if (stock.size() > x) {
+                        for (int i = 0; i < x; i++) {
+                            inv = stock.get(i);
+                            inv.setBinState(BinState.FREEZED);
+                        }
+                    }else {
+                        stock.forEach(inventory -> inventory.setBinState(BinState.FREEZED));
+                        int y = x - ordered.size(); //yet surplus
+                        for (int i = 0; i < y; i++) {
+                            inv = ordered.get(i);
+                            inv.setBinState(BinState.FREEZED);
+                        }
+                    }
                 }
             }
 
@@ -616,8 +729,11 @@ public class ProductService {
         if (src.getClassType() != null) dest.setClassType(src.getClassType());
         if (src.getKanbanType() != null) dest.setKanbanType(src.getKanbanType());
         if (src.getBinQty() != null) dest.setBinQty(src.getBinQty());
-        if (src.getNoOfBins() != null) dest.setNoOfBins(src.getNoOfBins());
+//        if (src.getNoOfBins() != null) dest.setNoOfBins(src.getNoOfBins());
         if (src.getDemand() != null) dest.setDemand(src.getDemand());
+        if (src.getStkOnFloor() != null) dest.setStkOnFloor(src.getStkOnFloor());
+        if (src.getIgnoreSync() != null) dest.setIgnoreSync(src.getIgnoreSync());
+        if (src.getFreezed() != null) dest.setFreezed(src.getFreezed());
     }
 
     /**

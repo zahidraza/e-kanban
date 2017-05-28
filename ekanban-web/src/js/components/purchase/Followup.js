@@ -71,14 +71,14 @@ class Followup extends Component {
       this.setState({initializing: false});
       this._loadOrder(this._getOpenOrders(),this.state.filter,this.state.page,true);
     }
-    if (this.props.order.toggleStatus != nextProps.order.toggleStatus) {
+    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus) {
       this._loadOrder(this._getOpenOrders(),this.state.filter,this.state.page,false);
     }
     
   }
 
   _getOpenOrders () {
-    const {category: {products}, order: {orders}} = this.props;
+    const {category: {products}, inventory: {orders}} = this.props;
     let orderedInv = [];
     let orderedOrders = orders.filter(o => o.orderState == 'ORDERED' && !o.followedUp);
 
@@ -132,7 +132,7 @@ class Followup extends Component {
     const {filter,page} = this.state;
     let value = event.target.value;
     let orderedInv = this._getOpenOrders();
-    orderedInv = orderedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.productId.toLowerCase().includes(value.toLowerCase()));
+    orderedInv = orderedInv.filter(i => i.productName.toLowerCase().includes(value.toLowerCase()) || i.itemCode.toLowerCase().includes(value.toLowerCase()));
     this.setState({searchText: value});
     if (value.length == 0) {
       this._loadOrder(orderedInv, filter,page,false);
@@ -303,7 +303,7 @@ class Followup extends Component {
       );
     }
 
-    const busyIcon = this.props.order.busy ? <Spinning /> : null;
+    const busyIcon = this.props.inventory.busy ? <Spinning /> : null;
 
     return (
       <Box>
@@ -312,7 +312,7 @@ class Followup extends Component {
           <Title responsive={false}>
             <span>Followup</span>
           </Title>
-          <Search inline={true} fill={true} size='medium' placeHolder='search'
+          <Search inline={true} fill={true} size='medium' placeHolder='search product name, item code'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           <FilterControl filteredTotal={filteredCount}
             unfilteredTotal={unfilteredCount}
@@ -341,7 +341,7 @@ Followup.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc,category: store.category, order: store.order, user: store.user};
+  return {misc: store.misc,category: store.category, inventory: store.inventory, user: store.user};
 };
 
 export default connect(select)(Followup);

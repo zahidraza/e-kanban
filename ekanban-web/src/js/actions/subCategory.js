@@ -16,7 +16,7 @@ export function addSubCategory (url,subCategory) {
     dispatch({type: c.SUB_CATEGORY_ADD_PROGRESS});
     axios.post(url, JSON.stringify(subCategory), {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
+
       if (response.status == 201) {
         dispatch({type: c.SUB_CATEGORY_ADD_SUCCESS, payload: {subCategory: response.data}});
       }
@@ -38,7 +38,6 @@ export function updateSubCategory (url,subCategory) {
     dispatch({type: c.SUB_CATEGORY_EDIT_PROGRESS});
     axios.put(url, JSON.stringify(subCategory),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.SUB_CATEGORY_EDIT_SUCCESS, payload: {subCategory: response.data}});
       }
@@ -56,11 +55,10 @@ export function updateSubCategory (url,subCategory) {
 }
 
 export function removeSubCategory (subCategory) {
-  console.log(subCategory);
+
   return function (dispatch) {
     axios.delete(subCategory._links.self.href, {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       dispatch({type: c.SUB_CATEGORY_REMOVE_SUCCESS, payload: {subCategory: subCategory}});
     }).catch( (err) => {
       if (err.response.status == 409) {

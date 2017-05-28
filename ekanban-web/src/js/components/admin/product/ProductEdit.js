@@ -24,6 +24,7 @@ import Layer from 'grommet/components/Layer';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Spinning from 'grommet/components/icons/Spinning';
+import CheckBox from 'grommet/components/CheckBox';
 
 
 class ProductEdit extends Component {
@@ -100,11 +101,7 @@ class ProductEdit extends Component {
     if (Object.getOwnPropertyNames(product.suppliers).length === 0) {
       delete product.suppliers;
     }
-    delete product.category;
-    delete product.subCategory;
-    delete product.sectionList;
-    delete product.supplierList;
-
+    console.log(product);
     this.props.dispatch(updateProduct(url,product));
   }
 
@@ -188,6 +185,22 @@ class ProductEdit extends Component {
     this.setState({layer: layer});
   }
 
+  _onChangeSelect (event) {
+    let {product} = this.state;
+    product.kanbanType = event.value;
+    this.setState({product});
+  }
+
+  _onChangeCheckbox (element) {
+    let {product} = this.state;
+    if (element == 'lock') {
+      product.ignoreSync = !product.ignoreSync;
+    }else if (element == 'discontinue') {
+      product.freezed = !product.freezed;
+    }
+    this.setState({product});
+  }
+
   _renderLayer (name) {
     const {layer} = this.state;
 
@@ -265,6 +278,15 @@ class ProductEdit extends Component {
 
     const busyIcon = busy ? <Spinning /> : null;
 
+    let binControl;
+    if (product.kanbanType == 'N_BIN') {
+      binControl = (
+        <FormField label="No of Bins" error={errors.noOfBins}>
+          <input type="text" name="noOfBins" value={product.noOfBins} onChange={this._onInputChange.bind(this)} />
+        </FormField>
+      );
+    }
+
     return (
       <Box>
         <AppHeader/>
@@ -287,9 +309,6 @@ class ProductEdit extends Component {
                   <FormField label="Product Description" error={errors.description}>
                     <input type="text" name="description" value={product.description} onChange={this._onInputChange.bind(this)} />
                   </FormField>
-                  <FormField label="Item Code" error={errors.itemCode}>
-                    <input type="text" name="itemCode" value={product.itemCode} onChange={this._onInputChange.bind(this)} />
-                  </FormField>
                   <FormField label="Price" error={errors.price}>
                     <input type="text" name="price" value={product.price} onChange={this._onInputChange.bind(this)} />
                   </FormField>
@@ -300,6 +319,26 @@ class ProductEdit extends Component {
                     <input type="text" name="packetSize" value={product.packetSize} onChange={this._onInputChange.bind(this)} />
                   </FormField>
 
+                </fieldset>
+
+                <fieldset>
+                  <FormField label="Kanban Type" htmlFor="class">
+                    <Select id="class" name="class" options={['N_BIN','TWO_BIN']}
+                      value={product.kanbanType}  onChange={this._onChangeSelect.bind(this)} />
+                  </FormField>
+                  {binControl}
+                  {/*<FormField label="Stock on Floor" error={errors.stkOnFloor}>
+                    <input type="text" name="stkOnFloor" value={product.stkOnFloor} onChange={this._onInputChange.bind(this)} />
+                  </FormField>*/}
+                  {/*<FormField label="Demand" error={errors.demand}>
+                    <input type="text" name="demand" value={product.demand} onChange={this._onInputChange.bind(this)} />
+                  </FormField>*/}
+                  <FormField label="Lock" error={errors.ignoreSync}>
+                    <CheckBox toggle={true}  checked={product.ignoreSync} onChange={this._onChangeCheckbox.bind(this,'lock')}/>
+                  </FormField>
+                  <FormField label="Discontinue" error={errors.freezed}>
+                    <CheckBox toggle={true}  checked={product.freezed} onChange={this._onChangeCheckbox.bind(this,'discontinue')}/>
+                  </FormField>
                 </fieldset>
 
                 <fieldset>
@@ -334,6 +373,8 @@ class ProductEdit extends Component {
                     <input type="text" name="conversionFactor" value={product.conversionFactor} onChange={this._onInputChange.bind(this)} />
                   </FormField>
                 </fieldset>
+
+                
 
                 {sectionFields}
                 {supplierFields}

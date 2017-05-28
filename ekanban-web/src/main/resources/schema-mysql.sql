@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `bins` varchar(255) NOT NULL,
   `bins_scanned` varchar(255) DEFAULT NULL,
+  `bin_qty` bigint(20) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   `is_followed_up` bit(1) DEFAULT NULL,
   `last_updated` datetime DEFAULT NULL,

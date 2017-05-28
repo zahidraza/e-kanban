@@ -51,8 +51,8 @@ class BarcodeGenerate extends Component {
 
   _onSearch (event) {
     let value = event.target.value;
-    if (value.length > 1) {
-      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.productId.toLowerCase().includes(value.toLowerCase()));
+    if (value.length > 0) {
+      let products = this.props.category.products.filter(p => p.name.toLowerCase().includes(value.toLowerCase()) || p.itemCode.toLowerCase().includes(value.toLowerCase()));
       let available = products.length > 0 ? true : false;
       this.setState({searchText: value,products, searching: true, available});
     }else{
@@ -76,7 +76,7 @@ class BarcodeGenerate extends Component {
         const items = products.map((p, index)=>{
           return (
             <TableRow key={index}  >
-              <td >{p.productId}</td>
+              <td >{p.itemCode}</td>
               <td >{p.name}</td>
               <td >{p.category.name}</td>
               <td >{p.subCategory.name}</td>
@@ -90,7 +90,7 @@ class BarcodeGenerate extends Component {
         });
         return (
           <Table scrollable={true}>
-            <TableHeader labels={['Product Id','Product Name','Category','Sub Category','No. of Bins', 'Bin Size','Print']} />
+            <TableHeader labels={['Item Code','Product Name','Category','Sub Category','No. of Bins', 'Bin Size','Print']} />
 
             <tbody>{items}</tbody>
           </Table>
@@ -129,7 +129,7 @@ class BarcodeGenerate extends Component {
           <Title responsive={false}>
             <span>{this.localeData.label_generate_barcode}</span>
           </Title>
-          <Search inline={true} fill={true} size='medium' placeHolder='Search Products [Enter minimum of 2 characters]'
+          <Search inline={true} fill={true} size='medium' placeHolder='search item code, product name'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           <Button icon={<HelpIcon />} onClick={this._onHelpClick.bind(this)}/>
         </Header>

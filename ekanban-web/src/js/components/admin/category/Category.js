@@ -42,7 +42,6 @@ class Category extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());

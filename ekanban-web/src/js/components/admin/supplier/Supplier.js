@@ -52,7 +52,6 @@ class Supplier extends Component {
   }
 
   componentWillMount () {
-    console.log('componentWillMount');
     if (!this.props.misc.initialized) {
       this.setState({initializing: true});
       this.props.dispatch(initialize());
@@ -63,7 +62,6 @@ class Supplier extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    console.log('componentWillReceiveProps');
     if ( (this.props.supplier.toggleStatus != nextProps.supplier.toggleStatus) || (!this.props.misc.initialized && nextProps.misc.initialized) ) {
       const {suppliers,filter,sort} = nextProps.supplier;
       this._loadSupplier(suppliers,filter,sort,1);
@@ -75,7 +73,6 @@ class Supplier extends Component {
   }
 
   _loadSupplier (suppliers,filter,sort,page) {
-    console.log("_loadSupplier()");
     let unfilteredCount = suppliers.length;
 
     if ('supplierType' in filter) {
@@ -119,8 +116,6 @@ class Supplier extends Component {
   }
 
   _onFilterActivate () {
-    console.log(this.props.supplier.filter);
-    console.log(this.props.supplier.sort);
     this.setState({filterActive: true});
   }
 
@@ -135,12 +130,10 @@ class Supplier extends Component {
   }
 
   _onAddClick () {
-    console.log('_onAddClick');
     this.props.dispatch({type: c.SUPPLIER_ADD_FORM_TOGGLE,payload: {adding: true}});
   }
 
   _onRemoveClick (index) {
-    console.log('_onRemoveClick');
     const {suppliers} = this.state;
     this.props.dispatch(removeSupplier(suppliers[index]));
   }
@@ -151,7 +144,6 @@ class Supplier extends Component {
   }
 
   _onEditClick (index) {
-    console.log('_onEditClick');
     const {suppliers} = this.state;
     const supplier = JSON.parse(JSON.stringify(suppliers[index]));
     this.props.dispatch({type: c.SUPPLIER_EDIT_FORM_TOGGLE, payload:{editing: true,supplier}});

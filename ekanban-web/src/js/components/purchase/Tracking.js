@@ -110,7 +110,7 @@ class Tracking extends Component {
       const delayedInv = this._getDelayedInv(nextProps);
       this._loadInventory(pendingInv, orderedInv, delayedInv, filter, page1, page2, page3,0);
     }
-    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus || this.props.order.toggleStatus != nextProps.order.toggleStatus) {
+    if (this.props.inventory.toggleStatus != nextProps.inventory.toggleStatus) {
       const {page1,page2,page3,filter} = this.state;
       const pendingInv = this._getPendingInv(nextProps);
       const orderedInv = this._getOrderedInv(nextProps);
@@ -147,15 +147,16 @@ class Tracking extends Component {
       bins = bins.substr(0,bins.length-1);
       if (p != undefined) {
         pendingInv.push({productId: key, prodId: p.id, itemCode: p.itemCode, productName: p.name, suppliers: p.supplierList, binSize: p.binQty + ' ' + p.uomPurchase, 
-          bins, noOfBins, createdAt: value[noOfBins-1].createdAt, ageing, classType: p.classType, category: p.category.name});
+          bins, noOfBins,binQty: p.binQty, uom: p.uomPurchase, createdAt: value[noOfBins-1].createdAt, ageing, classType: p.classType, category: p.category.name});
       }
     }
     return pendingInv;
   }
 
   _getOrderedInv (props) {
-    const {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = props;
+    let {category: {products}, supplier: {suppliers}, inventory: {orders}, user: {users}} = props;
     let orderedInv = [];
+    orders = orders.filter(o => o.orderState == 'ORDERED');
     orders.forEach(o => {
       const p = products.find(prod => prod.id == o.productId);
       const s = suppliers.find(s => s.id == o.supplierId);
@@ -166,14 +167,14 @@ class Tracking extends Component {
       if (p != undefined) {
         orderedInv.push({productId: p.productId, itemCode: p.itemCode, productName: p.name, supplierName, binSize: p.binQty + ' ' + p.uomPurchase,
           bins: o.bins, noOfBins: getNoOfBins(o.bins), orderedAt: o.orderedAt,orderedBy,tat: p.timeProduction + p.timeTransportation, 
-          classType: p.classType, category: p.category.name});
+          classType: p.classType, category: p.category.name,binQty: p.binQty, uom: p.uomPurchase});
       }
     });
     return orderedInv;
   }
 
   _getDelayedInv (props) {
-    let {category: {products}, supplier: {suppliers}, order: {orders}, user: {users}} = props;
+    let {category: {products}, supplier: {suppliers}, inventory: {orders}, user: {users}} = props;
     let delayedInv = [];
     let todayMillis = new Date().getTime();
     let oneDayMillis = 24*60*60*1000;
@@ -187,7 +188,7 @@ class Tracking extends Component {
       if (p != undefined && delay > 0) {
         delayedInv.push({productId: p.productId, itemCode: p.itemCode, productName: p.name, supplierName, binSize: p.binQty + ' ' + p.uomPurchase,
           bins: o.bins, noOfBins: getNoOfBins(o.bins), orderedAt: o.orderedAt,orderedBy, tat: p.timeProduction + p.timeTransportation, delay, classType: p.classType, 
-          category: p.category.name});
+          category: p.category.name,binQty: p.binQty, uom: p.uomPurchase});
       }
     });
     delayedInv.sort((inv1,inv2) => inv2.delay - inv1.delay);
@@ -292,7 +293,7 @@ class Tracking extends Component {
     }
     const sup = orderProduct.suppliers.find(s => s.name == supplier);
     const supId = sup == undefined ? null : sup.id;
-    let order = {productId: orderProduct.prodId, prodId: orderProduct.productId, orderedBy: sessionStorage.userId, supplierId: supId};
+    let order = {productId: orderProduct.prodId,binQty: orderProduct.binQty, prodId: orderProduct.productId, orderedBy: sessionStorage.userId, supplierId: supId};
     if (noOfBins == orderProduct.noOfBins) {
       order.bins = orderProduct.bins;
       pendingMap.delete(orderProduct.productId);
@@ -465,7 +466,7 @@ class Tracking extends Component {
 
   _renderOrderLayer () {
     let {orderProduct, supplier} = this.state;
-    let {busy, ordering} = this.props.order;
+    let {busy, ordering} = this.props.inventory;
 
     if (!ordering) return null;
 
@@ -499,7 +500,7 @@ class Tracking extends Component {
     const {inv,viewing,activeTab} = this.state;
     if (!viewing) return null;
 
-    let ageing,orderedBy,orderedAt,expArrival,delayedBy;
+    let ageing,orderedBy,orderedAt,expArrival,delayedBy,orderedQty;
     if (activeTab == 0) {
       ageing = (
         <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
@@ -512,6 +513,12 @@ class Tracking extends Component {
         <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
           <span> OrderedBy: </span>
           <span className="secondary">{inv.orderedBy}</span>
+        </ListItem>
+      );
+      orderedQty = (
+        <ListItem justify="between" pad={{vertical:'small',horizontal:'small'}} >
+          <span> Order Quantity: </span>
+          <span className="secondary">{inv.noOfBins*inv.binQty + " " + inv.uom}</span>
         </ListItem>
       );
       orderedAt = (
@@ -566,6 +573,7 @@ class Tracking extends Component {
               <span className="secondary">{inv.bins}</span>
             </ListItem>
             {ageing}
+            {orderedQty}
             {orderedBy}
             {orderedAt}
             {expArrival}
@@ -702,7 +710,7 @@ class Tracking extends Component {
       );
     }
 
-    const syncingIcon = this.props.inventory.syncing || this.props.order.syncing ? <Spinning /> : null;
+    const syncingIcon = this.props.inventory.syncing ? <Spinning /> : null;
 
     const pending = this._renderPending();
     const ordered = this._renderOrdered();
@@ -720,7 +728,7 @@ class Tracking extends Component {
           <Title responsive={false}>
             <span>{this.localeData.label_tracking}</span>
           </Title>
-          <Search inline={true} fill={true} size='medium' placeHolder='Search'
+          <Search inline={true} fill={true} size='medium' placeHolder='search product name, item code'
             value={searchText} onDOMChange={this._onSearch.bind(this)} />
           <Button icon={<SyncIcon />}  onClick={this._onSyncClick.bind(this)}/>
           <FilterControl filteredTotal={filteredCount}
@@ -757,7 +765,7 @@ Tracking.contextTypes = {
 };
 
 let select = (store) => {
-  return {misc: store.misc, category: store.category, inventory: store.inventory, order: store.order, user: store.user, supplier: store.supplier};
+  return {misc: store.misc, category: store.category, inventory: store.inventory, user: store.user, supplier: store.supplier};
 };
 
 export default connect(select)(Tracking);

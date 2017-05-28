@@ -15,11 +15,11 @@ const initialState = {
   itemsStore:[
      { path: '/dashboard', label: 'Dashboard'},
      { path: '/reports', label: 'Reports'},
-     { path: '/stock', label: 'Stock'},
      { path: '/inward', label: 'Inward Scan'},
      { path: '/outward', label: 'Outward Scan'},
+     { path: '/awaiting', label: 'Awaiting Order'},
      { path: '/barcode', label: 'Generate Barcode'},
-     { path: '/awaiting', label: 'Awaiting Order'}
+     { path: '/stock', label: 'Stock'}
 
   ],
   itemsPurchase:[

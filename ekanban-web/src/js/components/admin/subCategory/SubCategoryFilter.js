@@ -45,7 +45,6 @@ class SubCategoryFilter extends Component {
       let x = event.value.map(value => (
         typeof value === 'object' ? value.value : value)
       );
-      console.log(x);
       filter[name] = x;
       if (filter[name].length === 0) {
         delete filter[name];
@@ -56,7 +55,7 @@ class SubCategoryFilter extends Component {
 
   _onChangeSort (sort) {
     let sortString = `${sort.value}:${sort.direction}`;
-    console.log(sortString);
+
     this.props.dispatch({type:c.CATEGORY_SORT, payload: {sort: sortString}});
   }
 

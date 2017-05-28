@@ -4,7 +4,6 @@ import com.example.ekanban.dto.RestError;
 import com.example.ekanban.service.ProductService;
 import com.example.ekanban.util.ApiUrls;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,15 @@ public class ProductRestController {
 
     @Autowired ProductService productService;
 
-    @PostMapping(ApiUrls.URL_PRODUCTS_SYNC)
+    @PutMapping(ApiUrls.URL_PRODUCTS_SYNC_ALL)
     public ResponseEntity<?> syncProducts(){
         productService.sync();
+        return  ResponseEntity.ok("SYNC SUCCESS");
+    }
+
+    @PutMapping(ApiUrls.URL_PRODUCT_SYNC_ONE)
+    public ResponseEntity<?> syncProduct(@PathVariable("productId") Long productId){
+        productService.syncOne(productId);
         return  ResponseEntity.ok("SYNC SUCCESS");
     }
 

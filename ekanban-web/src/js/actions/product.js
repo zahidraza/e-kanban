@@ -13,7 +13,7 @@ axios.interceptors.response.use(function (response) {
 
 export function addProduct (url,product) {
   return function (dispatch) {
-    dispatch({type: c.PRODUCT_ADD_PROGRESS});
+    dispatch({type: c.PRODUCT_ADD_PROGRESS, payload: {adding: true}});
     axios.post(url, JSON.stringify(product), {headers: getHeaders()})
     .then((response) => {
       if (response.status == 201) {
@@ -22,6 +22,7 @@ export function addProduct (url,product) {
     }).catch( (err) => {
       if (err.response.status == 409) {
         alert(err.response.data.message);
+        dispatch({type: c.PRODUCT_ADD_PROGRESS, payload: {adding: false}});
       }
       if (err.response.status == 400) {
         dispatch({type: c.PRODUCT_BAD_REQUEST, payload: {errors: err.response.data}});
@@ -33,17 +34,21 @@ export function addProduct (url,product) {
 }
 
 export function updateProduct (url,product) {
+  delete product.category;
+  delete product.subCategory;
+  delete product.sectionList;
+  delete product.supplierList;
   return function (dispatch) {
-    dispatch({type: c.PRODUCT_EDIT_PROGRESS});
+    dispatch({type: c.PRODUCT_EDIT_PROGRESS, payload: {editing: true}});
     axios.put(url, JSON.stringify(product),{headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.PRODUCT_EDIT_SUCCESS, payload: {product: response.data}});
       }
     }).catch( (err) => {
       if (err.response.status == 409) {
         alert(err.response.data.message);
+        dispatch({type: c.PRODUCT_EDIT_PROGRESS, payload: {editing: false}});
       }else if (err.response.status == 400) {
         dispatch({type: c.PRODUCT_BAD_REQUEST, payload: {errors: err.response.data}});
       } else {
@@ -75,7 +80,6 @@ export function uploadProducts (file) {
     data.append("file", file);
     axios.post(window.serviceHost + '/uploads/products', data, {headers: {'Authorization': 'Bearer ' + sessionStorage.access_token}})
     .then((response) => {
-      console.log(response);
       if (response.status == 201) {
         dispatch({type: c.PRODUCT_UPLOAD_SUCCESS});
       }
@@ -93,16 +97,29 @@ export function uploadProducts (file) {
 export function syncProduct () {
   return function (dispatch) {
     dispatch({type: c.PRODUCT_SYNC_PROGRESS});
-    axios.post(window.serviceHost + '/products/sync', null, {headers: getHeaders()})
+    axios.put(window.serviceHost + '/products/sync', null, {headers: getHeaders()})
     .then((response) => {
-      console.log(response);
       if (response.status == 200) {
         dispatch({type: c.PRODUCT_SYNC_SUCCESS});
         dispatch({type: m.STORE_INITIALIZED, payload:{ initialized: false}});
       }
     }).catch( (err) => {
       console.log(err);
-      dispatch({type: c.PRODUCT_SYNC_SUCCESS});
+      dispatch({type: c.PRODUCT_SYNC_FAIL});
+    });
+  };
+}
+
+export function syncOneProduct (productId) {
+  return function (dispatch) {
+    axios.put(window.serviceHost + '/products/sync/' + productId, null, {headers: getHeaders()})
+    .then((response) => {
+      if (response.status == 200) {
+        dispatch({type: c.PRODUCT_SINGLE_SYNC_SUCCESS});
+      }
+    }).catch( (err) => {
+      console.log(err);
+      dispatch({type: c.PRODUCT_SINGLE_SYNC_FAIL});
     });
   };
 }

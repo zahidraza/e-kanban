@@ -45,7 +45,6 @@ class SupplierFilter extends Component {
       let selectedFilter = event.value.map(value => (
         typeof value === 'object' ? value.value : value)
       );
-      console.log(selectedFilter);
       filter[name] = selectedFilter;
       if (filter[name].length === 0) {
         delete filter[name];
@@ -56,7 +55,6 @@ class SupplierFilter extends Component {
 
   _onChangeSort (sort) {
     let sortString = `${sort.value}:${sort.direction}`;
-    console.log(sortString);
     this.props.dispatch({type:c.SUPPLIER_SORT, payload: {sort: sortString}});
   }
 
